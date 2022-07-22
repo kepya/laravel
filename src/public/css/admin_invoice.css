@@ -1,0 +1,9 @@
+.show {
+    transition: .5s;
+    display: block;
+}
+
+.hide {
+    transition: .5s;
+    display: none;
+}
