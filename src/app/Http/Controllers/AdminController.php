@@ -30,7 +30,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/getStaticInformation',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/getStaticInformation',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -54,7 +54,7 @@ class AdminController extends Controller
                 // echo $idClient;
 
                 // je definie l'url de connexion.
-                $url = "http://localhost:4000/admin/facture/" . $idClient;
+                $url = "http://172.17.0.2:4000/admin/facture/" . $idClient;
                 // je definie la donnée de ma facture.
                 $facture = array(
                     'newIndex' => $newIndex,
@@ -112,7 +112,7 @@ class AdminController extends Controller
             $name = $_POST['name'];
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://localhost:4000/client/facture/getFactureWithMonth/true',
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/getFactureWithMonth/true',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -148,8 +148,8 @@ class AdminController extends Controller
 
     public function adminStatus()
     {
-        $url = "http://localhost:4000/admin/facture/" . date("Y") . "/" . date("m") . "/100/1";
-        // $url = "http://localhost:4000/facture/".date("m")."/".date("Y")."/100/1";
+        $url = "http://172.17.0.2:4000/admin/facture/" . date("Y") . "/" . date("m") . "/100/1";
+        // $url = "http://172.17.0.2:4000/facture/".date("m")."/".date("Y")."/100/1";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -171,7 +171,7 @@ class AdminController extends Controller
         for ($i = 0; $i < $lengthPaid; $i++) {
             $curl2 = curl_init();
             curl_setopt_array($curl2, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $invoice['result'][$i]['idClient'],
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $invoice['result'][$i]['idClient'],
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -192,7 +192,7 @@ class AdminController extends Controller
     public function manageProducts()
     {
 
-        $url = "http://localhost:4000/stock/type";
+        $url = "http://172.17.0.2:4000/stock/type";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -215,7 +215,7 @@ class AdminController extends Controller
     public function productsType()
     {
 
-        $url = "http://localhost:4000/stock/type";
+        $url = "http://172.17.0.2:4000/stock/type";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -238,7 +238,7 @@ class AdminController extends Controller
 
         $type = $request->input('type');
 
-        $url = "http://localhost:4000/stock/type";
+        $url = "http://172.17.0.2:4000/stock/type";
 
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -308,7 +308,7 @@ class AdminController extends Controller
             $photo =  $request->file('image')->getClientOriginalName();
             $photoPath = $request->image->storeAs('/products', $photo);
 
-            $url = "http://localhost:4000/stock/";
+            $url = "http://172.17.0.2:4000/stock/";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -356,7 +356,7 @@ class AdminController extends Controller
     public function adminRemove()
     {
 
-        $url = "http://localhost:4000/stock/getAll";
+        $url = "http://172.17.0.2:4000/stock/getAll";
 
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -393,7 +393,7 @@ class AdminController extends Controller
         $product = $request->input('name');
         $quantity = $request->input('quantity');
 
-        $url = "http://localhost:4000/stock/type";
+        $url = "http://172.17.0.2:4000/stock/type";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -433,7 +433,7 @@ class AdminController extends Controller
     public function deleteType($id)
     {
 
-        $url = "http://localhost:4000/stock/type/" . $id;
+        $url = "http://172.17.0.2:4000/stock/type/" . $id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -482,7 +482,7 @@ class AdminController extends Controller
             $tokenVal = $tokentab[1];
             $Authorization = 'Bearer ' . $tokenVal;
 
-            $url = "http://localhost:4000/stock/type";
+            $url = "http://172.17.0.2:4000/stock/type";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -493,7 +493,7 @@ class AdminController extends Controller
             $types = $response['result'];
 
 
-            $url1 = "http://localhost:4000/stock/getByType";
+            $url1 = "http://172.17.0.2:4000/stock/getByType";
             $data1 = array(
                 'page' => 1,
                 'limit' => 0,
@@ -526,7 +526,7 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://localhost:4000/stock/type";
+        $url = "http://172.17.0.2:4000/stock/type";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -537,7 +537,7 @@ class AdminController extends Controller
         $types = $response['result'];
 
 
-        $url1 = "http://localhost:4000/stock/getAll";
+        $url1 = "http://172.17.0.2:4000/stock/getAll";
         $data = array(
             'page' => $id,
             'limit' => 5,
@@ -598,7 +598,7 @@ class AdminController extends Controller
 
             $id = $request->input('id');
 
-            $url = "http://localhost:4000/stock/" . $id;
+            $url = "http://172.17.0.2:4000/stock/" . $id;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -660,7 +660,7 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://localhost:4000/admin/auth/" . $id;
+        $url = "http://172.17.0.2:4000/admin/auth/" . $id;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -670,7 +670,7 @@ class AdminController extends Controller
         $response = json_decode($response, true);
         $userdata = $response['result'];
 
-        $url1 = "http://localhost:4000/admin/facture/getStaticInformation";
+        $url1 = "http://172.17.0.2:4000/admin/facture/getStaticInformation";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -699,7 +699,7 @@ class AdminController extends Controller
 
         $id = $request->session()->get('id');
 
-        $url = "http://localhost:4000/admin/auth/" . $id;
+        $url = "http://172.17.0.2:4000/admin/auth/" . $id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -762,7 +762,7 @@ class AdminController extends Controller
             $home = $request->input('home');
 
 
-            $url = "http://localhost:4000/admin/auth/update";
+            $url = "http://172.17.0.2:4000/admin/auth/update";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -854,7 +854,7 @@ class AdminController extends Controller
             $newpassword = md5(sha1($request->input('newpassword')));
             $oldpassword = md5(sha1($request->input('oldpassword')));
 
-            $url = "http://localhost:4000/admin/auth/updatePassword";
+            $url = "http://172.17.0.2:4000/admin/auth/updatePassword";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -903,7 +903,7 @@ class AdminController extends Controller
         $meterprice = $request->input('meterprice');
         $limitDay = $request->input('date');
 
-        $url = "http://localhost:4000/admin/facture/staticInformation";
+        $url = "http://172.17.0.2:4000/admin/facture/staticInformation";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -952,7 +952,7 @@ class AdminController extends Controller
         $step = $request->input('step');
 
 
-        $url = "http://localhost:4000/admin/facture/penalty";
+        $url = "http://172.17.0.2:4000/admin/facture/penalty";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -1015,7 +1015,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
 
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -1102,7 +1102,7 @@ class AdminController extends Controller
             $idClient = $invoice->idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1158,7 +1158,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
 
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -1246,7 +1246,7 @@ class AdminController extends Controller
             $idClient = $invoice->idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1302,7 +1302,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
 
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -1390,7 +1390,7 @@ class AdminController extends Controller
             $idClient = $invoice->idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1457,7 +1457,7 @@ class AdminController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1500,7 +1500,7 @@ class AdminController extends Controller
                 //echo $idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -1562,7 +1562,7 @@ class AdminController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1623,7 +1623,7 @@ class AdminController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -1689,7 +1689,7 @@ class AdminController extends Controller
                 $curl = curl_init();
 
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -1741,7 +1741,7 @@ class AdminController extends Controller
                     //echo $idClient;
                     $url = curl_init();
                     curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -1793,7 +1793,7 @@ class AdminController extends Controller
                     $curl = curl_init();
 
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -1839,7 +1839,7 @@ class AdminController extends Controller
                     $idClient = $invoices_paid[0]->idClient;
                     $url = curl_init();
                     curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -1903,7 +1903,7 @@ class AdminController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1966,7 +1966,7 @@ class AdminController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -2032,7 +2032,7 @@ class AdminController extends Controller
                 $curl = curl_init();
 
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -2084,7 +2084,7 @@ class AdminController extends Controller
                     //echo $idClient;
                     $url = curl_init();
                     curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -2135,7 +2135,7 @@ class AdminController extends Controller
                     $curl = curl_init();
 
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -2181,7 +2181,7 @@ class AdminController extends Controller
                     $idClient = $invoices_unpaid[0]->idClient;
                     $url = curl_init();
                     curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -2245,7 +2245,7 @@ class AdminController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -2308,7 +2308,7 @@ class AdminController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -2369,7 +2369,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2430,7 +2430,7 @@ class AdminController extends Controller
             $idClient = $invoice->idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -2486,7 +2486,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/getByStatus/false',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/getByStatus/false',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2543,7 +2543,7 @@ class AdminController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -2608,7 +2608,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/getByStatus/true',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/getByStatus/true',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2678,7 +2678,7 @@ class AdminController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -2744,7 +2744,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/one/' . $invoice_id,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/' . $invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2763,7 +2763,7 @@ class AdminController extends Controller
 
         $curl2 = curl_init();
         curl_setopt_array($curl2, array(
-            CURLOPT_URL => 'http://localhost:4000/client/auth/' . $invoice['result']['idClient'],
+            CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $invoice['result']['idClient'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2779,7 +2779,7 @@ class AdminController extends Controller
 
         $curl3 = curl_init();
         curl_setopt_array($curl3, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/auth/' . $invoice['result']['idAdmin'],
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/' . $invoice['result']['idAdmin'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2814,7 +2814,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/one/' . $invoice_id,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/' . $invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2857,7 +2857,7 @@ class AdminController extends Controller
             //echo $idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -2916,7 +2916,7 @@ class AdminController extends Controller
             //echo $idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $client_id,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $client_id,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -2967,7 +2967,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/getByStatus/false',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/getByStatus/false',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3016,7 +3016,7 @@ class AdminController extends Controller
             //echo $idClient;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -3047,7 +3047,7 @@ class AdminController extends Controller
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $year . '/' . $month . '/1000/1',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $year . '/' . $month . '/1000/1',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3092,7 +3092,7 @@ class AdminController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -3120,7 +3120,7 @@ class AdminController extends Controller
 
         $url_client = curl_init();
         curl_setopt_array($url_client, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/auth/getClient',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/getClient',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3148,7 +3148,7 @@ class AdminController extends Controller
         // annuel
         $url_annuel = curl_init();
         curl_setopt_array($url_annuel, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/factureByYear/' . $year,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/factureByYear/' . $year,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3194,7 +3194,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/' . $idClient,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/' . $idClient,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3235,7 +3235,7 @@ class AdminController extends Controller
             $amount = $_POST['amount'];
             $invoice_id = $_POST['idInvoice'];
 
-            $url = "http://localhost:4000/admin/facture/statusPaidFacture/" . $invoice_id;
+            $url = "http://172.17.0.2:4000/admin/facture/statusPaidFacture/" . $invoice_id;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -3272,7 +3272,7 @@ class AdminController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://localhost:4000/admin/facture/one/' . $invoice_id,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/' . $invoice_id,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -3315,7 +3315,7 @@ class AdminController extends Controller
                 //echo $idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://localhost:4000/client/auth/' . $idClient,
+                    CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/' . $idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -3359,7 +3359,7 @@ class AdminController extends Controller
         echo " v " . $invoice_id;
         if (isset($_POST['connect'])) {
             // je definie l'url de connexion.
-            $url = "http://localhost:4000/admin/facture/one/" . $invoice_id;
+            $url = "http://172.17.0.2:4000/admin/facture/one/" . $invoice_id;
 
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
@@ -3437,7 +3437,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/auth/getClient',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/getClient',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3487,7 +3487,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/getStaticInformation',
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/getStaticInformation',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3513,7 +3513,7 @@ class AdminController extends Controller
                 // echo $idClient;
 
                 // je definie l'url de connexion.
-                $url = "http://localhost:4000/admin/facture/" . $idClient;
+                $url = "http://172.17.0.2:4000/admin/facture/" . $idClient;
 
                 $data1 = array(
                     'newIndex' => $newIndex,
@@ -3539,7 +3539,7 @@ class AdminController extends Controller
 
                     $url = curl_init();
                     curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://localhost:4000/admin/facture/doInvoiceWithDate/' . $date,
+                        CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/doInvoiceWithDate/' . $date,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -3596,7 +3596,7 @@ class AdminController extends Controller
 
         $url = curl_init();
         curl_setopt_array($url, array(
-            CURLOPT_URL => 'http://localhost:4000/admin/facture/doInvoiceWithDate/' . $date,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/doInvoiceWithDate/' . $date,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3641,7 +3641,7 @@ class AdminController extends Controller
             $Authorization = 'Bearer ' . $tokenVal;
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://localhost:4000/admin/facture/doInvoiceWithDate/' . $date,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/doInvoiceWithDate/' . $date,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -3681,7 +3681,7 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://localhost:4000/admin/facture";
+        $url = "http://172.17.0.2:4000/admin/facture";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3692,7 +3692,7 @@ class AdminController extends Controller
         $factures = $response['result'];
 
 
-        $url1 = "http://localhost:4000/stock/getAll";
+        $url1 = "http://172.17.0.2:4000/stock/getAll";
         $data1 = array(
             'page' => 1,
             'limit' => 0,
@@ -3710,7 +3710,7 @@ class AdminController extends Controller
         $data1 = $response1['result']['docs'];
 
 
-        $url2 = "http://localhost:4000/admin/facture/factureByYear/" . date('Y');
+        $url2 = "http://172.17.0.2:4000/admin/facture/factureByYear/" . date('Y');
         $ch2 = curl_init();
         curl_setopt($ch2, CURLOPT_URL, $url2);
         curl_setopt($ch2, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3720,7 +3720,7 @@ class AdminController extends Controller
         $response2 = json_decode($response2, true);
         $data2 = $response2['result'];
 
-        $url3 = "http://localhost:4000/stock/getInputMaterialByYear/" . date('Y');
+        $url3 = "http://172.17.0.2:4000/stock/getInputMaterialByYear/" . date('Y');
         $ch3 = curl_init();
         curl_setopt($ch3, CURLOPT_URL, $url3);
         curl_setopt($ch3, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3751,7 +3751,7 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://localhost:4000/admin/facture";
+        $url = "http://172.17.0.2:4000/admin/facture";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3762,7 +3762,7 @@ class AdminController extends Controller
         $factures = $response['result'];
 
 
-        $url1 = "http://localhost:4000/stock/getAll";
+        $url1 = "http://172.17.0.2:4000/stock/getAll";
         $data1 = array(
             'page' => 1,
             'limit' => 0,
@@ -3781,7 +3781,7 @@ class AdminController extends Controller
         $data1 = $response1['result']['docs'];
 
 
-        $url2 = "http://localhost:4000/admin/facture/factureByYear/" . $year;
+        $url2 = "http://172.17.0.2:4000/admin/facture/factureByYear/" . $year;
         $ch2 = curl_init();
         curl_setopt($ch2, CURLOPT_URL, $url2);
         curl_setopt($ch2, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3791,7 +3791,7 @@ class AdminController extends Controller
         $response2 = json_decode($response2, true);
         $data2 = $response2['result'];
 
-        $url3 = "http://localhost:4000/stock/getInputMaterialByYear/" . $year;
+        $url3 = "http://172.17.0.2:4000/stock/getInputMaterialByYear/" . $year;
         $ch3 = curl_init();
         curl_setopt($ch3, CURLOPT_URL, $url3);
         curl_setopt($ch3, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3801,7 +3801,7 @@ class AdminController extends Controller
         $response3 = json_decode($response3, true);
         $data3 = $response3['result'];
 
-        $url4 = "http://localhost:4000/admin/facture/factureByYear/" . date('Y');
+        $url4 = "http://172.17.0.2:4000/admin/facture/factureByYear/" . date('Y');
         $ch4 = curl_init();
         curl_setopt($ch4, CURLOPT_URL, $url4);
         curl_setopt($ch4, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3811,7 +3811,7 @@ class AdminController extends Controller
         $response4 = json_decode($response4, true);
         $data4 = $response4['result'];
 
-        $url5 = "http://localhost:4000/stock/getInputMaterialByYear/" . date('Y');
+        $url5 = "http://172.17.0.2:4000/stock/getInputMaterialByYear/" . date('Y');
         $ch5 = curl_init();
         curl_setopt($ch5, CURLOPT_URL, $url5);
         curl_setopt($ch5, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3834,7 +3834,7 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://localhost:4000/admin/auth/getClient";
+        $url = "http://172.17.0.2:4000/admin/auth/getClient";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3844,7 +3844,7 @@ class AdminController extends Controller
         $response = json_decode($response, true);
         $customers = $response['result'];
 
-        $url1 = "http://localhost:4000/stock/getAll";
+        $url1 = "http://172.17.0.2:4000/stock/getAll";
         $data1 = array(
             'page' => 1,
             'limit' => 0,
@@ -3875,7 +3875,7 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://localhost:4000/admin/facture/clientFactureByYear/" . date('Y') . "/" . $id;
+        $url = "http://172.17.0.2:4000/admin/facture/clientFactureByYear/" . date('Y') . "/" . $id;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3886,7 +3886,7 @@ class AdminController extends Controller
         $factures = $response['result'];
 
 
-        $url1 = "http://localhost:4000/client/auth/" . $id;
+        $url1 = "http://172.17.0.2:4000/client/auth/" . $id;
         $ch1 = curl_init();
         curl_setopt($ch1, CURLOPT_URL, $url1);
         curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3917,7 +3917,7 @@ class AdminController extends Controller
             $year = date('Y');
         }
 
-        $url = "http://localhost:4000/admin/facture/clientFactureByYear/" . $year . "/" . $id;
+        $url = "http://172.17.0.2:4000/admin/facture/clientFactureByYear/" . $year . "/" . $id;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3928,7 +3928,7 @@ class AdminController extends Controller
         $factures = $response['result'];
 
 
-        $url1 = "http://localhost:4000/client/auth/" . $id;
+        $url1 = "http://172.17.0.2:4000/client/auth/" . $id;
         $ch1 = curl_init();
         curl_setopt($ch1, CURLOPT_URL, $url1);
         curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
