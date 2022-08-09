@@ -481,17 +481,17 @@
                               <li class="widget-49-meeting-item"><span>Left : <?= $fact['montantImpaye']?> </span></li>
                           </ul>
                           <div class="widget-49-meeting-action text-center">
-                              <?php
-                                  if($fact['facturePay'] == 1){
-                                    $class = 'btn-success';
-                                    $state = 'Paid';
-                                  }else{
-                                    $class = 'btn-danger';
-                                    $state = 'Unpaid';
-                                  }
-                              ?>
-                              <button class="btn btn-sm btn-space <?=$class?> rounded-pill"><?=$state?></button>
-                          </div>
+                        <?php
+                            if($fact['facturePay'] == 1){
+                              $class = 'text-success';
+                              $state = 'Paid';
+                            }else{
+                              $class = 'text-danger';
+                              $state = 'Unpaid';
+                            }
+                        ?>
+                        <span  class="text <?=$class?> rounded-pill"><?=$state?></span>
+                    </div>
                       </div>
                   </div>
               </div>
@@ -530,14 +530,14 @@
                     <div class="widget-49-meeting-action text-center">
                         <?php
                             if($fact['facturePay'] == 1){
-                              $class = 'btn-success';
+                              $class = 'text-success';
                               $state = 'Paid';
                             }else{
-                              $class = 'btn-danger';
+                              $class = 'text-danger';
                               $state = 'Unpaid';
                             }
                         ?>
-                        <button class="btn btn-sm btn-space <?=$class?> rounded-pill"><?=$state?></button>
+                        <span  class="text <?=$class?> rounded-pill"><?=$state?></span>
                     </div>
                 </div>
             </div>

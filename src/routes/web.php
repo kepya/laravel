@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ManageAdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ManageClientController;
 use App\Http\Middleware\CheckSession;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +19,10 @@ use App\Http\Middleware\CheckSession;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//localhost:8088/download_public/?file=yvan.jpg
+
+Route::get('/download_local', [AttachmentController::class, 'downloadLocalFile']);
+Route::get('/download_public', [AttachmentController::class, 'downloadPublicFile']);
 
 Route::get('/',[HomeController::class, 'sign_in'])->name('welcome');
 
@@ -111,7 +115,6 @@ Route::group(['middleware' => 'checksession'], function () {
 		Route::get('/clauses', function() {
 		    return view('client/clauses');
 		});
-
 
 		//Admin route
 
@@ -251,6 +254,7 @@ Route::group(['middleware' => 'checksession'], function () {
 		Route::get('/admin/finances/details/customer/{id}',[AdminController::class, 'customerDetails'])->name('customerDetails');
 
 		Route::post('/admin/finances/details/customer/{id}',[AdminController::class, 'customerDetailsYear'])->name('customerDetailsYear');
+
 
 });
 

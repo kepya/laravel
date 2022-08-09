@@ -256,7 +256,7 @@
 
                 <div class="d-flex flex justify-content-end">
                     <button class="btn btn-primary" id="connect" name="connect" type="submit">Paid Invoice</button>
-                    <button class="btn btn-secondary ml-2 back" id="showDetail" type="button">Cancel</button>
+                    <button class="btn btn-secondary ml-2 back" id="showDetail" type="button"><a href="admin/consumption-that-are-unpaid">Cancel</a></button>
                 </div>
             </form>
             @endif
@@ -267,7 +267,8 @@
 <script type="text/javascript">
 
 $('.back').on('click', function(){
-    history.back();
+    //history.back();
+    // admin/consumption-that-are-unpaid
 });
 
 </script>

@@ -135,16 +135,16 @@
         <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
             @csrf
             <div class="flex d-flex align-items-center">
-                search By : 
-                <select class="form-control ml-2" name="type" id="type" style="width: 100px;">
+            search By :
+            <select onchange="onChange(this)" class="form-control ml-2" #type name="type" id="type" style="width: 100px;">
                 <option value="month">Month</option>
                 <option value="year">Year</option>
                 <option value="username">Username</option>
-                <option value="meterId">MeterId</option>
-                </select>
-                <input type="number" name="search" id="search" class="form-control ml-2" style="width: 100px;"/>
-                <input type="submit" name="send_search_consumption_paid" id="send_search_consumption_paid" class="ml-1 btn btn-primary">
-            </div>
+            </select>
+            <input type="number" name="search" id="search" class="form-control ml-2" style="width: 100px;" />
+            <input type="text" name="searchT" id="searchT" class="form-control ml-2" style="width: 100px;"/>
+            <input type="submit" name="send_search_consumption_unpaid" id="send_search_consumption_unpaid" class="ml-1 btn btn-primary">
+        </div>
         </form>
     </div>
     <div class="row">
@@ -281,7 +281,7 @@
         </div>
     </div>
 
-   <script>
+   <script type="text/javascript">
         let btn_penalty = document.getElementById('penalty');
         let btn_tranche = document.getElementById('tranche');
 
@@ -292,5 +292,29 @@
         btn_penalty.addEventListener("click", (event) => {
             $('#mediumPenaltyModal').modal("show");
         })
+
+        const searchT = document.getElementById('searchT');
+        searchT.hidden=true;
+
+        function onChange(event) {
+            value = event.value;
+            const search = document.getElementById('search');
+            const searchT = document.getElementById('searchT');
+
+            if (value === "year") {
+                searchT.value = null;
+                searchT.hidden=true;
+                search.hidden=false;
+            } else if (value === "month") {
+                searchT.value = null;
+                searchT.hidden=true;
+                search.hidden=false;
+            } else {
+                searchT.hidden=false;
+                search.value = null;
+                search.hidden=true;
+            }
+        }
+
     </script>
 @stop

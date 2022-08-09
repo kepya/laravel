@@ -136,13 +136,13 @@
             @csrf
             <div class="flex d-flex align-items-center">
                 search By :
-                <select class="form-control ml-2" name="type" id="type" style="width: 100px;">
+                <select class="form-control ml-2" onchange="onChange(this)" #type name="type" id="type" style="width: 100px;">
                 <option value="month">Month</option>
                 <option value="year">Year</option>
                 <option value="username">Username</option>
-                <option value="meterId">MeterId</option>
                 </select>
                 <input type="number" name="search" id="search" class="form-control ml-2" style="width: 100px;"/>
+                <input type="text" name="searchT" id="searchT" class="form-control ml-2" style="width: 100px;"/>
                 <input type="submit" name="send_search" id="send_search" class="ml-1 btn btn-primary">
             </div>
         </form>
@@ -280,6 +280,7 @@
     </div>
 
     <script type="text/javascript">
+
         let token = <?php
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
@@ -304,7 +305,7 @@
         header.append('Content-Type', 'application/json');
         header.append('Authorization', autorization);
 
-        fetch('http://172.17.0.2:4000/admin/facture/factureByYear/' + year, {
+        fetch('http://172.17.0.5:4000/admin/facture/factureByYear/' + year, {
             method: 'GET',
             mode: 'cors',
             headers: header
@@ -379,13 +380,34 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
                     }).catch(error => {console.error('error : ' + error);});
                 }
             );
+        }
+        const searchT = document.getElementById('searchT');
+        searchT.hidden=true;
+        function onChange(event) {
+            value = event.value;
+            const search = document.getElementById('search');
+            const searchT = document.getElementById('searchT');
+
+            if (value === "year") {
+                searchT.value = null;
+                searchT.hidden=true;
+                search.hidden=false;
+            } else if (value === "month") {
+                searchT.value = null;
+                searchT.hidden=true;
+                search.hidden=false;
+            } else {
+                searchT.hidden=false;
+                search.value = null;
+                search.hidden=true;
+            }
         }
 
         function getInvoiceByMonth(page_size, size) {
@@ -430,7 +452,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -481,7 +503,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -532,7 +554,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -583,7 +605,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
