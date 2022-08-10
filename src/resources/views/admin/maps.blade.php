@@ -159,7 +159,7 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
     const autho = document.getElementById('authorization').value;
     
     var settings = {
-        "url": "http://172.17.0.5:4000/admin/auth/getClient",
+        "url": "http://172.17.0.2:4000/admin/auth/getClient",
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -174,7 +174,7 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
     });
     
     var adminS = {
-        "url": "http://172.17.0.5:4000/admin/auth/getAdminByToken",
+        "url": "http://172.17.0.2:4000/admin/auth/getAdminByToken",
         "method": "GET",
         "timeout": 0,
         "headers": {

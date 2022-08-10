@@ -13,7 +13,7 @@ class ManageAdminController extends Controller
 {
     public function viewAdministrators(){
 
-        $url = "http://172.17.0.5:4000/admin/auth/getAdmin";
+        $url = "http://172.17.0.2:4000/admin/auth/getAdmin";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -85,7 +85,7 @@ class ManageAdminController extends Controller
             $lng = $request->input('lng');
 
 
-            $url = "http://172.17.0.5:4000/admin/auth/register";
+            $url = "http://172.17.0.2:4000/admin/auth/register";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -159,7 +159,7 @@ class ManageAdminController extends Controller
             $name = $_POST['name'];
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "http://172.17.0.5:4000/admin/auth/getAdmin",
+                CURLOPT_URL => "http://172.17.0.2:4000/admin/auth/getAdmin",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -221,7 +221,7 @@ class ManageAdminController extends Controller
         $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://172.17.0.5:4000/admin/facture/statusPaidFacture/'.$id,
+                CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/statusPaidFacture/'.$id,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -242,7 +242,7 @@ class ManageAdminController extends Controller
 
     public function viewCustomers(){
 
-        $url = "http://172.17.0.5:4000/admin/auth/getClient";
+        $url = "http://172.17.0.2:4000/admin/auth/getClient";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -266,7 +266,7 @@ class ManageAdminController extends Controller
     }
 
     public function blockedCustomers(){
-        $url = "http://172.17.0.5:4000/admin/auth/getClient";
+        $url = "http://172.17.0.2:4000/admin/auth/getClient";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -333,7 +333,7 @@ class ManageAdminController extends Controller
 
             // return $firstname.' '.$lastname.' '.$birthdate.' '.$email.' '.$phone.' '.$home.' '.$identifier.' '.$password.' '.$photoPath;
 
-            $url = "http://172.17.0.5:4000/client/auth/register";
+            $url = "http://172.17.0.2:4000/client/auth/register";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -396,7 +396,7 @@ class ManageAdminController extends Controller
 
     public function blockCustomer($id,$status){
 
-        $url = "http://172.17.0.5:4000/admin/manageCompte/client/block/".$id;
+        $url = "http://172.17.0.2:4000/admin/manageCompte/client/block/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -441,7 +441,7 @@ class ManageAdminController extends Controller
 
     public function editCustomer($id){
 
-        $url = "http://172.17.0.5:4000/client/auth/".$id;
+        $url = "http://172.17.0.2:4000/client/auth/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -497,7 +497,7 @@ class ManageAdminController extends Controller
             $email = $request->input('email');
             $phone = $request->input('phone');
 
-            $url = "http://172.17.0.5:4000/admin/manageCompte/client/update/".$id;
+            $url = "http://172.17.0.2:4000/admin/manageCompte/client/update/".$id;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -554,7 +554,7 @@ class ManageAdminController extends Controller
             $name = $_POST['name'];
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "http://172.17.0.5:4000/admin/auth/getClient",
+                CURLOPT_URL => "http://172.17.0.2:4000/admin/auth/getClient",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -605,7 +605,7 @@ class ManageAdminController extends Controller
         $identifier = $request->input('identifier');
         $recent = $request->input('recentIndex');
 
-        $url = "http://172.17.0.5:4000/admin/facture/invoicePreCreate/".$id;
+        $url = "http://172.17.0.2:4000/admin/facture/invoicePreCreate/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -646,7 +646,7 @@ class ManageAdminController extends Controller
 
     public function deleteCustomer($id){
 
-        $url = "http://172.17.0.5:4000/admin/manageCompte/client/delete/".$id;
+        $url = "http://172.17.0.2:4000/admin/manageCompte/client/delete/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -688,7 +688,7 @@ class ManageAdminController extends Controller
         $lat = $request->input('lat');
         $lng = $request->input('lng');
 
-        $url = "http://172.17.0.5:4000/login/localisation/".$id;
+        $url = "http://172.17.0.2:4000/login/localisation/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -728,7 +728,7 @@ class ManageAdminController extends Controller
 
     public function blockAdmin($id,$status){
 
-        $url = "http://172.17.0.5:4000/admin/manageCompte/admin/block/".$id;
+        $url = "http://172.17.0.2:4000/admin/manageCompte/admin/block/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -773,7 +773,7 @@ class ManageAdminController extends Controller
 
     public function editAdmin($id){
 
-        $url = "http://172.17.0.5:4000/admin/auth/".$id;
+        $url = "http://172.17.0.2:4000/admin/auth/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -833,7 +833,7 @@ class ManageAdminController extends Controller
             // $latitude = $request->input('lat');
 
 
-            $url = "http://172.17.0.5:4000/admin/manageCompte/admin/update/".$id;
+            $url = "http://172.17.0.2:4000/admin/manageCompte/admin/update/".$id;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -884,7 +884,7 @@ class ManageAdminController extends Controller
 
     public function deleteAdmin($id){
 
-        $url = "http://172.17.0.5:4000/admin/manageCompte/admin/delete/".$id;
+        $url = "http://172.17.0.2:4000/admin/manageCompte/admin/delete/".$id;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -923,7 +923,7 @@ class ManageAdminController extends Controller
 
         $passwd = md5(sha1('forage@2021'));
 
-        $url = "http://172.17.0.5:4000/login/passwordUserReset/".$id;
+        $url = "http://172.17.0.2:4000/login/passwordUserReset/".$id;
 
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);

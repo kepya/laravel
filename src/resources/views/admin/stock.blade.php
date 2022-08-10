@@ -488,7 +488,7 @@
                     
             $.ajax({
 
-                url: "<?= 'http://172.17.0.5:4000/stock/' ?>" + id,
+                url: "<?= 'http://172.17.0.2:4000/stock/' ?>" + id,
                 headers: { 'Authorization': '<?= $Authorization ?>', 'Content-Type': 'application/json' },
 
                 success: function(success) {

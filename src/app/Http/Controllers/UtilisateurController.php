@@ -18,7 +18,7 @@ class UtilisateurController extends Controller
         $idFacture = $_POST['idFacture'];
         
         // je definie l'url de connexion.
-        $url = "http://172.17.0.5:4000/admin/facture/statusPaidFacture/"+$idFacture;
+        $url = "http://172.17.0.2:4000/admin/facture/statusPaidFacture/"+$idFacture;
         // je definie la donnée de ma facture.
         $facture = array(
             'status' => true
@@ -55,7 +55,7 @@ class UtilisateurController extends Controller
     public function allInvoiceWhichHaveNotPaid()
     {
         // je definie l'url de connexion.
-        $url = "http://172.17.0.5:4000/admin​/facture​/getFactureAdvance"; 
+        $url = "http://172.17.0.2:4000/admin​/facture​/getFactureAdvance"; 
 
         // Initialisez une session CURL.
         $ch = curl_init();  

@@ -24,7 +24,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.5:4000/client/auth/dashboard',
+        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/dashboard',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -57,7 +57,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.5:4000/client/auth/get/getClientByToken',
+        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/get/getClientByToken',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -90,7 +90,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.5:4000/client/facture/getFactureWithMonth/true',
+        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/getFactureWithMonth/true',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -123,7 +123,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.5:4000/client/facture/factureClientWithDate',
+        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/factureClientWithDate',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -155,7 +155,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.5:4000/client/facture',
+        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -186,7 +186,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.5:4000/client/facture/getFactureWithMonth/false',
+        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/getFactureWithMonth/false',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -247,7 +247,7 @@ class ManageClientController extends Controller
             $identifier = $request->input('identifier');
 
 
-            $url = "http://172.17.0.5:4000/client/auth/update";
+            $url = "http://172.17.0.2:4000/client/auth/update";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -320,7 +320,7 @@ class ManageClientController extends Controller
             $newpassword = md5(sha1($request->input('newpassword')));
             $oldpassword = md5(sha1($request->input('oldpassword')));
 
-            $url = "http://172.17.0.5:4000/client/auth/updatePassword";
+            $url = "http://172.17.0.2:4000/client/auth/updatePassword";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -374,7 +374,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.5:4000/admin/facture/one/'.$invoice_id,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/'.$invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -393,7 +393,7 @@ class ManageClientController extends Controller
 
         $curl2 = curl_init();
         curl_setopt_array($curl2, array(
-            CURLOPT_URL => 'http://172.17.0.5:4000/client/auth/'.$invoice['result']['idClient'],
+            CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/'.$invoice['result']['idClient'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -409,7 +409,7 @@ class ManageClientController extends Controller
 
         $curl3 = curl_init();
         curl_setopt_array($curl3, array(
-            CURLOPT_URL => 'http://172.17.0.5:4000/admin/auth/'.$invoice['result']['idAdmin'],
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/'.$invoice['result']['idAdmin'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -442,7 +442,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.5:4000/admin/facture/one/'.$invoice_id,
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/'.$invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -459,7 +459,7 @@ class ManageClientController extends Controller
 
         $curl2 = curl_init();
         curl_setopt_array($curl2, array(
-            CURLOPT_URL => 'http://172.17.0.5:4000/client/auth/'.$invoice['result']['idClient'],
+            CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/'.$invoice['result']['idClient'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -476,7 +476,7 @@ class ManageClientController extends Controller
         // print_r($client);
         $curl3 = curl_init();
         curl_setopt_array($curl3, array(
-            CURLOPT_URL => 'http://172.17.0.5:4000/admin/auth/'.$invoice['result']['idAdmin'],
+            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/'.$invoice['result']['idAdmin'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -503,7 +503,7 @@ class ManageClientController extends Controller
             $montant = $request->input('montant');
 
 
-            $url = "http://172.17.0.5:4000/client/facture/paid/".$modalId;
+            $url = "http://172.17.0.2:4000/client/facture/paid/".$modalId;
             echo $url;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);

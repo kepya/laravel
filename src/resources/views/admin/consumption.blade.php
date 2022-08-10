@@ -305,7 +305,7 @@
         header.append('Content-Type', 'application/json');
         header.append('Authorization', autorization);
 
-        fetch('http://172.17.0.5:4000/admin/facture/factureByYear/' + year, {
+        fetch('http://172.17.0.2:4000/admin/facture/factureByYear/' + year, {
             method: 'GET',
             mode: 'cors',
             headers: header
@@ -380,7 +380,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -452,7 +452,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -503,7 +503,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -554,7 +554,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
@@ -605,7 +605,7 @@
                 (bill) => {
                     let idClient = bill.idClient;
                     alert('idclient : ' + idClient);
-                    fetch('http://172.17.0.5:4000/client/auth/' + idClient)
+                    fetch('http://172.17.0.2:4000/client/auth/' + idClient)
                     .then( (response) => response.json())
                     .then(data => {
                         users.push(data.result);
