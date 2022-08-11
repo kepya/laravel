@@ -118,6 +118,8 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		//Admin route
 
+		Route::match(['get','put'],'/admin/manage_products/remove/removed',[AdminController::class, 'removeProduct'])->name('removeProduct');
+		
 		Route::match(['post','get'],'/admin/find', [ManageAdminController::class, 'findAdmin']);
 
 		Route::get('/admin/home',[HomeController::class, 'adminHome'])->name('adminHome');
