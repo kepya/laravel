@@ -1,4 +1,4 @@
-@extends('client.layout.default')
+@extends('Client.layout.default')
 @section('title', 'Dashboard')
 @section('nav')
         <li class="nav-item active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">

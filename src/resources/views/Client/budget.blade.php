@@ -41,14 +41,6 @@
             @endif
         @endif
 
-        <!-- Nav Item - Profile Setting -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/user" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Profile Setting</span>
-            </a>
-        </li>
-
         <!-- Nav Item - Policy -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="/clauses" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile">
