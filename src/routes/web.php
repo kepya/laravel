@@ -113,7 +113,7 @@ Route::group(['middleware' => 'checksession'], function () {
 		// });
 
 		Route::get('/clauses', function() {
-		    return view('client/clauses');
+		    return view('Client/clauses');
 		});
 
 		//Admin route
