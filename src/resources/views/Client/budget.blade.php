@@ -30,6 +30,21 @@
         </li>
 
         <!-- Nav Item - Invoice -->
+        <li class="nav-item ">
+            <a class="nav-link collapsed"  href="#" data-toggle="collapse" data-target="#collapseUtilities1" aria-expanded="true" aria-controls="collapseUtilities1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices">
+                <i class="fas fa-money-bill-alt"></i>
+                <span>Invoices</span>
+            </a>
+            <div id="collapseUtilities1" class="collapse" aria-labelledby="headingUtilities1" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Invoices</h6>
+                    <a class="collapse-item" href="/invoices_paid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">Invoices Paid</a>
+                    <a class="collapse-item" href="/unpaid_invoices" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices unpaid">Unpaid Invoices</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Nav Item - Profile -->
         @if(Session::has('status'))
             @if(Session::get('status') != 0)
                 <li class="nav-item">

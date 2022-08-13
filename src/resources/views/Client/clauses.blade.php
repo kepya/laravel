@@ -1,5 +1,5 @@
-@extends('admin.layouts.skeleton')
-@section('title', 'Add a Customer')
+@extends('Client.layout.default')
+@section('title', 'Confidential Clauses')
 @section('nav')
         <li class="nav-item">
             <a class="nav-link" href="/home">
