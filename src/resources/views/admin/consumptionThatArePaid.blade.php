@@ -282,17 +282,6 @@
     </div>
 
    <script type="text/javascript">
-        let btn_penalty = document.getElementById('penalty');
-        let btn_tranche = document.getElementById('tranche');
-
-        btn_tranche.addEventListener("click", (event) => {
-            $('#mediumTrancheModal').modal("show");
-        })
-
-        btn_penalty.addEventListener("click", (event) => {
-            $('#mediumPenaltyModal').modal("show");
-        })
-
         const searchT = document.getElementById('searchT');
         searchT.hidden=true;
 

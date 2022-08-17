@@ -24,7 +24,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/dashboard',
+        CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/dashboard',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -57,7 +57,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/get/getClientByToken',
+        CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/get/getClientByToken',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -90,7 +90,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/getFactureWithMonth/true',
+        CURLOPT_URL => 'http://172.17.0.3:4000/client/facture/getFactureWithMonth/true',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -123,7 +123,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/factureClientWithDate',
+        CURLOPT_URL => 'http://172.17.0.3:4000/client/facture/factureClientWithDate',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -138,7 +138,8 @@ class ManageClientController extends Controller
 
         $response = curl_exec($curl);
         $informations = json_decode($response, true);
-        $response = json_encode($informations['result']);
+
+        $response = $informations != null ? json_encode($informations['result']) : null;
         curl_close($curl);
 
         return view('Client/budget',['data' => $response]);
@@ -155,7 +156,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture',
+        CURLOPT_URL => 'http://172.17.0.3:4000/client/facture',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -186,7 +187,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://172.17.0.2:4000/client/facture/getFactureWithMonth/false',
+        CURLOPT_URL => 'http://172.17.0.3:4000/client/facture/getFactureWithMonth/false',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -247,7 +248,7 @@ class ManageClientController extends Controller
             $identifier = $request->input('identifier');
 
 
-            $url = "http://172.17.0.2:4000/client/auth/update";
+            $url = "http://172.17.0.3:4000/client/auth/update";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -265,8 +266,6 @@ class ManageClientController extends Controller
             );
             $data_json = json_encode($data);
 
-            //print_r($data_json);
-
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
@@ -278,8 +277,6 @@ class ManageClientController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-
-            // print_r($response);
 
             if ($response->status == 200){
                 $request->session()->put('name',$name);
@@ -320,7 +317,7 @@ class ManageClientController extends Controller
             $newpassword = md5(sha1($request->input('newpassword')));
             $oldpassword = md5(sha1($request->input('oldpassword')));
 
-            $url = "http://172.17.0.2:4000/client/auth/updatePassword";
+            $url = "http://172.17.0.3:4000/client/auth/updatePassword";
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -334,8 +331,6 @@ class ManageClientController extends Controller
             );
             $data_json = json_encode($data);
 
-            // print_r($data_json);
-
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
@@ -347,8 +342,6 @@ class ManageClientController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-
-            // print_r($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');
@@ -374,7 +367,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/'.$invoice_id,
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/one/'.$invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -389,11 +382,9 @@ class ManageClientController extends Controller
         curl_close($curl);
         $invoice = json_decode($response, true);
 
-        // print_r($invoice['result']);
-
         $curl2 = curl_init();
         curl_setopt_array($curl2, array(
-            CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/'.$invoice['result']['idClient'],
+            CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/'.$invoice['result']['idClient'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -409,7 +400,7 @@ class ManageClientController extends Controller
 
         $curl3 = curl_init();
         curl_setopt_array($curl3, array(
-            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/'.$invoice['result']['idAdmin'],
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/auth/'.$invoice['result']['idAdmin'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -422,13 +413,10 @@ class ManageClientController extends Controller
         $response3 = curl_exec($curl3);
         curl_close($curl3);
         $admin = json_decode($response3, true);
-
-        echo($admin['result']['phone']);
-
+   
         $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin]);
-
-        return $pdf->download('facture-'. $client['result']['name'].'-'.date('F').'.pdf');
-        // return view('facturePdf/generator',['invoice' => $invoice, 'client' => $client, 'admin' => $admin]);
+        return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
+    
     }
 
     public function overview($invoice_id){
@@ -442,7 +430,7 @@ class ManageClientController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.2:4000/admin/facture/one/'.$invoice_id,
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/one/'.$invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -459,7 +447,7 @@ class ManageClientController extends Controller
 
         $curl2 = curl_init();
         curl_setopt_array($curl2, array(
-            CURLOPT_URL => 'http://172.17.0.2:4000/client/auth/'.$invoice['result']['idClient'],
+            CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/'.$invoice['result']['idClient'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -473,10 +461,9 @@ class ManageClientController extends Controller
         curl_close($curl2);
         $client = json_decode($response2, true);
 
-        // print_r($client);
         $curl3 = curl_init();
         curl_setopt_array($curl3, array(
-            CURLOPT_URL => 'http://172.17.0.2:4000/admin/auth/'.$invoice['result']['idAdmin'],
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/auth/'.$invoice['result']['idAdmin'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -503,7 +490,7 @@ class ManageClientController extends Controller
             $montant = $request->input('montant');
 
 
-            $url = "http://172.17.0.2:4000/client/facture/paid/".$modalId;
+            $url = "http://172.17.0.3:4000/client/facture/paid/".$modalId;
             echo $url;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
@@ -518,8 +505,6 @@ class ManageClientController extends Controller
             );
             $data_json = json_encode($data);
 
-            //print_r($data_json);
-
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
@@ -531,8 +516,6 @@ class ManageClientController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-
-            // print_r($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');

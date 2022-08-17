@@ -13,10 +13,10 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">Information</div>
-
+        
         <!-- Nav Item - consumption -->
         <li class="nav-item ">
-            <a class="nav-link collapsed"  href="#" data-toggle="collapse" data-target="#collapseUtilities2é" aria-expanded="true" aria-controls="collapseUtilities1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices">
+            <a class="nav-link collapsed"  href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Budget</span>
             </a>
