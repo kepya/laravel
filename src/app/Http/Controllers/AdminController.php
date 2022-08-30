@@ -2496,7 +2496,7 @@ class AdminController extends Controller
                 $i = $i + 1;
             }
         }
-
+        // dump($invoicesWithPaginator);
 
         return view('admin/consumption', [
             'invoices' => $invoicesWithPaginator,
@@ -3385,16 +3385,16 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
             $Authorization = 'Bearer ' . $tokenVal;
 
             $newIndex = $_POST['newIndex'];
-            $penalty = $_POST['penalty'];
-            $observation = $_POST['observation'];
+            $oldIndex = $_POST['oldIndex'];
             $dateSpicy = $_POST['dateSpicy'];
             $amountPaid = $_POST['amountPaid'];
 
             // je definie la donnée de ma facture.
             $facture = array(
                 "newIndex"  => $newIndex,
-                "observation" => $observation,
-                "penalite"  => $penalty,
+                "oldIndex"  => $oldIndex,
+                "observation" => '',
+                "penalite"  => 0,
                 "montantVerse"  => $amountPaid,
                 "dateReleveNewIndex"  => $dateSpicy
             );
@@ -3673,10 +3673,35 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
 
             // dump($response);
             $users = array();
+            $userHasInvoices = array();
 
             if ($response->status == 200) {
                 $users = $response->result;
-                return view('admin/facture', ['users' => $users, 'date' => $date]);
+                $length = count($users);
+                for ($i=0; $i < $length; $i++) { 
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/haveInvoice/' . $users[$i] -> _id,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+                    ));
+
+                    $response = curl_exec($curl);
+                    $response = json_decode($response);
+
+                    array_push($userHasInvoices,array(
+                        "user"  => $users[$i],
+                        "hasInvoice" => $response->result,
+                    ));
+                }
+                // dump($userHasInvoices);
+                return view('admin/facture', ['users' => $users, 'date' => $date, 'userHasInvoices' => $userHasInvoices]);
             } else {
                 // Session::flash('message', ucfirst($response->error));
                 // Session::flash('alert-class', 'alert-danger');

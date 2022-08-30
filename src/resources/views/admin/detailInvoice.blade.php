@@ -151,7 +151,7 @@
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Old index</div>
-                            <input type="number" disabled class="form-control" placeholder="old index" id="oldIndex" name="oldIndex" value="<?= $invoice  -> oldIndex?>" required>
+                            <input type="number" class="form-control" placeholder="old index" id="oldIndex" name="oldIndex" value="<?= $invoice  -> oldIndex?>" required>
                         </div>
                     </div>
                 </div>

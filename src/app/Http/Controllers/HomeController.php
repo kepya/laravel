@@ -163,7 +163,7 @@ class HomeController extends Controller
         $tokentab = explode('=',$token);
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer '.$tokenVal;
-
+        echo $tokenVal;
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

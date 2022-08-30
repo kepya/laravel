@@ -15,7 +15,7 @@
         <div class="sidebar-heading">Information</div>
 
         <!-- Nav Item - consumption -->
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link collapsed"  href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>Consumption</span>
