@@ -131,39 +131,89 @@
 
              <form method="post" action="/admin/customer/addCustomer/store" class="col-lg-8 offset-lg-2" enctype="multipart/form-data">
                 @csrf
-                <div class="input-group mt-3">
-                    <span class="text-danger text-lg mr-2" style="margin-top: 10px;">*</span>
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-address-book'></i></span></div>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="full name" id="name" name="name" value="{{ old('name') }}" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+
+                <div class="part1" style="display:flex;">
+                    <span class="text-danger text-lg mr-2" style="display:flex;align-items:center;justify-content:center;">*</span>
+                    <span>Customer Informations</span>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <input type="number" class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="@if(isset($nbrCl)){{$nbrCl+1}}@else{{ old('ref_client') }}@endif" required>
+                        </div>
+                        <div class="form-group col-md-10">
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="full name" id="name" name="name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row" id="addPhone">
+                        <input type="hidden" name="nbrePhone" id="nbrePhone"  value="1">
+                        <div class="form-group col-md-1">
+                            <i class="fas fa-plus ml-2 btn-primary" class="" id="plusPhone" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                        </div>
+                        <div class="form-group col-md-11" id="form0">
+                            <input type="number" class="form-control @error('phone0') is-invalid @enderror" placeholder="phone number" id="phone0" name="phone0" value="{{ old('phone0') }}">
+                            @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-1" id="minusform0" style="display:none;">
+                            <i class="fas fa-minus ml-3 btn-primary" class="" id="minusPhone" style="display:flex;align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group mt-3">
-                    <span class="text-danger text-lg mr-2" style="margin-top: 10px;">*</span>
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">@</span></div>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="email" name="email" id="email" value="{{ old('email') }}">
-                     @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                     @enderror
+                <div class="part2">Sites</div>
+                <div class="form-group mt-2" id="addHomeMeter">
+                    <input type="hidden" name="blocSites" id="blocSites" value="1">
+                    <div class="form-row">
+                        <div class="form-group col-md-1">
+                            <i class="fas fa-plus ml-2 btn-primary" id="plusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                        </div>
+                        <div class="form-group col-md-3" id="form1">
+                            <input type="text" class="form-control" placeholder="Meter_ID" id="meter0" name="meter0" value="{{ old('meter0') }}">
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="{{ old('home0') }}">
+                        </div>
+                        <div class="form-group col-md-1" id="minusform1" style="display:none;">
+                            <i class="fas fa-minus ml-3 btn-primary" id="minusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group mt-3">
-                    <span class="text-danger text-lg mr-2" style="margin-top: 10px;">*</span>
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-phone-volume'></i></span></div>
-                    <input type="number" class="form-control @error('phone') is-invalid @enderror" placeholder="phone number" id="phone" name="phone" value="{{ old('phone') }}" required>
-                    @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <div class="part3">Subscription</div>
+                <div class="form-group mt-2">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input type="date" class="form-control" id="subs_date" name="subs_date" value="{{ old('subs_date')}}" placeholder="Date">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="number" class="form-control" id="subs_amount" name="subs_amount" value="{{ old('subs_amount')}}" placeholder="Amount">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <input type="text" class="form-control" placeholder="Observation" id="observation" name="observation" value="{{ old('observation') }}">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group mt-3 pl-3">
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-home'></i></span></div>
-                    <input type="text" class="form-control" placeholder="description of the location" id="home" name="home" value="{{ old('home') }}">
+                <div class="form-group mt-2">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="">Image</label>
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
+                            @error('image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group mt-3 pl-3">
+                <!-- <div class="input-group mt-3 pl-3">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="setLocation" id="setLocation" name="setLocation">
                       <label class="form-check-label" for="setLocation">
@@ -172,39 +222,7 @@
                     </div>
                     <input type="hidden" name="lat" id="lat"  value="">
                     <input type="hidden" name="lng" id="lng"  value="">
-                </div>
-
-                <div class="input-group mt-3">
-                    <span class="text-danger text-lg mr-2" style="margin-top: 10px;">*</span>
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-water'></i></span></div>
-                    <input type="text" class="form-control" placeholder="Water meter identifier" id="identifier" name="identifier" value="{{ old('identifier') }}" required>
-                </div>
-
-                <div class="input-group mt-3">
-                    <span class="text-danger text-lg mr-2" style="margin-top: 10px;">*</span>
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class=' fas fa-lock'></i></span></div>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter the password" id="password" name="password" value="{{ old('password') }}" required>
-                    @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="input-group mt-3">
-                    <span class="text-danger text-lg mr-2" style="margin-top: 10px;">*</span>
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class=' fas fa-lock'></i></span></div>
-                    <input type="password" class="form-control @error('confirmpassword') is-invalid @enderror" placeholder="Confirm the password" id="confirmpassword" name="confirmpassword" value="{{ old('confirmpassword') }}" required>
-                    @error('confirmpassword')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="input-group mt-3 pl-3">
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class=' fas fa-image'></i></span></div>
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
-                    @error('image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                </div> -->
 
                 <div class="row float-right mt-3">
                     <a href="#">
@@ -220,46 +238,107 @@
     </div>
 </div>
 
-<script>
-    $( "#setLocation" ).on( "click", function() {
 
-        if($("#setLocation").is(':checked'))
+<script>
+    var nbrePhone = 0;
+    var blocSites = 0;
+
+    $("#plusPhone").on("click", function(){
+        nbrePhone+=1;
+        $("#addPhone").append(
+            "<div class='form-group col-md-10' style='margin-left:60px;' id='input_phone_"+nbrePhone+"'>"+
+                "<input type='number' class='form-control @error('phone"+nbrePhone+"') is-invalid @enderror' placeholder='phone number' id='phone"+nbrePhone+"' name='phone"+nbrePhone+"' value='{{ old('phone"+nbrePhone+"') }}'>"+
+                "@error('phone"+nbrePhone+"')"+
+                        "<div class='invalid-feedback'>{{ $message }}</div>"+
+                "@enderror"+
+            "</div>"
+        );
+        $("#form0").removeClass('col-md-11').addClass('col-md-10');
+        $('#minusform0').css('display', 'flex');
+        $("#nbrePhone").val(nbrePhone+1);
+    });
+
+    $('#minusPhone').on("click",function(){
+        $("#input_phone_"+nbrePhone).remove();
+        nbrePhone-=1;
+        if(nbrePhone==0){
+            $("#form0").removeClass('col-md-10').addClass('col-md-11');
+            $('#minusform0').css('display', 'none');
+        }
+        $("#nbrePhone").val(nbrePhone+1);
+    });
+
+    $("#plusSites").on("click", function(){
+        blocSites+=1;
+        $("#addHomeMeter").append(
+                "<div class='form-row' id='blocSites"+blocSites+"'>"+
+                    "<div class='form-group col-md-2' style='margin-left:60px;'>"+
+                        "<input type='text' class='form-control' placeholder='Meter_ID' id='meter"+blocSites+"' name='meter"+blocSites+"' value='{{ old('meter"+blocSites+"') }}'>"+
+                    "</div>"+
+                    "<div class='form-group col-md-8'>"+
+                        "<input type='text' class='form-control' placeholder='location' id='home"+blocSites+"' name='home"+blocSites+"' value='{{ old('home"+blocSites+"') }}'>"+
+                    "</div>"+
+                "</div>"
+        );
+        $("#form1").removeClass('col-md-3').addClass('col-md-2');
+        $('#minusform1').css('display', 'flex');
+        $("#blocSites").val(blocSites+1);
+    });
+
+    $('#minusSites').on("click",function(){
+        $("#blocSites"+blocSites).remove();
+        blocSites-=1;
+        if(blocSites==0){
+            $("#form1").removeClass('col-md-2').addClass('col-md-3');
+            $('#minusform1').css('display', 'none');
+        }
+        $("#blocSites").val(blocSites+1);
+    });
+
+</script>
+
+<script>
+    // $( "#setLocation" ).on( "click", function() {
+
+    //     if($("#setLocation").is(':checked'))
 
             // checked
 
-           function myPosition(position) {
-            $('#lat').val(position.coords.latitude);
-            $('#lng').val(position.coords.longitude);
-           }
+    //        function myPosition(position) {
+    //         $('#lat').val(position.coords.latitude);
+    //         $('#lng').val(position.coords.longitude);
+    //        }
 
-           function errorPosition(error) {
-              var info = "Error while getting your location : ";
+    //        function errorPosition(error) {
+    //           var info = "Error while getting your location : ";
 
-              switch(error.code) {
-                  case error.TIMEOUT:
-                      info += "Timeout !";
-                  break;
-                  case error.PERMISSION_DENIED:
-                  info += "Permission denied";
-                  break;
-                  case error.POSITION_UNAVAILABLE:
-                      info += "Your location could not be determined";
-                  break;
-                  case error.UNKNOWN_ERROR:
-                      info += "Unknown Error";
-                  break;
-              }
+    //           switch(error.code) {
+    //               case error.TIMEOUT:
+    //                   info += "Timeout !";
+    //               break;
+    //               case error.PERMISSION_DENIED:
+    //               info += "Permission denied";
+    //               break;
+    //               case error.POSITION_UNAVAILABLE:
+    //                   info += "Your location could not be determined";
+    //               break;
+    //               case error.UNKNOWN_ERROR:
+    //                   info += "Unknown Error";
+    //               break;
+    //           }
 
-              alert(info);
-           }
+    //           alert(info);
+    //        }
 
-          if(navigator.geolocation)
-            navigator.geolocation.getCurrentPosition(myPosition,errorPosition,{enableHighAccuracy:true});
+    //       if(navigator.geolocation)
+    //         navigator.geolocation.getCurrentPosition(myPosition,errorPosition,{enableHighAccuracy:true});
 
-        else
-            //unchecked
-            var message = "unchecked";
-    });
+    //     else
+    //         //unchecked
+    //         var message = "unchecked";
+    // });
 </script>
+
+
 
 @stop

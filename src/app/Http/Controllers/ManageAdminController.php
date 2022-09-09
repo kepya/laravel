@@ -275,6 +275,7 @@ class ManageAdminController extends Controller
     public function viewCustomers(){
 
         $url = "http://172.17.0.3:4000/admin/auth/getClient";
+        //$url = "http://172.17.0.3:4000/admin/auth/client/1/5";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -288,13 +289,27 @@ class ManageAdminController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($response,true);
+
+        $url2 = "http://172.17.0.3:4000/client/auth/count";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response2 = curl_exec($ch);
+        curl_close($ch);
+        $response2 = json_decode($response2,true);
+        $nbrCl = $response2['result'];
+
+        //print_r($response);
+        //print($nbrCl);
+
         // $informations = $response['result'];
         // foreach ($informations as $key => $value) {
         //     $image = $value['profileImage'];
         //     return Storage::url($image);
         // }
         // return Storage::url() http://127.0.0.1:8000/storage/cathedraledouala.jpg
-        return view('admin/customer',['customers' => $response]);
+       return view('admin/customer',['customers' => $response,'nbrCl' => $nbrCl]);
     }
 
     public function blockedCustomers(){
@@ -316,24 +331,38 @@ class ManageAdminController extends Controller
     }
 
     public function addCustomers(){
-        return view('/admin/addCustomer');
+
+        $url2 = "http://172.17.0.3:4000/client/auth/count";
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response2 = curl_exec($ch);
+        curl_close($ch);
+        $response2 = json_decode($response2,true);
+        $nbrCl = $response2['result'];
+        return view('/admin/addCustomer',['nbrCl' => $nbrCl]);
     }
 
     public function storeCustomers(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'name' => 'bail|required',
-            'email' => 'bail|required|email',
-            'phone' => 'bail|required|digits:9',
-            'password' => 'bail|required|regex:/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z]).{8,15}$/',
-            'confirmpassword' => 'bail|required|same:password',
+            //'phone' => 'bail|digits:9',
+            // 'password' => 'bail|required|regex:/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z]).{8,15}$/',
+            // 'confirmpassword' => 'bail|required|same:password',
             'image' => 'bail|image|mimes:jpeg,jpg,png|max:2000',
             ],
             $messages = [
-                'required' => 'The :attribute is required',
-                'phone.digits' => '9 digits needed',
-                'confirmpassword.same' => 'Confirm your password',
-                'password.regex' => 'Between 8 and 15 characters - Minimum one uppercase letter and one number digit - Minimum one special character !@#$%^&*-',
+                // 'required' => 'The :attribute is required',
+                //'phone.digits' => '9 digits needed',
+                // 'confirmpassword.same' => 'Confirm your password',
+                // 'password.regex' => 'Between 8 and 15 characters - Minimum one uppercase letter and one number digit - Minimum one special character !@#$%^&*-',
                 'image.mimes' => 'Only jpeg,jpg,png formats accepted',
                 'image.max' => 'The :attribute must not sized over 2Mo',
             ]
@@ -354,16 +383,43 @@ class ManageAdminController extends Controller
             }
 
             $name = $request->input('name');
-            $email = $request->input('email');
-            $phone = $request->input('phone');
-            $home = $request->input('home');
-            $lat = $request->input('lat');
-            $lng = $request->input('lng');
-            $identifier = $request->input('identifier');
-            $password = md5(sha1($request->input('password')));
-            // echo 'Path: '.Storage::path($photo);
+            $nbrePhone = $request->input('nbrePhone');
+            $blocSites = $request->input('blocSites');
+            $ref_client = $request->input('ref_client');
+            $subs_date = $request->input('subs_date');
+            $subs_amount = $request->input('subs_amount');
+            $observation = $request->input('observation');
 
-            // return $firstname.' '.$lastname.' '.$birthdate.' '.$email.' '.$phone.' '.$home.' '.$identifier.' '.$password.' '.$photoPath;
+            //tableaux de récupération
+            $phones = [];
+            $sites = [];
+            $homes = [];
+            $meters = [];
+
+            //compteurs de bouclage
+            $i=0;
+            $j=0;
+
+            for($i;$i<$nbrePhone;$i++){
+                $phone = $request->input('phone'.$i);
+                array_push($phones,$phone);
+            }
+
+            for($j;$j<$blocSites;$j++){
+                $home = $request->input('home'.$j);
+                $meter = $request->input('meter'.$j);
+                array_push($homes,$home);
+                array_push($meters,$meter);
+            }
+
+            array_push($sites,$meters);
+            array_push($sites,$homes);
+
+            // $lat = $request->input('lat');
+            // $lng = $request->input('lng');
+
+            $password = md5(sha1('@KF'.$ref_client));
+            // echo 'Path: '.Storage::path($photo);
 
             $url = "http://172.17.0.3:4000/client/auth/register";
             $alltoken = $_COOKIE['token'];
@@ -372,57 +428,67 @@ class ManageAdminController extends Controller
             $tokentab = explode('=',$token);
             $tokenVal = $tokentab[1];
             $Authorization = 'Bearer '.$tokenVal;
-            if(empty($home)){
-                //dump($home);
-                $home = " ";
-            }
 
-            if($lat && $lng){
-                $data = array(
-                    'name' => $name,
-                    'phone' => $phone,
-                    'password' => $password,
-                    'email' => $email,
-                    "description" => $home,
-                    "longitude" => $lng,
-                    "latitude" => $lat,
-                    "IdCompteur" => $identifier,
-                    "profileImage" => $photoPath,
-                );
-            }else {
-                $data = array(
-                    'name' => $name,
-                    'phone' => $phone,
-                    'password' => $password,
-                    'email' => $email,
-                    "description" => $home,
-                    "IdCompteur" => $identifier,
-                    "profileImage" => $photoPath,
-                );
-            }
-            $data_json = json_encode($data);
+            $data = array(
+                'name' => $name,
+                'phone' => $phones,
+                'password' => $password,
+                "sites" => $sites,
+                'customerReference' => $ref_client,
+                'subscriptionDate' => $subs_date,
+                'subscriptionAmount'=>$subs_amount,
+                'observation' => $observation,
+                "profileImage" => $photoPath,
+            );
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response  = curl_exec($ch);
-            curl_close($ch);
+            print_r($data);
 
-            $response = json_decode($response);
+            // if($lat && $lng){
+            //     $data = array(
+            //         'name' => $name,
+            //         'phone' => $phone,
+            //         'password' => $password,
+            //         // 'email' => $email,
+            //         "description" => $home,
+            //         "longitude" => $lng,
+            //         "latitude" => $lat,
+            //         "IdCompteur" => $identifier,
+            //         "profileImage" => $photoPath,
+            //     );
+            // }else {
+            //     $data = array(
+            //         'name' => $name,
+            //         'phone' => $phone,
+            //         'password' => $password,
+            //         // 'email' => $email,
+            //         "description" => $home,
+            //         "IdCompteur" => $identifier,
+            //         "profileImage" => $photoPath,
+            //     );
+            // }
+            // $data_json = json_encode($data);
 
-            if ($response->status == 200){
-                Session::flash('message', 'Action Successfully done!');
-                Session::flash('alert-class', 'alert-success');
-                return redirect()->back();
+            // $ch = curl_init();
+            // curl_setopt($ch, CURLOPT_URL, $url);
+            // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            // curl_setopt($ch, CURLOPT_POST, 1);
+            // curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // $response  = curl_exec($ch);
+            // curl_close($ch);
 
-            }else{
-                Session::flash('message', ucfirst($response->error));
-                Session::flash('alert-class', 'alert-danger');
-                return redirect()->back();
-            }
+            // $response = json_decode($response);
+
+            // if ($response->status == 200){
+            //     Session::flash('message', 'Action Successfully done!');
+            //     Session::flash('alert-class', 'alert-success');
+            //     return redirect()->back();
+
+            // }else{
+            //     Session::flash('message', ucfirst($response->error));
+            //     Session::flash('alert-class', 'alert-danger');
+            //     return redirect()->back();
+            // }
         }
     }
 

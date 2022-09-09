@@ -131,7 +131,7 @@
             <a href="/admin/customer/addCustomer" class="btn btn-primary"> Add a customer </a>
             <a href="/admin/customer/blockedCustomer" class="btn ml-3 btn-warning"><i class="fas fa-exclamation-triangle mr-2"></i>Blocked</a>
         </div>
-        <h1 class="h3 mb-0 text-gray-800">Customers</h1>
+        <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Customers</h1>
         <form action="/admin/search/customer" novalidate method="post" enctype="multipart/form-data" class="form-horizontal row-border">
             <div class="col-sm-12">
                 <div class="row">
@@ -285,7 +285,7 @@
                 }
             }
         } else {
-           
+
         }
      ?>
 
@@ -343,48 +343,99 @@
         </div>
     </div>
 
+    <!-- <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Ref_Client</th>
+                <th>N° meter</th>
+                <th>Client</th>
+                <th>Tel</th>
+                <th>Location</th>
+                <th>Amount(CFA)</th>
+                <th>Observation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?= date('d/m/Y',strtotime('17/08/2020'))?></td>
+                <td>Client 1</td>
+                <td></td>
+                <td>GOUAJEU DOMGNO Emeline</td>
+                <td>697165159/ 697476526</td>
+                <td>premiere cliente</td>
+                <td>75 000</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><?= date('d/m/Y',strtotime('29/08/2020'))?></td>
+                <td>Client 2</td>
+                <td>2019-9-0049</td>
+                <td>DEFRE MEGUIANNI Soddy</td>
+                <td>690598662</td>
+                <td>fermier afrique du sud</td>
+                <td>100000</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><?= date('d/m/Y',strtotime('03/09/2020'))?></td>
+                <td>Client 3</td>
+                <td>20256156</td>
+                <td>TAGNE</td>
+                <td>697761267</td>
+                <td>briquetterie plaque afique du sud</td>
+                <td>75000</td>
+                <td>Installation le 06/11/20</td>
+            </tr>
+        </tbody>
+    </table> -->
 
     <script>
 
-    $("body").on('click','#toLocation',function(event){
+        $(document).ready( function () {
+            $.noConflict();
+            $('#table_id').DataTable();
+        } );
 
-        event.preventDefault();
+    // $("body").on('click','#toLocation',function(event){
 
-        var id = $(this).attr('locate');
-        var desc = $(this).attr('desc');
+    //     event.preventDefault();
 
-       function myPosition(position) {
+    //     var id = $(this).attr('locate');
+    //     var desc = $(this).attr('desc');
 
-        $('#lat').val(position.coords.latitude);
-        $('#latsee').val(position.coords.latitude);
-        $('#lng').val(position.coords.longitude);
-        $('#lngsee').val(position.coords.longitude);
-        $('#id').val(id);
-        $('#description').val(desc);
-       }
+    //    function myPosition(position) {
 
-       function errorPosition(error) {
-          var info = "Error while getting your location : ";
+    //     $('#lat').val(position.coords.latitude);
+    //     $('#latsee').val(position.coords.latitude);
+    //     $('#lng').val(position.coords.longitude);
+    //     $('#lngsee').val(position.coords.longitude);
+    //     $('#id').val(id);
+    //     $('#description').val(desc);
+    //    }
 
-          switch(error.code) {
-              case error.TIMEOUT:
-                  info += "Timeout !";
-              break;
-              case error.PERMISSION_DENIED:
-              info += "Permission denied";
-              break;
-              case error.POSITION_UNAVAILABLE:
-                  info += "Your location could not be determined";
-              break;
-              case error.UNKNOWN_ERROR:
-                  info += "Unknown Error";
-              break;
-          }
-       }
+    //    function errorPosition(error) {
+    //       var info = "Error while getting your location : ";
 
-      if(navigator.geolocation)
-        navigator.geolocation.getCurrentPosition(myPosition,errorPosition,{enableHighAccuracy:true});
-    });
+    //       switch(error.code) {
+    //           case error.TIMEOUT:
+    //               info += "Timeout !";
+    //           break;
+    //           case error.PERMISSION_DENIED:
+    //           info += "Permission denied";
+    //           break;
+    //           case error.POSITION_UNAVAILABLE:
+    //               info += "Your location could not be determined";
+    //           break;
+    //           case error.UNKNOWN_ERROR:
+    //               info += "Unknown Error";
+    //           break;
+    //       }
+    //    }
+
+    //   if(navigator.geolocation)
+    //     navigator.geolocation.getCurrentPosition(myPosition,errorPosition,{enableHighAccuracy:true});
+    // });
 
     </script>
 

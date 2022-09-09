@@ -29,6 +29,10 @@
     <!-- Page level plugins -->
     <script src="{{asset('js/chart.js/Chart.min.js')}}"></script>
 
+    <!-- Datatables-->
+    <link rel="stylesheet" type="text/css" href="{{asset('css/datatables.min.css')}}"/>
+    <script src="{{asset('/js/datatables.min.js')}}"></script>
+
 </head>
 <body id="page-top">
 
@@ -71,7 +75,7 @@
 
             <!-- Main Content -->
             <div id="content">
-                
+
                 <!-- Topbar -->
                 <nav class=" navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <!-- Sidebar Toggle (Topbar) -->
@@ -130,7 +134,7 @@
                                     class="img-profile rounded-circle"
                                     src="{{ $photo }}"
                                 />
-                            @endif       
+                            @endif
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class=" dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" >
