@@ -274,8 +274,8 @@ class ManageAdminController extends Controller
 
     public function viewCustomers(){
 
-        $url = "http://172.17.0.3:4000/admin/auth/getClient";
-        //$url = "http://172.17.0.3:4000/admin/auth/client/1/5";
+        // $url = "http://172.17.0.3:4000/admin/auth/getClient";
+        $url = "http://172.17.0.3:4000/admin/auth/client/1/10";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -300,7 +300,7 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        //print_r($response);
+        print_r($response);
         //print($nbrCl);
 
         // $informations = $response['result'];
@@ -309,7 +309,7 @@ class ManageAdminController extends Controller
         //     return Storage::url($image);
         // }
         // return Storage::url() http://127.0.0.1:8000/storage/cathedraledouala.jpg
-       return view('admin/customer',['customers' => $response,'nbrCl' => $nbrCl]);
+       return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
     }
 
     public function blockedCustomers(){
@@ -443,29 +443,6 @@ class ManageAdminController extends Controller
 
             print_r($data);
 
-            // if($lat && $lng){
-            //     $data = array(
-            //         'name' => $name,
-            //         'phone' => $phone,
-            //         'password' => $password,
-            //         // 'email' => $email,
-            //         "description" => $home,
-            //         "longitude" => $lng,
-            //         "latitude" => $lat,
-            //         "IdCompteur" => $identifier,
-            //         "profileImage" => $photoPath,
-            //     );
-            // }else {
-            //     $data = array(
-            //         'name' => $name,
-            //         'phone' => $phone,
-            //         'password' => $password,
-            //         // 'email' => $email,
-            //         "description" => $home,
-            //         "IdCompteur" => $identifier,
-            //         "profileImage" => $photoPath,
-            //     );
-            // }
             // $data_json = json_encode($data);
 
             // $ch = curl_init();
