@@ -429,7 +429,7 @@ class ManageAdminController extends Controller
                 'name' => $name,
                 'phone' => $phones,
                 'password' => $password,
-                "idCompteur" => $meters,
+                "IdCompteur" => $meters,
                 "description" => $homes,
                 'customerReference' => $ref_client,
                 'subscriptionDate' => $subs_date,
