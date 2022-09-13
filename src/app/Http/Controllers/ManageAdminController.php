@@ -392,7 +392,6 @@ class ManageAdminController extends Controller
 
             //tableaux de récupération
             $phones = [];
-            $sites = [];
             $homes = [];
             $meters = [];
 
@@ -412,9 +411,6 @@ class ManageAdminController extends Controller
                 array_push($meters,$meter);
             }
 
-            array_push($sites,$meters);
-            array_push($sites,$homes);
-
             // $lat = $request->input('lat');
             // $lng = $request->input('lng');
 
@@ -433,7 +429,8 @@ class ManageAdminController extends Controller
                 'name' => $name,
                 'phone' => $phones,
                 'password' => $password,
-                "sites" => $sites,
+                "idCompteur" => $meters,
+                "description" => $homes,
                 'customerReference' => $ref_client,
                 'subscriptionDate' => $subs_date,
                 'subscriptionAmount'=>$subs_amount,
