@@ -119,12 +119,16 @@ Route::group(['middleware' => 'checksession'], function () {
 		//Admin route
 
 		Route::match(['get','put'],'/admin/manage_products/remove/removed',[AdminController::class, 'removeProduct'])->name('removeProduct');
-		
+
 		Route::match(['post','get'],'/admin/find', [ManageAdminController::class, 'findAdmin']);
 
 		Route::get('/admin/home',[HomeController::class, 'adminHome'])->name('adminHome');
 
 		Route::get('/admin/customer',[ManageAdminController::class, 'viewCustomers']);
+
+        Route::get('/admin/customer/search',[ManageAdminController::class, 'viewCustomersBySearch'])->name('viewCustomersBySearch');
+
+        Route::get('/admin/customer/search/{page_search}',[ManageAdminController::class, 'viewCustomersByPage'])->name('viewCustomersByPage');
 
 		Route::match(['get','post'],'/admin/search/customer',[ManageAdminController::class, 'searchCustomer']);
 

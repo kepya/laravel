@@ -274,7 +274,6 @@ class ManageAdminController extends Controller
 
     public function viewCustomers(){
 
-        // $url = "http://172.17.0.3:4000/admin/auth/getClient";
         $url = "http://172.17.0.3:4000/admin/auth/client/1/10";
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -300,7 +299,7 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        print_r($response);
+        //print_r($response);
         //print($nbrCl);
 
         // $informations = $response['result'];
@@ -310,6 +309,67 @@ class ManageAdminController extends Controller
         // }
         // return Storage::url() http://127.0.0.1:8000/storage/cathedraledouala.jpg
        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+    }
+
+    public function viewCustomersByPage($page){
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response,true);
+
+        $url2 = "http://172.17.0.3:4000/client/auth/count";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response2 = curl_exec($ch);
+        curl_close($ch);
+        $response2 = json_decode($response2,true);
+        $nbrCl = $response2['result'];
+
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+    }
+
+    public function viewCustomersBySearch(Request $request){
+        $page = $request->page;
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response,true);
+
+        $url2 = "http://172.17.0.3:4000/client/auth/count";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response2 = curl_exec($ch);
+        curl_close($ch);
+        $response2 = json_decode($response2,true);
+        $nbrCl = $response2['result'];
+
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
     }
 
     public function blockedCustomers(){
@@ -411,9 +471,6 @@ class ManageAdminController extends Controller
                 array_push($meters,$meter);
             }
 
-            // $lat = $request->input('lat');
-            // $lng = $request->input('lng');
-
             $password = md5(sha1('@KF'.$ref_client));
             // echo 'Path: '.Storage::path($photo);
 
@@ -425,11 +482,24 @@ class ManageAdminController extends Controller
             $tokenVal = $tokentab[1];
             $Authorization = 'Bearer '.$tokenVal;
 
+            if(empty($subs_date)){
+                $subs_date = 'No date';
+            }
+
+            if(empty($observation)){
+                $observation = 'No observation';
+            }
+
+            if(empty($subs_amount)){
+                $subs_amount = 0;
+            }
+
+
             $data = array(
                 'name' => $name,
                 'phone' => $phones,
                 'password' => $password,
-                "IdCompteur" => $meters,
+                "idCompteur" => $meters,
                 "description" => $homes,
                 'customerReference' => $ref_client,
                 'subscriptionDate' => $subs_date,
@@ -438,20 +508,24 @@ class ManageAdminController extends Controller
                 "profileImage" => $photoPath,
             );
 
-            print_r($data);
+            //print_r($data);
 
-            // $data_json = json_encode($data);
+            $data_json = json_encode($data);
 
-            // $ch = curl_init();
-            // curl_setopt($ch, CURLOPT_URL, $url);
-            // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-            // curl_setopt($ch, CURLOPT_POST, 1);
-            // curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // $response  = curl_exec($ch);
-            // curl_close($ch);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response  = curl_exec($ch);
+            curl_close($ch);
 
-            // $response = json_decode($response);
+            print_r($response);
+
+            $response = json_decode($response);
+
+            print_r($response);
 
             // if ($response->status == 200){
             //     Session::flash('message', 'Action Successfully done!');

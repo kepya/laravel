@@ -149,8 +149,6 @@
     </div>
 
 
-
-
     @if(Session::has('error'))
         <div class="alert alert-danger alert-dismissible fade show">
             <i class="fas fa-exclamation-triangle"></i>
@@ -164,136 +162,222 @@
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
         <!-- Basic Card Example -->
-
         <?php
-        if ($customers != null) {
-            if($customers['status'] == 200){
+            if(isset($response["result"])){
 
-                $informations = $customers['result'];
+                $data = $response['result'];  //table informations returned
 
-                foreach($informations as $key => $info) {
-                    $location = $info['localisation'];
-                    $description = $location['description'];
+                $customers = $data['docs']; //table of customers
 
-                    if($description != ""){
-                        $description = $location['description'];
-                    }else{
-                        $description = "Not set";
-                    }
+                $totalDocs = $data['totalDocs']; //number of customers in the database
+                $limit = $data['limit']; // limit of materials on a page
+                $totalPages = $data['totalPages']; //number of pages
+                $page = $data['page']; //current page
+                $pagingCounter = $data['pagingCounter']; //paging counter
+                $hasPrevPage = $data['hasPrevPage']; //boolean if previous page exists
+                $hasNextPage = $data['hasNextPage']; //boolean if next page exists
+                $prevPage = $data['prevPage']; //index of the previous page
+                $nextPage = $data['nextPage']; //index of the next page
 
-                    $status = $info['status'];
-                    $delete = $info['isDelete'];
+                if(empty($page)){
+                    $page = 0;
+                }
 
-                    if($status == 1){
-                        $card='bg-success';
-                        $class='btn-success';
-                        $state = 'Active';
-                        $badge = 'badge-success';
-                    }
+                if(empty($hasPrevPage)){
+                    $hasPrevPage = 0;
+                }
 
-                    if(empty($status)){
-                        $status = 0;
-                    }
+                if(empty($hasNextPage)){
+                    $hasNextPage = 0;
+                }
 
-                    if($info['profileImage'] != "noPath"){
-                        $image = url('storage/'.$info['profileImage']);
-                    }else{
-                        $image = "/img/undraw_profile.svg";
-                    }
+                if(empty($prevPage)){
+                    $prevPage = 0;
+                }
 
-                    if(!$delete && $status==1){
+                if(empty($nextPage)){
+                    $nextPage = 0;
+                }
 
-                ?>
+                if($totalDocs != 0) { //if there are customers in the database
 
+                    foreach($customers as $customer){
 
-                <div class="col-md-6 col-lg-4">
-                        <div class="card shadow mb-4" style="width:18rem;">
-                            <div class="card-header py-3 <?= $card ?>">
+                        //Verify if the person has many meters
+                        $status = $customer['status'];
+                        $delete = $customer['isDelete'];
+                        $description = $customer['localisation'];
 
-                                <div class="row">
+                        if($status == 1){
+                            $card='bg-success';
+                            $class='btn-success';
+                            $state = 'Active';
+                            $badge = 'badge-success';
+                        }
 
-                                    <img class="person-img float-left" src='<?= $image ?>' width="50" height="50"/>
+                        if(empty($status)){
+                            $status = 0;
+                        }
 
-                                    <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
-                                        <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$info['name']?></h6>
-                                    </div>
+                        if($customer['profileImage'] != "noPath"){
+                            $image = url('storage/'.$customer['profileImage']);
+                        }else{
+                            $image = "/img/undraw_profile.svg";
+                        }
 
-                                </div>
+                        if(!$delete && $status==1){ //Customer not blocked and not deleted
+                        ?>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card shadow mb-4" style="width:18rem;">
+                                    <div class="card-header py-3 <?= $card ?>">
 
-                            </div>
+                                        <div class="row">
 
-                            <div class="card-body ">
-                                <hr>
+                                            <img class="person-img float-left" src='<?= $image ?>' width="50" height="50"/>
 
-                                <div class="text-center">
+                                            <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
+                                                <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$customer['name']?></h6>
+                                            </div>
 
-                                    <table>
-                                        <tr>
-                                            <td>Number: </td>
-                                            <td><?= $info['phone'] ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Address: </td>
-                                            <td><?= $description ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Meter ID: </td>
-                                            <td><?= $info['IdCompteur'] ?></td>
-                                        </tr>
-                                    </table>
-
-                                </div>
-
-                                <hr>
-                            </div>
-
-                            <div class="card-footer <?= $card?>" >
-
-                                    <a href="/admin/customer/block/<?= $info['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </span>
-                                        <span class="text" style="margin:auto;"><?= $state ?></span>
-                                    </a>
-
-                                    <div class="float-right">
-
-                                        <a href="locationModal" id="toLocation" locate="<?= $info['_id'] ?>" desc="<?= $info['localisation']['description'] ? $info['localisation']['description'] : ""?>" data-toggle="modal" data-target="#locationModal" class="btn <?= $card ?> locationModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="location">
-                                            <span class="icon"  style="color:white;">
-                                                <i class="fas fa-globe"></i></i>
-                                            </span>
-                                        </a>
-
-                                        <a href="/admin/customer/edit/<?= $info['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                            <span class="icon"  style="color:white;">
-                                                <i class="fas fa-edit"></i>
-                                            </span>
-                                        </a>
-
-                                        <a href="/admin/customer/delete/<?= $info['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-                                            <span class="icon"  style="color:white;">
-                                                <i class="fas fa-trash"></i>
-                                            </span>
-                                        </a>
+                                        </div>
 
                                     </div>
+
+                                    <div class="card-body ">
+                                        <hr>
+                                        <div class="text-center">
+                                            <table>
+                                                <tr>
+                                                    <td>CLIENT : </td>
+                                                    <td><?= $customer['customerReference'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Subscribed on : </td>
+                                                    <td><?= $customer['subscriptionDate'] ?></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <hr>
+                                    </div>
+
+                                    <div class="card-footer <?= $card?>" >
+
+                                            <a href="/admin/customer/block/<?= $customer['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                </span>
+                                                <span class="text" style="margin:auto;"><?= $state ?></span>
+                                            </a>
+
+                                            <div class="float-right">
+
+                                                <a href="locationModal" id="toLocation" locate="<?= $customer['_id'] ?>" desc="<?= $info['localisation']['description'] ? $info['localisation']['description'] : ""?>" data-toggle="modal" data-target="#locationModal" class="btn <?= $card ?> locationModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="location">
+                                                    <span class="icon"  style="color:white;">
+                                                        <i class="fas fa-globe"></i></i>
+                                                    </span>
+                                                </a>
+
+                                                <a href="/admin/customer/edit/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                                    <span class="icon"  style="color:white;">
+                                                        <i class="fas fa-edit"></i>
+                                                    </span>
+                                                </a>
+
+                                                <a href="/admin/customer/delete/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                                    <span class="icon"  style="color:white;">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                </a>
+
+                                            </div>
+                                    </div>
+                                </div>
                             </div>
+
+                        <?php
+                        }
+
+                    }?>
+
+                    <div class="row">
+                        <div class="container">
+
+                            <div class="float-right">
+
+                                <?php
+                                    //previous page
+                                    if($hasPrevPage == 0){
+                                        $prevDisabled = 'disabled';
+                                        $prevAriadisabled = 'true';
+                                        $prevHref = '#';
+                                    }else{
+                                        $prevDisabled = '';
+                                        $prevAriadisabled = '';
+                                        $prevHref = '/admin/customer/search/'.$prevPage;
+                                    }
+
+                                    //next page
+                                    if($hasNextPage == 0){
+                                        $nextDisabled = 'disabled';
+                                        $nextAriadisabled = 'true';
+                                        $nextHref = '#';
+                                    }else{
+                                        $nextDisabled = '';
+                                        $nextAriadisabled = '';
+                                        $nextHref = '/admin/customer/search/'.$nextPage ;
+                                    }
+
+                                ?>
+
+                                <!-- Pagination -->
+                                    <small><?=$totalPages?>pages</small>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item <?= $prevDisabled?>">
+                                            <a class="page-link" href="<?=$prevHref?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                            </li>
+                                            <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/search/<?= $page ?>"><?= $page ?></a></li>
+
+                                            <li class="page-item <?=$nextDisabled?>">
+                                            <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                    <div class="form-pages">
+                                        <form action="/admin/customer/search" method="get">
+                                            @csrf
+                                            <div class="form-row">
+                                                <div class="col-md-4">
+                                                    <span class="mr-2">Page N°</span><input type="number" id="page" name="page" value="<?=$page?>">
+                                                </div>
+                                                <div>
+                                                    <input type="submit" id="pageSearch" name="PageSearch" value="GO">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                            </div>
+
                         </div>
+
                     </div>
-        <?php
-                    }
+                <?php
                 }
             }
-        } else {
 
-        }
-     ?>
+        ?>
 
     </div>
 
 
+
     <!-- Location Modal -->
-    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -341,62 +425,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <!-- <table id="table_id" class="display">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Ref_Client</th>
-                <th>N° meter</th>
-                <th>Client</th>
-                <th>Tel</th>
-                <th>Location</th>
-                <th>Amount(CFA)</th>
-                <th>Observation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><?= date('d/m/Y',strtotime('17/08/2020'))?></td>
-                <td>Client 1</td>
-                <td></td>
-                <td>GOUAJEU DOMGNO Emeline</td>
-                <td>697165159/ 697476526</td>
-                <td>premiere cliente</td>
-                <td>75 000</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><?= date('d/m/Y',strtotime('29/08/2020'))?></td>
-                <td>Client 2</td>
-                <td>2019-9-0049</td>
-                <td>DEFRE MEGUIANNI Soddy</td>
-                <td>690598662</td>
-                <td>fermier afrique du sud</td>
-                <td>100000</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><?= date('d/m/Y',strtotime('03/09/2020'))?></td>
-                <td>Client 3</td>
-                <td>20256156</td>
-                <td>TAGNE</td>
-                <td>697761267</td>
-                <td>briquetterie plaque afique du sud</td>
-                <td>75000</td>
-                <td>Installation le 06/11/20</td>
-            </tr>
-        </tbody>
-    </table> -->
 
     <script>
-
-        $(document).ready( function () {
-            $.noConflict();
-            $('#table_id').DataTable();
-        } );
-
     // $("body").on('click','#toLocation',function(event){
 
     //     event.preventDefault();
