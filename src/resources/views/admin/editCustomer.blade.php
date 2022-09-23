@@ -115,9 +115,9 @@
     <div class="card mb-4">
         <div class="card-header">
             <!-- Edit a customer -->
-            <div class="float-right">
+            <!-- <div class="float-right">
                 <a href="" class="btn btn-primary" data-toggle="modal" data-target="#accountModal">Edit Customer Account</a>
-            </div>
+            </div> -->
 
             <a href="/admin/customer/edit/resetPasswd/<?= $data['_id']?>" class="btn btn-primary">Reset Password</a>
 
@@ -141,38 +141,141 @@
              <form method="post" action="/admin/customer/saveCustomer/<?= $data['_id']?>" class="col-lg-8 offset-lg-2" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-address-book'></i></span></div>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="name" id="name" name="name" value="<?= $data['name']?>" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                <div class="part1" style="display:flex;">
+                    <span class="text-danger text-lg mr-2" style="display:flex;align-items:center;justify-content:center;">*</span>
+                    <span>Customer Informations</span>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <input type="number" class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="<?= $data['customerReference']?>" required>
+                        </div>
+                        <div class="form-group col-md-10">
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="full name" id="name" name="name" value="<?= $data['name']?>" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row" id="addPhone">
+                        <?php
+                            if(count($data['phone']) <= 1){ ?>
+                                <input type="hidden" name="nbrePhone" id="nbrePhone"  value="<?=count($data['phone'])?>">
+                                <div class="form-group col-md-1">
+                                    <i class="fas fa-plus ml-2 btn-primary" class="" id="plusPhone" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                                <div class="form-group col-md-11" id="form0">
+                                    <input type="number" class="form-control" placeholder="phone number" id="phone0" name="phone0" value="<?= !empty($data['phone']) ? $data['phone'][0]: ''?>">
+                                </div>
+                                <div class="form-group col-md-1" id="minusform0" style="display:none;">
+                                    <i class="fas fa-minus ml-3 btn-primary" class="" id="minusPhone" style="display:flex;align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                        <?php
+                            }else{ ?>
+                                <input type="hidden" name="nbrePhone" id="nbrePhone"  value="<?=count($data['phone'])?>">
+                                <div class="form-group col-md-1">
+                                    <i class="fas fa-plus ml-2 btn-primary" class="" id="plusPhone" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                                <div class="form-group col-md-10" id="form0">
+                                    <input type="number" class="form-control" placeholder="phone number" id="phone0" name="phone0" value="<?=$data['phone'][0]?>">
+                                </div>
+                                <div class="form-group col-md-1" id="minusform0">
+                                    <i class="fas fa-minus ml-3 btn-primary" class="" id="minusPhone" style="display:flex;align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                        <?php
+                                for ($i=1; $i < count($data['phone']); $i++) { ?>
+                                    <div class='form-group col-md-10' style='margin-left:60px;' id='<?='input_phone_'.$i?>'>
+                                        <input type='number' class="form-control" placeholder='phone number' id='<?='phone'.$i?>' name='<?='phone'.$i?>' value='<?=$data['phone'][$i]?>'>
+                                    </div>
+                        <?php
+                                }
+                            }
+                        ?>
+
+                    </div>
                 </div>
 
-                <div class="input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">@</span></div>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="email" name="email" id="email" value="<?= $data['email']?>">
-                     @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                     @enderror
+                <div class="part2">Sites</div>
+                <div class="form-group mt-2" id="addHomeMeter">
+                    <input type="hidden" name="blocSites" id="blocSites" value="<?=count($data['localisation']['description'])?>">
+                    <?php
+                        if(count($data['localisation']['description']) <= 1){ ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-1">
+                                    <i class="fas fa-plus ml-2 btn-primary" id="plusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                                <div class="form-group col-md-3" id="form1">
+                                    <input type="text" class="form-control" placeholder="Meter_ID" id="meter0" name="meter0" value="<?= !empty($data['idCompteur']) ? $data['idCompteur'][0] : ''?>">
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="<?= !empty($data['localisation']['description']) ? $data['localisation']['description'][0] : ''?>">
+                                </div>
+                                <div class="form-group col-md-1" id="minusform1" style="display:none;">
+                                    <i class="fas fa-minus ml-3 btn-primary" id="minusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                            </div>
+                        <?php
+                        }else{ ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-1">
+                                    <i class="fas fa-plus ml-2 btn-primary" id="plusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                                <div class="form-group col-md-2" id="form1">
+                                    <input type="text" class="form-control" placeholder="Meter_ID" id="meter0" name="meter0" value="<?=$data['idCompteur'][0]?>">
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="<?=$data['localisation']['description'][0]?>">
+                                </div>
+                                <div class="form-group col-md-1" id="minusform1">
+                                    <i class="fas fa-minus ml-3 btn-primary" id="minusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
+                                </div>
+                            </div>
+                    <?php
+                            for ($i=1;$i<count($data['localisation']['description']);$i++) {?>
+                                <div class="form-row" id="<?='blocSites'.$i?>">
+                                    <div class="form-group col-md-2" style="margin-left:60px;" >
+                                        <input type="text" class="form-control" placeholder="Meter_ID" id="<?='meter'.$i?>" name="<?='meter'.$i?>" value="<?=$data['idCompteur'][$i]?>">
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <input type="text" class="form-control" placeholder="location" id="<?='meter'.$i?>" name="<?='home'.$i?>" value="<?=$data['localisation']['description'][$i]?>">
+                                    </div>
+                                </div>
+                        <?php
+                            }
+                        }
+                    ?>
                 </div>
 
-                <div class="input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-phone-volume'></i></span></div>
-                    <input type="number" class="form-control @error('phone') is-invalid @enderror" placeholder="phone number" id="phone" name="phone" value="<?= $data['phone']?>" required>
-                    @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+
+                <div class="part3">Subscription</div>
+                <div class="form-group mt-2">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input type="date" class="form-control" id="subs_date" name="subs_date" value="<?= $data['subscriptionDate']?>" placeholder="Date">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="number" class="form-control" id="subs_amount" name="subs_amount" value="<?= $data['subscriptionAmount']?>" placeholder="Amount">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <input type="text" class="form-control" placeholder="Observation" id="observation" name="observation" value="<?= $data['observation']?>">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class=' fas fa-image'></i></span></div>
-                    <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo">
-                    @error('photo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <div class="form-group mt-2">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="">Image</label>
+                            <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo">
+                            @error('photo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <input type="hidden" name="profileImage" id="profileImage" value="<?= $data['profileImage']?>"/>
+                        </div>
+                    </div>
                 </div>
-                <input type="hidden" name="profileImage" id="profileImage" value="<?= $data['profileImage']?>"/>
 
                 <div class="row float-right mt-3">
                     <a href="/admin/customer">
@@ -188,42 +291,67 @@
     </div>
 </div>
 
-<!-- Account Modal -->
-<div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update Customer Account</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="/admin/customer/account/update/<?= $data['_id']?>" class="user">
-                    @csrf
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Water meter identifier" id="identifier" name="identifier" value="<?= $data['IdCompteur']?>" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" placeholder="Recent Index" id="recentIndex" name="recentIndex" value="" required>
-                    </div>
-                    <hr>
-                    <div class="row float-right mt-3">
-                        <a href="#">
-                            <button href="#" class="btn btn-primary btn-user" name="submit" type="submit">
-                                Proceed
-                            </button>
-                        </a>
-                        <a href="#">
-                            <button class="btn btn-secondary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
-                        </a>
-                    </div>
-                </form>
+<script>
+    var nbrePhone = <?=count($data['phone'])?>;
+    var blocSites = <?=count($data['localisation']['description'])?>;
 
-            </div>
-        </div>
-    </div>
-</div>
+    $("#plusPhone").on("click", function(){
+        $("#addPhone").append(
+            "<div class='form-group col-md-10' style='margin-left:60px;' id='input_phone_"+nbrePhone+"'>"+
+                "<input type='number' class='form-control @error('phone"+nbrePhone+"') is-invalid @enderror' placeholder='phone number' id='phone"+nbrePhone+"' name='phone"+nbrePhone+"' value='{{ old('phone"+nbrePhone+"') }}'>"+
+                "@error('phone"+nbrePhone+"')"+
+                        "<div class='invalid-feedback'>{{ $message }}</div>"+
+                "@enderror"+
+            "</div>"
+        );
+        if($("#form0").hasClass('col-md-11')){
+            $("#form0").removeClass('col-md-11').addClass('col-md-10');
+            $('#minusform0').css('display', 'flex');
+        }
+        nbrePhone+=1;
+        $("#nbrePhone").val(nbrePhone);
+    });
+
+    $('#minusPhone').on("click",function(){
+        nbrePhone-=1;
+        $("#input_phone_"+nbrePhone).remove();
+        if(nbrePhone==1){
+            $("#form0").removeClass('col-md-10').addClass('col-md-11');
+            $('#minusform0').css('display', 'none');
+        }
+        $("#nbrePhone").val(nbrePhone);
+    });
+
+    $("#plusSites").on("click", function(){
+        $("#addHomeMeter").append(
+                "<div class='form-row' id='blocSites"+blocSites+"'>"+
+                    "<div class='form-group col-md-2' style='margin-left:60px;'>"+
+                        "<input type='text' class='form-control' placeholder='Meter_ID' id='meter"+blocSites+"' name='meter"+blocSites+"' value='{{ old('meter"+blocSites+"') }}'>"+
+                    "</div>"+
+                    "<div class='form-group col-md-8'>"+
+                        "<input type='text' class='form-control' placeholder='location' id='home"+blocSites+"' name='home"+blocSites+"' value='{{ old('home"+blocSites+"') }}'>"+
+                    "</div>"+
+                "</div>"
+        );
+        if($("#form1").hasClass('col-md-3')){
+            $("#form1").removeClass('col-md-3').addClass('col-md-2');
+            $('#minusform1').css('display', 'flex');
+        }
+        blocSites+=1;
+        $("#blocSites").val(blocSites);
+    });
+
+    $('#minusSites').on("click",function(){
+        blocSites-=1;
+        $("#blocSites"+blocSites).remove();
+        if(blocSites==1){
+            $("#form1").removeClass('col-md-2').addClass('col-md-3');
+            $('#minusform1').css('display', 'none');
+        }
+        $("#blocSites").val(blocSites);
+    });
+
+</script>
 
 @stop
+

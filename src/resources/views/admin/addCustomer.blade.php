@@ -213,17 +213,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="input-group mt-3 pl-3">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="setLocation" id="setLocation" name="setLocation">
-                      <label class="form-check-label" for="setLocation">
-                        Activate the location
-                      </label>
-                    </div>
-                    <input type="hidden" name="lat" id="lat"  value="">
-                    <input type="hidden" name="lng" id="lng"  value="">
-                </div> -->
-
                 <div class="row float-right mt-3">
                     <a href="#">
                         <button class="btn btn-primary" name="submit" type="submit">Register</button>

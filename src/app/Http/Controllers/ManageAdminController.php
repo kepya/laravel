@@ -311,6 +311,56 @@ class ManageAdminController extends Controller
        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
     }
 
+    public function viewCustomersSort(Request $request){
+
+        $customerRef = $request->customerID;
+        $order = $request->order;
+        $idCompteur = $request->meter;
+        $subs_date = $request->subs_date;
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/find";
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+
+        $data = array(
+            "date"=> $subs_date,
+            "refId"=> $customerRef,
+            "counterId"=> $idCompteur,
+            "order"=> $order,
+        );
+
+        $data_json = json_encode($data);
+
+        //print_r($data_json);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response  = curl_exec($ch);
+        curl_close($ch);
+
+
+        $url2 = "http://172.17.0.3:4000/client/auth/count";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response2 = curl_exec($ch);
+        curl_close($ch);
+        $response2 = json_decode($response2,true);
+        $nbrCl = $response2['result'];
+
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+
+    }
+
     public function viewCustomersByPage($page){
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
@@ -482,19 +532,6 @@ class ManageAdminController extends Controller
             $tokenVal = $tokentab[1];
             $Authorization = 'Bearer '.$tokenVal;
 
-            if(empty($subs_date)){
-                $subs_date = 'No date';
-            }
-
-            if(empty($observation)){
-                $observation = 'No observation';
-            }
-
-            if(empty($subs_amount)){
-                $subs_amount = 0;
-            }
-
-
             $data = array(
                 'name' => $name,
                 'phone' => $phones,
@@ -521,22 +558,20 @@ class ManageAdminController extends Controller
             $response  = curl_exec($ch);
             curl_close($ch);
 
-            print_r($response);
-
             $response = json_decode($response);
 
-            print_r($response);
+            //print_r($response);
 
-            // if ($response->status == 200){
-            //     Session::flash('message', 'Action Successfully done!');
-            //     Session::flash('alert-class', 'alert-success');
-            //     return redirect()->back();
+            if ($response->status == 200){
+                Session::flash('message', 'Action Successfully done!');
+                Session::flash('alert-class', 'alert-success');
+                return redirect()->back();
 
-            // }else{
-            //     Session::flash('message', ucfirst($response->error));
-            //     Session::flash('alert-class', 'alert-danger');
-            //     return redirect()->back();
-            // }
+            }else{
+                Session::flash('message', ucfirst($response->error));
+                Session::flash('alert-class', 'alert-danger');
+                return redirect()->back();
+            }
         }
     }
 
@@ -603,6 +638,8 @@ class ManageAdminController extends Controller
         $response = json_decode($response,true);
         $userdata = $response['result'];
 
+        //print_r($userdata);
+
         return view('admin/editCustomer',['data' => $userdata]);
 
     }
@@ -610,15 +647,10 @@ class ManageAdminController extends Controller
     public function saveCustomer($id,Request $request){
 
         $validator = Validator::make($request->all(), [
-            'name' =>  'bail|required',
-            'email' => 'bail|required|email',
-            'phone' => 'bail|required|digits:9',
             'photo' => 'bail|image|mimes:jpeg,jpg,png|max:2000',
             ],
 
             $messages = [
-                'required' => 'The :attribute is required',
-                'phone.digits' => '9 digits needed',
                 'photo.mimes' => 'Only jpeg,jpg,png formats accepted',
                 'photo.max' => 'The :attribute must not sized over 2Mo',
             ]
@@ -638,10 +670,34 @@ class ManageAdminController extends Controller
                 $photoPath = $request->input('profileImage');
             }
 
-
             $name = $request->input('name');
-            $email = $request->input('email');
-            $phone = $request->input('phone');
+            $nbrePhone = $request->input('nbrePhone');
+            $blocSites = $request->input('blocSites');
+            $ref_client = $request->input('ref_client');
+            $subs_date = $request->input('subs_date');
+            $subs_amount = $request->input('subs_amount');
+            $observation = $request->input('observation');
+
+            //tableaux de récupération
+            $phones = [];
+            $homes = [];
+            $meters = [];
+
+            //compteurs de bouclage
+            $i=0;
+            $j=0;
+
+            for($i;$i<$nbrePhone;$i++){
+                $phone = $request->input('phone'.$i);
+                array_push($phones,$phone);
+            }
+
+            for($j;$j<$blocSites;$j++){
+                $home = $request->input('home'.$j);
+                $meter = $request->input('meter'.$j);
+                array_push($homes,$home);
+                array_push($meters,$meter);
+            }
 
             $url = "http://172.17.0.3:4000/admin/manageCompte/client/update/".$id;
             $alltoken = $_COOKIE['token'];
@@ -653,13 +709,19 @@ class ManageAdminController extends Controller
 
             $data = array(
                 'name' => $name,
-                'phone' => $phone,
-                'email' => $email,
+                'phone' => $phones,
+                "idCompteur" => $meters,
+                "description" => $homes,
+                'customerReference' => $ref_client,
+                'subscriptionDate' => $subs_date,
+                'subscriptionAmount'=>$subs_amount,
+                'observation' => $observation,
                 "profileImage" => $photoPath,
             );
+
             $data_json = json_encode($data);
 
-            // print_r($data_json);
+            //print_r($data_json);
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -747,7 +809,7 @@ class ManageAdminController extends Controller
     }
 
     public function updateAccount($id, Request $request){
-        dump($id);
+        // dump($id);
         $identifier = $request->input('identifier');
         $recent = $request->input('recentIndex');
 

@@ -126,7 +126,9 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::get('/admin/customer',[ManageAdminController::class, 'viewCustomers']);
 
-        Route::get('/admin/customer/search',[ManageAdminController::class, 'viewCustomersBySearch'])->name('viewCustomersBySearch');
+        Route::match(['get','post'],'/admin/customer/sort',[ManageAdminController::class, 'viewCustomersSort'])->name('viewCustomersSort');
+
+        Route::match(['get','post'],'/admin/customer/search',[ManageAdminController::class, 'viewCustomersBySearch'])->name('viewCustomersBySearch');
 
         Route::get('/admin/customer/search/{page_search}',[ManageAdminController::class, 'viewCustomersByPage'])->name('viewCustomersByPage');
 
