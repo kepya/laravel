@@ -156,7 +156,7 @@
 
                   @if($data['profile'] == "superAdmin")
 
-                    <div class="profile-usertitle-job">
+                    <!-- <div class="profile-usertitle-job">
 
                       <a href="#" id="location" locate="<?= $data['_id']?>" class="btn text-primary" style="size:18px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
                           <span class="icon">
@@ -164,7 +164,7 @@
                           </span>
                       </a>
 
-                   </div>
+                   </div> -->
 
                   @endif
               </div>
