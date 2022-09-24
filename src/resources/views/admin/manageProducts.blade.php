@@ -70,12 +70,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Clauses -->
         <li class="nav-item">
@@ -83,7 +83,7 @@
             <i class="fas fa-list"></i>
             <span>Confidentiality Clauses</span>
             </a>
-        </li> 
+        </li>
 
         <!-- Nav Item - profile -->
         <li class="nav-item">
@@ -146,16 +146,16 @@
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <select name="type" id="type" class="form-control">
-                                    <?php 
+                                    <?php
                                         foreach($data as $data){
                                     ?>
                                         <option value="<?= $data['_id']?>"><?= $data['name']?></option>
-                                    <?php 
+                                    <?php
                                         }
-                                    ?> 
+                                    ?>
                                 </select>
                             </div>
                             <div class="form-group">

@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -256,7 +256,7 @@ class="d-sm-flex align-items-center justify-content-between mb-4"
                 echo $left;
               }else{
                 echo '0';
-              }  
+              }
             ?>
           </div>
         </div>
@@ -392,7 +392,7 @@ if(isset($earnly_invoices)){
     }
 
 }
-        
+
     ?>
 ],
 backgroundColor: [

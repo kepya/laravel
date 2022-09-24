@@ -54,12 +54,12 @@
         </li>
 
         <!-- Nav Item - Notification -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/chat">
             <i class="fas fa-file-archive"></i>
             <span>Notification</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Stock -->
         <li class="nav-item">
@@ -79,12 +79,12 @@
         </li>
 
         <!-- Nav Item - Clauses -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -122,7 +122,7 @@
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
 <h1 class="h3 mb-0 text-gray-800">Finances </h1>
-<a href="/admin/finances/details" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm "><i class="fas fa-caret-right"></i> Details</a>
+<a href="/admin/finances/details/1" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm "><i class="fas fa-caret-right"></i> Details</a>
 
 </div>
 <!-- Content Row -->
@@ -134,7 +134,7 @@
       <div class="row no-gutters align-items-center">
         <div class="col mr-2">
           <div class="  text-xs  font-weight-bold  text-primary text-uppercase  mb-1 ">
-           Total Income 
+           Total Income
           </div>
           <div class="h5 mb-0 font-weight-bold text-gray-800">
             <?php
@@ -167,7 +167,7 @@
       <div class="row no-gutters align-items-center">
         <div class="col mr-2">
           <div class=" text-xs font-weight-bold text-success text-uppercase mb-1 ">
-            <?php echo date('F-Y').' ';?>Income 
+            <?php echo date('F-Y').' ';?>Income
           </div>
           <div class="h5 mb-0 font-weight-bold text-gray-800">
             <?php
@@ -202,7 +202,7 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
             <div class=" text-xs font-weight-bold text-info text-uppercase mb-1 ">
-              <?php echo date('F-Y').' ';?>Expense 
+              <?php echo date('F-Y').' ';?>Expense
             </div>
             <div class="h5 mb-0 font-weight-bold text-gray-800">
               <?php
@@ -247,7 +247,7 @@
                 echo $totalExpense;
               }else{
                 echo '0';
-              }  
+              }
             ?>
           </div>
         </div>
@@ -364,7 +364,7 @@ data: [
             foreach ($yearBills as $bill){
 
                 if(date('F', strtotime($date)) == date('F', strtotime($bill['createdAt']))){
-                  
+
                     if($bill['facturePay'] == 1){
                       $data += $bill['montantConsommation'];
                     }
@@ -384,11 +384,11 @@ data: [
             }
             $c++;
           }
-      
+
         }
 
       }
-    
+
   ?>
 ],
 backgroundColor: [
@@ -469,7 +469,7 @@ data: [
               }
               $c++;
             }
-        
+
           }
         }
     ?>
@@ -492,5 +492,5 @@ responsive: true
 
 </script>
 
-   
+
 @stop

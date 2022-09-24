@@ -719,6 +719,8 @@ class ManageAdminController extends Controller
                 "profileImage" => $photoPath,
             );
 
+            print_r($data);
+
             $data_json = json_encode($data);
 
             //print_r($data_json);
@@ -734,18 +736,18 @@ class ManageAdminController extends Controller
 
             $response = json_decode($response);
 
-            // print_r($response);
+            // // print_r($response);
 
-            if ($response->status == 200){
-                Session::flash('message', 'Action Successfully done!');
-                Session::flash('alert-class', 'alert-success');
-                return redirect()->back();
+            // if ($response->status == 200){
+            //     Session::flash('message', 'Action Successfully done!');
+            //     Session::flash('alert-class', 'alert-success');
+            //     return redirect()->back();
 
-            }else{
-                Session::flash('message', ucfirst($response->error));
-                Session::flash('alert-class', 'alert-danger');
-                return redirect()->back();
-            }
+            // }else{
+            //     Session::flash('message', ucfirst($response->error));
+            //     Session::flash('alert-class', 'alert-danger');
+            //     return redirect()->back();
+            // }
         }
     }
 

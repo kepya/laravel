@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -114,7 +114,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Product <?php if (isset($nametype)) echo '- '.$nametype; else echo '' ; ?></h1> 
+    <h1 class="h3 mb-0 text-gray-800">Product <?php if (isset($nametype)) echo '- '.$nametype; else echo '' ; ?></h1>
 </div>
 
 @if(Session::has('message'))
@@ -130,41 +130,41 @@
     <form action="/admin/stock/type" method="post" enctype="multipart/form-data" class="form-horizontal row-border">
         <div class="col-sm-12">
 
-            <label>Display according to the Type</label>        
+            <label>Display according to the Type</label>
             <div class="row">
                 <div class="col-9">
                     @csrf
-                    <select name="type" id="type" class="form-control"> 
-                      <?php 
+                    <select name="type" id="type" class="form-control">
+                      <?php
                             if(isset($nametype)){ ?>
 
                             <option value="<?= $nametype?>"><?= $nametype ?></option>
-                            <option value="all">All</option> 
-                      <?php     
+                            <option value="all">All</option>
+                      <?php
                                 foreach($types as $type){
 
                                     if($type['name'] != $nametype){
                         ?>
                                         <option value="<?= $type['name']?>"><?= $type['name']?></option>
-                        <?php 
+                        <?php
                                     }
                                 }
                             }else{ ?>
 
-                                <option value="all">All</option> 
+                                <option value="all">All</option>
 
-                        <?php        
+                        <?php
                                 foreach($types as $type){ ?>
 
                                     <option value="<?= $type['name']?>"><?= $type['name']?></option>
-                        <?php       
+                        <?php
                                 }
 
                             }
-                        ?> 
+                        ?>
                     </select>
                 </div>
-                
+
                 <div class="col-2">
                     <button class="btn-sm btn-success" type="submit">Proceed</button>
                 </div>
@@ -181,20 +181,20 @@
     <br>
 </div>
 
-    <?php 
+    <?php
 
         if(isset($materials)){ ?>
 
 <div class="row">
-    
-<?php        
+
+<?php
 
             $data = $materials['result'];  //table informations returned
             $allmaterials = $data['docs']; //table of materials
 
             $totalDocs = $data['totalDocs']; //number of materials in the database
             $limit = $data['limit']; // limit of materials on a page
-            $totalPages = $data['totalPages']; //number of pages 
+            $totalPages = $data['totalPages']; //number of pages
             $page = $data['page']; //current page
             $pagingCounter = $data['pagingCounter']; //paging counter
             $hasPrevPage = $data['hasPrevPage']; //boolean if previous page exists
@@ -241,7 +241,7 @@
                 </div>
                 <div class="card-body text-center">
                     <img class="img-profile rounded-circle w-75" src="<?= url('storage/'.$material['picture'])?>" />
-                    <hr /> 
+                    <hr />
                     <div class="float-left">
                         <h5><b>Quantity : </b><?= $material['quantity']?></h5>
                     </div>
@@ -252,8 +252,8 @@
             </div>
         </div>
 
-    <?php 
-            } 
+    <?php
+            }
     ?>
 
 </div>
@@ -265,9 +265,9 @@
 
         <div class="float-right">
 
-            <?php 
+            <?php
 
-                //previous page 
+                //previous page
                 if($hasPrevPage == 0){
                     $prevDisabled = 'disabled';
                     $prevAriadisabled = 'true';
@@ -299,12 +299,12 @@
                         <span aria-hidden="true">&laquo;</span>
                       </a>
                     </li>
-                    <?php 
+                    <?php
                         // for($i=1; $i<=$totalPages; $i++){
 
                         //     if($page == $i){
                         //         $active = 'active';
-                        //         $ariacurrent = 'page'; 
+                        //         $ariacurrent = 'page';
                         //     }else{
                         //         $active = '';
                         //         $ariacurrent = '';
@@ -312,7 +312,7 @@
                          // }
                     ?>
                     <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/stock/<?= $page ?>"><?= $page ?></a></li>
-                    
+
                     <li class="page-item <?=$nextDisabled?>">
                       <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
                         <span aria-hidden="true">&raquo;</span>
@@ -324,14 +324,14 @@
         </div>
 
     </div>
-    
+
 </div>
 <?php } ?>
 
 <!-- Second part :  Materials according to the type  -->
 
 <?php
-    
+
         if (isset($typeMaterials)){ ?>
 
  <div class="row">
@@ -359,7 +359,7 @@
                 </div>
                 <div class="card-body text-center">
                     <img class="img-profile rounded-circle w-75" src="<?= url('storage/'.$material['picture'])?>" />
-                    <hr /> 
+                    <hr />
                     <div class="float-left">
                         <h5><b>Quantity : </b><?= $material['quantity']?></h5>
                     </div>
@@ -370,13 +370,13 @@
             </div>
         </div>
 
-    <?php 
-            } 
+    <?php
+            }
     ?>
 
 </div>
 
-<?php } 
+<?php }
 
 ?>
 
@@ -395,25 +395,25 @@
                     <form method="post" action="/admin/stock/update" class="user" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        
+
                         <input type="hidden" id="id" name="id"  value="">
-                        
+
                         <div class="form-group">
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                 id="name" name="name" placeholder="Enter your product name" value="" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                        </div> 
+                        </div>
                         <div class="form-group">
                             <select name="type" id="type" class="form-control">
-                                <?php 
+                                <?php
                                     foreach($types as $type){
                                 ?>
                                     <option value="<?= $type['_id']?>"><?= $type['name']?></option>
-                                <?php 
+                                <?php
                                     }
-                                ?>  
+                                ?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -445,7 +445,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                         </div>
-                        
+
                         <hr>
                         <div class="row float-right mt-3">
                             <a href="#">
@@ -458,7 +458,7 @@
                             </a>
                         </div>
                     </form>
-                    
+
                 </div>
                <!--  <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -474,7 +474,7 @@
         $("body").on('click', '.productModal', function(event) {
             event.preventDefault();
             // body...
-            var id = $(this).attr('edit');  
+            var id = $(this).attr('edit');
 
             <?php
 
@@ -485,7 +485,7 @@
                 $tokenVal = $tokentab[1];
                 $Authorization = 'Bearer '.$tokenVal;
             ?>
-                    
+
             $.ajax({
 
                 // url: "<?= 'http://172.17.0.3:4000/stock/' ?>" + id,
@@ -508,9 +508,9 @@
                     $("#oldimage").val(result['picture']);
                 }
 
-            
+
             })
-                
+
         })
     });
 </script>

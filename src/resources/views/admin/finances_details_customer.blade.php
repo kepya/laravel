@@ -389,12 +389,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/clauses">
             <i class="fas fa-list"></i>
             <span>Confidentiality Clauses</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - profile -->
         <li class="nav-item">
@@ -424,7 +424,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800"><a href="/admin/finances/details" class="mr-3"><i class="fas fa-chevron-circle-left"></i></a>Details </h1>
+  <h1 class="h3 mb-0 text-gray-800"><a href="/admin/finances/details/1" class="mr-3"><i class="fas fa-chevron-circle-left"></i></a>Details </h1>
 
   <form action="/admin/finances/details/customer/<?= $userdata['_id']?>" novalidate method="post" enctype="multipart/form-data" class="form-horizontal row-border">
         <div class="col-sm-12">
@@ -449,7 +449,7 @@
 
 <div class="row">
 
-  <?php 
+  <?php
 
       if(isset($facturesYear)){
 
@@ -495,10 +495,10 @@
                       </div>
                   </div>
               </div>
-            </div>    
- <?php   
+            </div>
+ <?php
         $i++;
-        } 
+        }
       }else {
         $i = 1;
         foreach($factures as $fact){
@@ -543,9 +543,9 @@
             </div>
         </div>
     </div>
-  <?php 
+  <?php
     $i++;
-    } 
+    }
   }
 ?>
 </div>
@@ -691,5 +691,5 @@ beginAtZero: true
 });
 
 </script>
-   
+
 @stop

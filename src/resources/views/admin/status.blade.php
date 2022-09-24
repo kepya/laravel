@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -121,7 +121,7 @@
         <!-- Earnings (Monthly) Card Example -->
         <?php
             $lengthPaid = count($invoice['result']);
-            for ($i=0; $i < $lengthPaid; $i++) { 
+            for ($i=0; $i < $lengthPaid; $i++) {
         ?>
             <?php if ($invoice['result'][$i]['facturePay'] == true) {?>
                 <div class="col-lg-6 mb-4">
@@ -140,7 +140,7 @@
                         </div>
                     </div>
                 </div>
-            <?php   
+            <?php
             } else {
             ?>
                 <div class="col-lg-6 mb-4">
@@ -163,7 +163,7 @@
                 </div>
             <?php
             } ?>
-            
+
         <?php
             }
         ?>
@@ -198,7 +198,7 @@
                         </a>
                     </div>
                 </form>
-                
+
             </div>
            <!--  <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -214,8 +214,8 @@
     var id = $(this).attr('smile');
 
     $('#id').val(id);
-   
-    }); 
+
+    });
 </script>
 @stop
 

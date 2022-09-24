@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -111,10 +111,10 @@
         </li>
 @stop
 @section('content')
-  
+
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Administrators</h1> 
+        <h1 class="h3 mb-0 text-gray-800">Administrators</h1>
         <div class="d-flex">
             @if(Session::has('profile'))
                 @if(Session::get('profile') == "superAdmin")
@@ -138,11 +138,11 @@
         </div>
     </div>
 
-    <?php 
+    <?php
         if ($administrators != null) {
-            if($administrators['status'] == 200){ 
+            if($administrators['status'] == 200){
 
-                    $informations = $administrators['result']; 
+                    $informations = $administrators['result'];
                     ?>
 
             <div class="container">
@@ -159,18 +159,18 @@
                         @endif
                     @endif
                     <th>Registered_at</th>
-                    <th>Actions</th> 
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
 
                     <?php
 
-                        foreach($informations as $key => $info) { 
+                        foreach($informations as $key => $info) {
                             $name = $info['name'];
                             $email = $info['email'];
                             $phone = $info['phone'];
-                            $registered_at = date('d-m-Y H:i:s', strtotime($info['createdAt'])); 
+                            $registered_at = date('d-m-Y H:i:s', strtotime($info['createdAt']));
 
                             if($info['profileImage'] != "noPath"){
                                 $image = url('storage/'.$info['profileImage']);
@@ -181,10 +181,10 @@
                             $status = $info['status'];
                             if(empty($status)){
                                 $status = 0;
-                            } 
+                            }
 
                             $delete = $info['isDelete'];
-                            
+
                     ?>
                 <tr style="background-color:white;color:black;">
                     <td><img class="img-profile" src='<?= $image ?>' height="40" width="40"/></td>
@@ -225,17 +225,17 @@
                     <td><?= $registered_at ?></td>
                     <td>
                             @if(Session::has('profile'))
-                        
+
                                 @if(Session::get('profile') != "superAdmin")
 
                                     {{ _('No action') }}
-                            
+
                                 @else
                                     @if($delete)
                                         {{ _('Deleted') }}
-                
+
                                     @else
-                                    
+
                                     <a href="/admin/administrator/edit/<?= $info['_id']?>" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
                                         <span class="icon">
                                             <i class="fas fa-edit"></i>
@@ -248,19 +248,19 @@
                                         </span>
                                     </a>
 
-                                    
+
                                     @endif
                                 @endif
                             @endif
                     </td>
                 </tr>
-                <?php } ?>    
+                <?php } ?>
                 </tbody>
             </table>
             </div>
             <?php }
-        } 
-    ?> 
+        }
+    ?>
 
 
 @stop

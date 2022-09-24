@@ -257,7 +257,11 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::post('/admin/finances',[AdminController::class, 'financeYear'])->name('seeFinancesYear');
 
-		Route::get('/admin/finances/details',[AdminController::class, 'financeDetails'])->name('financeDetails');
+		Route::get('/admin/finances/details/{id}',[AdminController::class, 'financeDetails'])->name('financeDetails');
+
+        Route::match(['get','post'],'/admin/finances/details/search',[AdminController::class, 'financeDetailSearch'])->name('financeDetailSearch');
+
+        Route::get('/admin/finances/details/search/{page}',[AdminController::class, 'financeDetailSearchByPage'])->name('financeDetailSearchByPage');
 
 		Route::get('/admin/finances/details/customer/{id}',[AdminController::class, 'customerDetails'])->name('customerDetails');
 

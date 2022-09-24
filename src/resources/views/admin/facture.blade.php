@@ -84,12 +84,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -180,8 +180,8 @@
                             @endif
                         </div>
                         <div class="col-12">
-                            <h5 class="ml-2 d-flex justify-content-center">{{$userHasInvoice['user']->name}}</h5>
-                            <h6 class="ml-2 d-flex justify-content-center">{{$userHasInvoice['user']->IdCompteur}}</h6>
+                            <h5 class="ml-2 d-flex justify-content-center">CLIENT : {{$userHasInvoice['user']->customerReference}}</h5>
+                            <h6 class="ml-2 d-flex justify-content-center">{{$userHasInvoice['user']->name}}</h6>
                             <a href="#modal{{$userHasInvoice['user']->_id}}" class="d-inline-flex btn btn-primary ml-4" style="border-radius: 10px; color:white" user=<?= $userHasInvoice['user']->_id ?> data-toggle="modal" data-target="#modal{{$userHasInvoice['user']->_id}}" class="btn btn-sm bg-primary addInvoiceModal ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Invoice">
                                 Add Invoice
                             </a>
@@ -211,6 +211,17 @@
                                     <div class="input-group">Date</div>
                                     <input type="date" class="form-control" value="<?= $date?>" placeholder="Date" id="date" name="date">
                                 </div>
+
+                                <div class="form-group mb-3" id="b_idCompteur">
+                                    <div class="input-group">Meters</div>
+                                    <select id="meter"  name="meter" class="form-control" aria-label="multiple select" required>
+                                        <option value="">Choose a meter</option>
+                                        @foreach($userHasInvoice['user']->idCompteur as $meter)
+                                            <option value="{{$meter}}">{{$meter}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <div class="form-group mb-3">
                                     <div class="input-group">New index</div>
                                     <input type="number" min="0" class="form-control" placeholder="new index" id="newIndex" name="newIndex" required>

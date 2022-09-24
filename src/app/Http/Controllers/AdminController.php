@@ -1394,7 +1394,7 @@ class AdminController extends Controller
                 $i = $i + 1;
             }
         }
-        
+
         return view('admin/consumption-that-are-unpaid', [
             'invoices' => $invoicesWithPaginator,
             'client' => $client,
@@ -1426,8 +1426,8 @@ class AdminController extends Controller
             if ($type === "month") {
                 $month = $_POST['search'];
                 $year = date("Y");
-            } 
-            
+            }
+
             if ($type === 'year') {
                 $month = date("m");
                 $year = $_POST['search'];
@@ -1508,9 +1508,9 @@ class AdminController extends Controller
 
                 $i = 0;
                 $user = $response -> result;
-               
+
                 array_push($client, $user);
-            
+
             }
 
             $bill = array();
@@ -1528,7 +1528,7 @@ class AdminController extends Controller
                     }
                 }
 
-                
+
             return view('admin/consumption', [
                 'invoices' => $bill,
                 'client' => $usagers,
@@ -1873,16 +1873,16 @@ class AdminController extends Controller
 
                     $response = curl_exec($url);
                     $response = json_decode($response);
-    
+
                     $user = $response -> result;
-                   
+
                     array_push($client, $user);
-                
+
                 }
-    
+
                 $bill = array();
                 $usagers = array();
-    
+
                 foreach ($client as $key => $user) {
                     $name = $user->name;
                     if (strcasecmp($username, $name)) {
@@ -1891,10 +1891,10 @@ class AdminController extends Controller
                     } else {
                         array_push($usagers, $client[$key]);
                         array_push($bill, $invoices_paid[$key]);
-    
+
                     }
                 }
-    
+
                 return view('admin/consumptionThatArePaid', [
                     'invoices' => $bill,
                     'client' => $usagers,
@@ -2226,16 +2226,16 @@ class AdminController extends Controller
 
                     $response = curl_exec($url);
                     $response = json_decode($response);
-    
+
                     $user = $response -> result;
-                   
+
                     array_push($clients, $user);
-                
+
                 }
-    
+
                 $bill = array();
                 $usagers = array();
-    
+
                 foreach ($clients as $key => $user) {
                     $name = $user->name;
                     if (strcasecmp($username, $name)) {
@@ -2244,10 +2244,10 @@ class AdminController extends Controller
                     } else {
                         array_push($usagers, $clients[$key]);
                         array_push($bill, $invoices[$key]);
-    
+
                     }
                 }
-    
+
                 return view('admin/consumptionThatAreNotPaid', [
                     'invoices' => $bill,
                     'client' => $usagers,
@@ -2812,7 +2812,7 @@ class AdminController extends Controller
         $response3 = curl_exec($curl3);
         curl_close($curl3);
         $admin = json_decode($response3, true);
-        
+
         $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin]);
 return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
     }
@@ -3526,12 +3526,14 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
                 $date = $_POST['date'];
                 $idClient = $_POST['userId'];
                 $oldIndex = $_POST['oldIndex'];
+                $meter = $_POST['meter'];
                 // echo $idClient;
 
                 // je definie l'url de connexion.
                 $url = "http://172.17.0.3:4000/admin/facture/" . $idClient;
 
                 $data1 = array(
+                    'idCompteur'=> $meter,
                     'newIndex' => $newIndex,
                     'oldIndex' => $oldIndex,
                     'dateReleveNewIndex' => $date
@@ -3678,7 +3680,7 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
             if ($response->status == 200) {
                 $users = $response->result;
                 $length = count($users);
-                for ($i=0; $i < $length; $i++) { 
+                for ($i=0; $i < $length; $i++) {
                     $curl = curl_init();
                     curl_setopt_array($curl, array(
                         CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/haveInvoice/' . $users[$i] -> _id,
@@ -3875,7 +3877,7 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $url = "http://172.17.0.3:4000/admin/auth/getClient";
+        $url = "http://172.17.0.3:4000/admin/auth/client/1/10";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3883,7 +3885,6 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
         $response = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($response, true);
-        $customers = $response['result'];
 
         $url1 = "http://172.17.0.3:4000/stock/getAll";
         $data1 = array(
@@ -3903,7 +3904,84 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
         $response1 = json_decode($response1, true);
         $data1 = $response1['result']['docs'];
 
-        return view('admin/finances_details', ['customers' => $customers, 'materials' => $data1]);
+        return view('admin/finances_details', ['response' => $response, 'materials' => $data1]);
+    }
+
+    public function financeDetailSearch(Request $request){
+        $page = $request->page;
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response,true);
+
+        $url1 = "http://172.17.0.3:4000/stock/getAll";
+        $data1 = array(
+            'page' => 1,
+            'limit' => 0,
+        );
+        $data_json1 = json_encode($data1);
+
+        $ch1 = curl_init();
+        curl_setopt($ch1, CURLOPT_URL, $url1);
+        curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
+        curl_setopt($ch1, CURLOPT_POST, 1);
+        curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_json1);
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+        $response1  = curl_exec($ch1);
+        curl_close($ch1);
+        $response1 = json_decode($response1, true);
+        $data1 = $response1['result']['docs'];
+
+        return view('admin/finances_details', ['response' => $response, 'materials' => $data1]);
+    }
+
+    public function financeDetailSearchByPage($page)
+    {
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response,true);
+
+        $url1 = "http://172.17.0.3:4000/stock/getAll";
+        $data1 = array(
+            'page' => 1,
+            'limit' => 0,
+        );
+        $data_json1 = json_encode($data1);
+
+        $ch1 = curl_init();
+        curl_setopt($ch1, CURLOPT_URL, $url1);
+        curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
+        curl_setopt($ch1, CURLOPT_POST, 1);
+        curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_json1);
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+        $response1  = curl_exec($ch1);
+        curl_close($ch1);
+        $response1 = json_decode($response1, true);
+        $data1 = $response1['result']['docs'];
+
+        return view('admin/finances_details', ['response' => $response, 'materials' => $data1]);
     }
 
     public function customerDetails($id)

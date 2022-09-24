@@ -83,12 +83,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
 
         <!-- Nav Item - Payment -->
@@ -455,7 +455,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/admin/customer/edit" class="user">
+                    <form method="post" action="" class="user">
                         @csrf
                         <input type="hidden" id="id" name="id"  value="">
 
@@ -493,12 +493,7 @@
                         <hr>
                         <div class="row float-right mt-3">
                             <a href="#">
-                                <button href="#" class="btn btn-primary btn-user" name="submit" type="submit">
-                                    Modify
-                                </button>
-                            </a>
-                            <a href="#">
-                                <button class="btn btn-secondary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
                             </a>
                         </div>
                     </form>

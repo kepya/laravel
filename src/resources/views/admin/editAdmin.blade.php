@@ -79,12 +79,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/clauses">
             <i class="fas fa-list"></i>
             <span>Confidentiality Clauses</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - profile -->
         <li class="nav-item">

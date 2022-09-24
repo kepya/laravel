@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -114,7 +114,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Paid Consumption</h1> 
+        <h1 class="h3 mb-0 text-gray-800">Paid Consumption</h1>
     </div>
 
     <div class="flex d-flex justify-content-between mb-1">
@@ -179,7 +179,7 @@
                             <td style="text-align: right">
                                 <a href="{{ url('/admin/detail-consumption/'.$invoice->_id.'/edit') }}" class="btn btn-xs btn-primary pull-right">
                                     <i class="fa fa-pencil-alt" style="font-size: 20px;">
-                                    </i> 
+                                    </i>
                                 </a>
                                 <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-penalty-{{ $invoice->_id }}">
                                     <i class="far fa-eye" style="font-size: 20px;">

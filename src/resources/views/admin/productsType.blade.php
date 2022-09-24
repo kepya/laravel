@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Clauses -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item">
@@ -84,7 +84,7 @@
             <i class="fas fa-list"></i>
             <span>Confidentiality Clauses</span>
             </a>
-        </li> 
+        </li>
 
         <!-- Nav Item - profile -->
         <li class="nav-item">
@@ -111,10 +111,10 @@
         </li>
 @stop
 @section('content')
-  
+
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Products Types</h1> 
+        <h1 class="h3 mb-0 text-gray-800">Products Types</h1>
         <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#typeModal" > Add a type </a>
     </div>
 
@@ -136,7 +136,7 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <?php 
+        <?php
                 if($data['status'] == 200){
 
                     $types = $data['result'];
@@ -145,7 +145,7 @@
 
             ?>
         <tbody>
-            
+
           <tr style="background-color:white;color:black;">
             <td><?= $type['name'] ?></td>
             <td><?= date('d-m-Y H:i:s', strtotime($type['createdAt']))?></td>
@@ -158,14 +158,14 @@
 
             </td>
           </tr>
-          
+
         </tbody>
-        <?php 
+        <?php
                 }
             }
         ?>
       </table>
     </div>
-        
+
 
 @stop

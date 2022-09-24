@@ -71,12 +71,12 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/map">
             <i class="fas fa-map-marker-alt"></i>
             <span>Map</span>
             </a>
-        </li>
+        </li> -->
 
         <!-- Nav Item - Payment -->
         <li class="nav-item active">
@@ -114,7 +114,7 @@
 
     <div class="container">
       <h1 class="text-primary text-center" style="margin-top:20px;">Privacy policy</h1>
-    
+
       <hr>
       <br>
       <div class="row">
@@ -141,14 +141,14 @@
         <div class="col-md-10 offset-1 text-center">
           <p>
             Your privacy is of the utmost importance to <b>M. Tanguy Kuate</b>, who is responsible for this site.
-          </p>  
+          </p>
           <br>
       </div>
       <div class="row">
         <div class="col-md-6 text-center">
           <h4 class="text-primary">
             The purpose of this privacy policy is to explain to you:
-          </h4>  
+          </h4>
           <br>
           <ul class="text-left">
             <li>How your personal information is collected and processed. Personal information is any information that can identify you. This includes your first and last name, your age, your postal address, your e-mail address and your location;</li>
@@ -160,7 +160,7 @@
         <div class="col-md-4 offset-2">
           <h4 class="text-primary text-center">
             Personal information collected:
-          </h4>  
+          </h4>
           <br>
           <ul class="text-left">
             <li>Name</li>
@@ -183,7 +183,7 @@
         <div class="col-md-6">
           <h4 class="text-primary text-center">
             purpose of collecting your informations:
-          </h4>  
+          </h4>
           <br>
           <ul class="text-left">
             <li>Statistics;</li>
@@ -193,7 +193,7 @@
         <div class="col-md-6">
           <h4 class="text-primary text-center">
             Sharing of personal information:
-          </h4>  
+          </h4>
           <br>
           <p>
             We will not sell to third parties or generally market the personal information collected.
@@ -204,7 +204,7 @@
         <div class="col-md-6">
           <h4 class="text-primary text-center">
             Duration of retention of personal information:
-          </h4>  
+          </h4>
           <br>
           <p>
             The data controller will keep all personal information collected in its computer systems on the site under reasonable security conditions for an unlimited period of time
@@ -213,7 +213,7 @@
         <div class="col-md-6">
           <h4 class="text-primary text-center">
             Hosting of personal information:
-          </h4>  
+          </h4>
           <br>
           <p>
             Our site is hosted by <b>Not set</b>, whose registered office is located at the following address: <b>Not set</b>
@@ -228,12 +228,12 @@
         <div class="col-md-10 offset-1">
           <h4 class="text-primary text-center">
             Person responsible for the processing of personal information :
-          </h4>  
+          </h4>
           <br>
           <p>
             The personal information we collect is kept in a secure environment. People working for us are required to respect the confidentiality of your information.
             <br>
-            To ensure the security of your personal information, we use the following measure: Phone number/password 
+            To ensure the security of your personal information, we use the following measure: Phone number/password
           </p>
           <p>
             We are committed to maintaining a high level of privacy by incorporating the latest technological innovations to ensure the confidentiality of your transactions. However, as no mechanism offers maximum security, there is always a degree of risk involved when using the Internet to transmit personal information.
@@ -244,7 +244,7 @@
         <div class="col-md-10 offset-1">
           <h4 class="text-primary text-center">
             Security :
-          </h4>  
+          </h4>
           <br>
           <p>
             The controller of personal information <b>Mr. Tanguy Kuate</b> is responsible for determining the purposes and means of processing personal information.
