@@ -274,7 +274,9 @@ class ManageAdminController extends Controller
 
     public function viewCustomers(){
 
-        $url = "http://172.17.0.3:4000/admin/auth/client/1/10";
+        $size = 10;
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -308,7 +310,7 @@ class ManageAdminController extends Controller
         //     return Storage::url($image);
         // }
         // return Storage::url() http://127.0.0.1:8000/storage/cathedraledouala.jpg
-       return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+       return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
     }
 
     public function viewCustomersSort(Request $request){
@@ -317,8 +319,9 @@ class ManageAdminController extends Controller
         $order = $request->order;
         $idCompteur = $request->meter;
         $subs_date = $request->subs_date;
+        $size = $request->limit;
 
-        $url = "http://172.17.0.3:4000/admin/auth/client/find";
+        $url = "http://172.17.0.3:4000/admin/auth/client/find/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -346,26 +349,26 @@ class ManageAdminController extends Controller
         $response  = curl_exec($ch);
         curl_close($ch);
 
-        print_r($response);
+        //print_r($response);
 
 
-        // $url2 = "http://172.17.0.3:4000/client/auth/count";
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $url2);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // $response2 = curl_exec($ch);
-        // curl_close($ch);
-        // $response2 = json_decode($response2,true);
-        // $nbrCl = $response2['result'];
+        $url2 = "http://172.17.0.3:4000/client/auth/count";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response2 = curl_exec($ch);
+        curl_close($ch);
+        $response2 = json_decode($response2,true);
+        $nbrCl = $response2['result'];
 
-        // return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
 
     }
 
-    public function viewCustomersByPage($page){
+    public function viewCustomersByPage($page,$size){
 
-        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -390,13 +393,14 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl, 'size'=>$size]);
     }
 
     public function viewCustomersBySearch(Request $request){
         $page = $request->page;
+        $size = $request->limit;
 
-        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/10";
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -421,7 +425,9 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+        //print_r($response);
+
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
     }
 
     public function blockedCustomers(){

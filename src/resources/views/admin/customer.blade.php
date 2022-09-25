@@ -132,20 +132,10 @@
             <a href="/admin/customer/blockedCustomer" class="btn ml-3 btn-warning"><i class="fas fa-exclamation-triangle mr-2"></i>Blocked</a>
         </div>
         <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Customers</h1>
-        <form action="/admin/search/customer" novalidate method="post" enctype="multipart/form-data" class="form-horizontal row-border">
-            <div class="col-sm-12">
-                <div class="row">
-                    @csrf
-                    <div class="col-9">
-                        <input type="text" class="form-control form-control-user" id="name" name="name" placeholder="Name of user">
-                    </div>
-                    <div class="col-2">
-                        <button class="btn-sm btn-success h-100" type="submit" name="search" id="search"><i class="fas fa-search"></i></button>
-                    </div>
-                </div>
-
-            </div>
-        </form>
+        <div>
+            <!-- <a href="" class="btn btn-primary showTable" id="showTable"><i class="fa fa-table"></i></a> -->
+            <h2>View Customers</h2>
+        </div>
     </div>
 
 
@@ -159,33 +149,60 @@
         </div>
     @endif
 
-    <h3 class="mt-3">Sort</h3>
+    <br>
 
-    <div class="form-group">
-        <form action="/admin/customer/sort" class="ml-4" method="post">
-            <div class="form-row">
-                @csrf
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="customerID" name="customerID" value="" placeholder="ID">
+    <div class="d-sm-flex align-items-right justify-content-between mt-4">
+        <div>
+            <h3>Sort</h3>
+        </div>
+        <div class="form-group">
+            <form action="/admin/customer/sort" class="ml-4" method="post">
+                <div class="form-row">
+                    @csrf
+                    <input class="form-control" type="number" id="limit" name="limit" value="<?=$size?>" hidden>
+                    <div class="form-group col-md-2">
+                        <input type="number" class="form-control" id="customerID" name="customerID" value="" placeholder="ID">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <input type="text" class="form-control" id="meter" name="meter" value="" placeholder="UIX2000">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <input type="date" class="form-control" id="subs_date" name="subs_date" value="" placeholder="Date">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <select id="order"  name="order" class="form-control" aria-label="multiple select">
+                            <option selected value="asc">asc</option>
+                            <option value="desc">desc</option>
+                        </select>
+                    </div>
+                    <div class="form-group ml-2">
+                        <input class="btn btn-primary" type="submit" id="sort" name="sort" value="Sort">
+                    </div>
                 </div>
-                <div class="form-group col-md-1">
-                    <input type="text" class="form-control" id="meter" name="meter" value="" placeholder="UIX2000">
+            </form>
+        </div>
+
+
+        <form action="/admin/search/customer" novalidate method="post" enctype="multipart/form-data" class="form-horizontal row-border">
+            <div class="col-sm-12">
+                <div class="row">
+                    @csrf
+                    <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-user" id="name" name="name" placeholder="Name of user">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn-sm btn-success h-100" type="submit" name="search" id="search"><i class="fas fa-search"></i></button>
+                    </div>
                 </div>
-                <div class="form-group col-md-2">
-                    <input type="date" class="form-control" id="subs_date" name="subs_date" value="" placeholder="Date">
-                </div>
-                <div class="form-group col-md-1">
-                    <select id="order"  name="order" class="form-control" aria-label="multiple select">
-                        <option selected value="asc">asc</option>
-                        <option value="desc">desc</option>
-                    </select>
-                </div>
-                <div class="form-group ml-2">
-                    <input class="btn btn-primary" type="submit" id="sort" name="sort" value="Sort">
-                </div>
+
             </div>
         </form>
     </div>
+
+
+
+
 
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
@@ -381,7 +398,7 @@
                             }else{
                                 $prevDisabled = '';
                                 $prevAriadisabled = '';
-                                $prevHref = '/admin/customer/search/'.$prevPage;
+                                $prevHref = '/admin/customer/search/'.$prevPage.'/'.$size ?? '';
                             }
 
                             //next page
@@ -392,7 +409,7 @@
                             }else{
                                 $nextDisabled = '';
                                 $nextAriadisabled = '';
-                                $nextHref = '/admin/customer/search/'.$nextPage ;
+                                $nextHref = '/admin/customer/search/'.$nextPage.'/'.$size ?? '' ;
                             }
 
                         ?>
@@ -406,7 +423,7 @@
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                     </li>
-                                    <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/search/<?= $page ?>"><?= $page ?></a></li>
+                                    <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/search/<?= $page ?>/<?=$size ?? ''?>"><?= $page ?></a></li>
 
                                     <li class="page-item <?=$nextDisabled?>">
                                     <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
@@ -420,11 +437,21 @@
                                     @csrf
                                     <div class="form-group">
                                         <div class="form-row">
-                                            <div class="form-group">
+                                            <div class="form-group mr-2">
                                                 <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
                                             </div>
-                                            <div class="form-group col-md-3">
-                                                <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
+                                            <div class="form-group">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-2">
+                                                        <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="mt-2">Limit :</div>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
