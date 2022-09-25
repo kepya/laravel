@@ -132,14 +132,7 @@
         </button>
     </div>
 @endif
-@if(Session::has('messageErr'))
-    <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
-        {{ Session::get('messageErr') }}<a href='/admin/profile#settings'> the general settings</a>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
+
 
 <div class="py-3 d-flex flex-row align-items-center justify-content-between ">
     <h4 class="m-0 font-weight-bold text-primary">

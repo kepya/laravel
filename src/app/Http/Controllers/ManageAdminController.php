@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-
+use function PHPUnit\Framework\isNull;
 
 class ManageAdminController extends Controller
 {
@@ -345,6 +345,8 @@ class ManageAdminController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response  = curl_exec($ch);
         curl_close($ch);
+
+        //print_r($response);
 
 
         $url2 = "http://172.17.0.3:4000/client/auth/count";
@@ -719,11 +721,9 @@ class ManageAdminController extends Controller
                 "profileImage" => $photoPath,
             );
 
-            print_r($data);
+            //print_r($data);
 
             $data_json = json_encode($data);
-
-            //print_r($data_json);
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -738,16 +738,16 @@ class ManageAdminController extends Controller
 
             // // print_r($response);
 
-            // if ($response->status == 200){
-            //     Session::flash('message', 'Action Successfully done!');
-            //     Session::flash('alert-class', 'alert-success');
-            //     return redirect()->back();
+            if ($response->status == 200){
+                Session::flash('message', 'Action Successfully done!');
+                Session::flash('alert-class', 'alert-success');
+                return redirect()->back();
 
-            // }else{
-            //     Session::flash('message', ucfirst($response->error));
-            //     Session::flash('alert-class', 'alert-danger');
-            //     return redirect()->back();
-            // }
+            }else{
+                Session::flash('message', ucfirst($response->error));
+                Session::flash('alert-class', 'alert-danger');
+                return redirect()->back();
+            }
         }
     }
 

@@ -115,6 +115,26 @@
 <div
 class="d-sm-flex align-items-center justify-content-between mb-4"
 >
+
+<div class="row">
+    @if(Session::has('message'))
+        <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
+            {{ Session::get('message') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    @if(Session::has('messageErr'))
+        <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
+            {{ Session::get('messageErr') }}<a href='/admin/profile#settings'> the general settings</a>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+</div>
+
     <h1 class="h3 mb-0 text-gray-800">Invoices Information</h1>
 
     </div>

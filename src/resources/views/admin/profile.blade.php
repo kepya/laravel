@@ -433,10 +433,11 @@
 </div>
 
 <script>
-  //redirect to specific tab
-  $(document).ready(function () {
-      $("#tabMenu a[href='#{{ old('tab') }}']").tab('show');
-  });
+    //redirect to specific tab
+    $(document).ready(function () {
+        let selectedTab = window.location.hash;
+        $('.nav-link[href="' + selectedTab + '"]' ).trigger('click');
+    })
 </script>
 
 <script>
