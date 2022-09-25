@@ -133,13 +133,13 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
         </li>
 @stop
 @section('content')
-<?php 
+<?php
     $alltoken = $_COOKIE['token'];
     $alltokentab = explode(';', $alltoken);
     $token = $alltokentab[0];
     $tokentab = explode('=',$token);
     $tokenVal = $tokentab[1];
-    $Authorization = 'Bearer '.$tokenVal;   
+    $Authorization = 'Bearer '.$tokenVal;
 ?>
 <div class="card mb-4">
     <div class="card-header">
@@ -149,17 +149,17 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
             <button type="submit" class="btn btn-primary">Actuliser</button>
         </form>
     </div>
-</div> 
+</div>
 <div id="mapid"></div>
 <script src="/js/jquery-3.6.0.min.js"></script>
-<script type='text/javascript'> 
+<script type='text/javascript'>
     let client = [];
     let NumClient;
     let admin;
     const autho = document.getElementById('authorization').value;
-    
+
     var settings = {
-        "url": "http://172.17.0.3:4000/admin/auth/getClient",
+        "url": "http://localhost:4000/admin/auth/getClient",
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -168,13 +168,13 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
     };
     $.ajax(settings).done(function (response) {
         for (let j = 0; j < response.result.length; j++) {
-            client.push(response.result[j]);   
+            client.push(response.result[j]);
         }
         NumClient = response.result.length;
     });
-    
+
     var adminS = {
-        "url": "http://172.17.0.3:4000/admin/auth/getAdminByToken",
+        "url": "http://localhost:4000/admin/auth/getAdminByToken",
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -185,7 +185,7 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
         admin = response.result
         console.log(response);
     });
-    
+
     $( document ).ready(function() {
         var mymap = L.map('mapid').setView([5.48464445289128, 10.442020316114435], 16);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -199,9 +199,9 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
 
         var greenIcon = L.icon({
             iconUrl: '/img/pointeur3.png',
-            iconSize:     [32, 32], 
-            iconAnchor:   [22, 94], 
-            popupAnchor:  [-3, -76] 
+            iconSize:     [32, 32],
+            iconAnchor:   [22, 94],
+            popupAnchor:  [-3, -76]
         });
         var adminIcon = L.icon({
             iconUrl: '/img/pointeur1.png',
@@ -213,7 +213,7 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
         });
 
         L.marker([admin.localisation.latitude, admin.localisation.longitude], {icon: adminIcon}).addTo(mymap).bindPopup("<h4>Admin</h4>").openPopup();
-        
+
         for (let i = 0; i < NumClient; i++) {
             if (client[i].localisation.latitude && client[i].localisation.longitude) {
                 const description = function () {
@@ -225,11 +225,11 @@ crossorigin=""/><!-- Make sure you put this AFTER Leaflet's CSS -->
                 }
                 L.marker([client[i].localisation.latitude, client[i].localisation.longitude]).addTo(mymap).bindPopup(client[i].localisation.description).openPopup();
             }
-            
+
         }
-        
+
     });
-        
+
 </script>
 <!-- Make sure you put this AFTER Leaflet's CSS -->
-@stop 
+@stop

@@ -471,7 +471,7 @@
 
                type : 'post',
 
-               url : "<?= 'http://172.17.0.3:4000/login/localisation/'?>" + id,
+               url : "<?= 'http://localhost:4000/login/localisation/'?>" + id,
 
                headers: { 'Authorization': '<?= $Authorization ?>', 'Content-Type': 'application/json' },
 

@@ -198,10 +198,10 @@
                 $customers = $data['docs']; //table of customers
 
                 $totalDocs = $data['totalDocs']; //number of customers in the database
-                $limit = $data['limit']; // limit of materials on a page
+                //$limit = $data['limit']; // limit of materials on a page
                 $totalPages = $data['totalPages']; //number of pages
                 $page = $data['page']; //current page
-                $pagingCounter = $data['pagingCounter']; //paging counter
+                //$pagingCounter = $data['pagingCounter']; //paging counter
                 $hasPrevPage = $data['hasPrevPage']; //boolean if previous page exists
                 $hasNextPage = $data['hasNextPage']; //boolean if next page exists
                 $prevPage = $data['prevPage']; //index of the previous page
@@ -439,8 +439,147 @@
         <?php
         }
     }
-
 ?>
+
+<div class="row">
+    <?php
+        if(isset($customerSearch)){
+
+            foreach ($customerSearch as $customer){
+
+                $status = $customer['status'];
+                $delete = $customer['isDelete'];
+                $description = $customer['localisation']['description'];
+
+                if($status == 1){
+                    $card='bg-success';
+                    $class='btn-success';
+                    $state = 'Active';
+                    $badge = 'badge-success';
+                }
+
+                if(empty($status)){
+                    $status = 0;
+                }
+
+                if($customer['profileImage'] != "noPath"){
+                    $image = url('storage/'.$customer['profileImage']);
+                }else{
+                    $image = "/img/undraw_profile.svg";
+                }
+
+                $phones=""; //phone numbers as a string
+                $meters=""; //meter numbers as a string
+                $desc=""; //description as a string
+
+                if(!empty($customer['phone'])){
+                    $i=0;
+                    foreach($customer['phone'] as $phone){
+                        $i++;
+                        if($i == count($customer['phone'])){
+                            $phones = $phones.$phone;
+                        }else{
+                            $phones = $phones.$phone." / ";
+                        }
+                    }
+                }
+
+                if(!empty($customer['idCompteur'])){
+                    $i=0;
+                    foreach($customer['idCompteur'] as $meter){
+                        $i++;
+                        if($i == count($customer['idCompteur'])){
+                            $meters = $meters.$meter;
+                        }else{
+                            $meters = $meters.$meter." / ";
+                        }
+                    }
+                }
+
+                if(!empty($description)){
+                    $i=0;
+                    foreach($description as $description){
+                        $i++;
+                        if($i == count($customer['localisation']['description'])){
+                            $desc = $desc.$description;
+                        }else{
+                            $desc = $desc.$description." / ";
+                        }
+                    }
+                }
+            ?>
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow mb-4" style="width:18rem;">
+                    <div class="card-header py-3 <?= $card ?>">
+
+                        <div class="row">
+
+                            <img class="person-img float-left" src='<?= $image ?>' width="50" height="50"/>
+
+                            <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
+                                <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$customer['name']?></h6>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body ">
+                        <hr>
+                        <div class="text-center">
+                            <table>
+                                <tr>
+                                    <td>CLIENT : <?= $customer['customerReference']?></td>
+                                </tr>
+                                <tr>
+                                    <td>TEL : <?= $phones?> </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                    </div>
+
+                    <div class="card-footer <?= $card?>" >
+
+                            <a href="/admin/customer/block/<?= $customer['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                                <span class="text" style="margin:auto;"><?= $state ?></span>
+                            </a>
+
+                            <div class="float-right">
+
+                                <a href="#" customerID="<?= $customer['_id'] ?>"  meters="<?=$meters?>" subs_amount="<?=$customer['subscriptionAmount']?>" subs_date="<?=$customer['subscriptionDate']?>" obs="<?=$customer['observation']?>" desc="<?=$desc?>" data-toggle="modal" data-target="#infoModal" class="btn <?= $card ?> infoModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-eye"></i></i>
+                                    </span>
+                                </a>
+
+                                <a href="/admin/customer/edit/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                </a>
+
+                                <a href="/admin/customer/delete/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </a>
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+        <? }
+        }
+        ?>
+</div>
+
 
 
     <!-- Info Modal -->

@@ -16,14 +16,14 @@ class UtilisateurController extends Controller
     public function advanceInvoice()
     {
         $idFacture = $_POST['idFacture'];
-        
+
         // je definie l'url de connexion.
-        $url = "http://172.17.0.3:4000/admin/facture/statusPaidFacture/"+$idFacture;
+        $url = "http://localhost:4000/admin/facture/statusPaidFacture/"+$idFacture;
         // je definie la donnée de ma facture.
         $facture = array(
             'status' => true
         );
-        
+
         // j'encode cette donnée là'.
         $data_json = json_encode($facture);
 
@@ -42,7 +42,7 @@ class UtilisateurController extends Controller
 
         //CURLOPT_POST : si la requête doit utiliser le protocole POST pour sa résolution (boolean)
         curl_setopt($ch, CURLOPT_PUT, 1);
-        
+
         //j'insere la donnée à etre envoyé
         curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
         //enfin d'avoir un retour sur l'etat de la requette on a CURLOPT_RETURNTRANSFER = true
@@ -55,26 +55,26 @@ class UtilisateurController extends Controller
     public function allInvoiceWhichHaveNotPaid()
     {
         // je definie l'url de connexion.
-        $url = "http://172.17.0.3:4000/admin​/facture​/getFactureAdvance"; 
+        $url = "http://localhost:4000/admin​/facture​/getFactureAdvance";
 
         // Initialisez une session CURL.
-        $ch = curl_init();  
-        
-        // Récupérer le contenu de la page
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        
-        //Saisir l'URL et la transmettre à la variable.
-        curl_setopt($ch, CURLOPT_URL, $url); 
+        $ch = curl_init();
 
-        //Exécutez la requête 
-        $invoices = curl_exec($ch); 
+        // Récupérer le contenu de la page
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        //Saisir l'URL et la transmettre à la variable.
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        //Exécutez la requête
+        $invoices = curl_exec($ch);
 
         //Afficher le résultat
-        // echo $invoices; 
-        
+        // echo $invoices;
+
         //Je ferme la connexion et je libere les ressources
         curl_close($ch);
-        
+
         $response = json_decode($invoices);
         //var_dump($response);
 
@@ -98,5 +98,5 @@ class UtilisateurController extends Controller
         curl_close($ch);
     }
 
-    
+
 }
