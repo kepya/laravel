@@ -831,15 +831,6 @@ class ManageAdminController extends Controller
             $name = $_POST['name'];
             $size = $_POST['limit'];
 
-            $url = "http://172.17.0.3:4000/admin/auth/client/1/0";
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            curl_close($ch);
-            $response = json_decode($response,true);
-
             $url2 = "http://172.17.0.3:4000/client/auth/count";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url2);
