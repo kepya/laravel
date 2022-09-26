@@ -362,9 +362,10 @@ class ManageAdminController extends Controller
         $response  = curl_exec($ch);
         curl_close($ch);
 
-        print_r($response);
-         dd($response);
+        $response = json_decode($response,true);
+        $results = $response['result']["docs"];
 
+        $nbrCl = count($results);
 
         return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,"date"=> $subs_date,"refId"=> $customerRef,"counterId"=> $idCompteur,"order"=> $order]);
 
