@@ -534,6 +534,8 @@
                         }
                     }
                 }
+
+                if(!$delete && $status==1){ //Customer not blocked and not deleted
             ?>
 
 
@@ -602,7 +604,8 @@
                 </div>
             </div>
 
-        <? }
+        <?      }
+            }
         }
         ?>
 </div>

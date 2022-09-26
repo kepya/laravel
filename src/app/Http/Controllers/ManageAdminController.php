@@ -829,6 +829,26 @@ class ManageAdminController extends Controller
     	if (isset($_POST['search'])) {
 
             $name = $_POST['name'];
+            $size = $_POST['limit'];
+
+            $url = "http://172.17.0.3:4000/admin/auth/client/1/0";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $response = json_decode($response,true);
+
+            $url2 = "http://172.17.0.3:4000/client/auth/count";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url2);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response2 = curl_exec($ch);
+            curl_close($ch);
+            $response2 = json_decode($response2,true);
+            $nbrCl = $response2['result'];
 
             if(!empty($name)){
 
@@ -868,17 +888,11 @@ class ManageAdminController extends Controller
                     "result" => json_decode(json_encode($customers), true),
                 );
                 //dump($array);
-                return view('admin/customer',['customerSearch' => $array['result']]);
+                return view('admin/customer',['customerSearch' => $array['result'],'nbrCl' => $nbrCl,'size'=>$size]);
 
             }else{
 
                 $url = "http://172.17.0.3:4000/admin/auth/client/1/10";
-                $alltoken = $_COOKIE['token'];
-                $alltokentab = explode(';', $alltoken);
-                $token = $alltokentab[0];
-                $tokentab = explode('=',$token);
-                $tokenVal = $tokentab[1];
-                $Authorization = 'Bearer '.$tokenVal;
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
@@ -887,27 +901,9 @@ class ManageAdminController extends Controller
                 curl_close($ch);
                 $response = json_decode($response,true);
 
-                $url2 = "http://172.17.0.3:4000/client/auth/count";
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url2);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $response2 = curl_exec($ch);
-                curl_close($ch);
-                $response2 = json_decode($response2,true);
-                $nbrCl = $response2['result'];
-
-                return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl]);
+                return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
             }
 
-        }
-        else {
-            $array = array(
-                "status" => "404",
-                "result" => null,
-            );
-            //dump($array);
-            return view('admin/customer',['customers' => $array]);
         }
     }
 
