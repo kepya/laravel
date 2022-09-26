@@ -161,16 +161,16 @@
                     @csrf
                     <input class="form-control" type="number" id="limit" name="limit" value="<?=$size?>" hidden>
                     <div class="form-group col-md-2">
-                        <input type="number" class="form-control" id="customerID" name="customerID" value="" placeholder="ID">
+                        <input type="number" class="form-control" id="customerID" name="customerID" value="<?=$refId ?? ''?>" placeholder="ID">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="meter" name="meter" value="" placeholder="UIX2000">
+                        <input type="text" class="form-control" id="meter" name="meter" value="<?=$counterId ?? ''?>" placeholder="UIX2000">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="date" class="form-control" id="subs_date" name="subs_date" value="" placeholder="Date">
+                        <input type="date" class="form-control" id="subs_date" name="subs_date" value="<?=$date ?? ''?>" placeholder="Date">
                     </div>
                     <div class="form-group col-md-2">
-                        <select id="order"  name="order" class="form-control" aria-label="multiple select">
+                        <select id="order"  name="order" class="form-control" aria-label="multiple select" value="<?=$order ?? ''?>">
                             <option selected value="asc">asc</option>
                             <option value="desc">desc</option>
                         </select>
@@ -187,7 +187,7 @@
             <div class="col-sm-12">
                 <div class="row">
                     @csrf
-                    <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
+                    <input class="form-control" type="number" id="limit" name="limit" value="<?=$size?>" hidden>
                     <div class="col-9">
                         <input type="text" class="form-control form-control-user" id="name" name="name" placeholder="Name of user">
                     </div>

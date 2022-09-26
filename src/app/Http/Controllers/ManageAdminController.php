@@ -321,6 +321,18 @@ class ManageAdminController extends Controller
         $subs_date = $request->subs_date;
         $size = $request->limit;
 
+        if(empty($subs_date)){
+            $subs_date = "";
+        }
+
+        if(empty($idCompteur)){
+            $idCompteur = "";
+        }
+
+        if(empty($customerRef)){
+            $customerRef = "";
+        }
+
         $url = "http://172.17.0.3:4000/admin/auth/client/find/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -349,7 +361,7 @@ class ManageAdminController extends Controller
         $response  = curl_exec($ch);
         curl_close($ch);
 
-        //print_r($response);
+        // print_r($response);
 
 
         $url2 = "http://172.17.0.3:4000/client/auth/count";
@@ -362,7 +374,7 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,"date"=> $subs_date,"refId"=> $customerRef,"counterId"=> $idCompteur,"order"=> $order]);
 
     }
 
