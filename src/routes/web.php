@@ -148,6 +148,10 @@ Route::group(['middleware' => 'checksession'], function () {
 
         Route::match(['get','put'],'/admin/customer/block/{id}/{status}',[ManageAdminController::class, 'blockCustomer'])->name('blockCustomer');
 
+        Route::get('/admin/customer/blockedCustomer/search/{page_search}/{size}',[ManageAdminController::class, 'viewCustomersBlockedByPage'])->name('viewCustomersBlockedByPage');
+
+        Route::match(['get','post'],'/admin/customer/blockedCustomer/search',[ManageAdminController::class, 'viewCustomersBlockedBySearch'])->name('viewCustomersBlockedBySearch');
+
 		Route::get('/admin/facture',[AdminController::class, 'allClient']);
 
 		Route::post('/admin/facture/addInvoice',[AdminController::class, 'addOneInvoice'])->name('addOneInvoice');

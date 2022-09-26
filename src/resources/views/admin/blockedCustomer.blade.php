@@ -129,173 +129,318 @@
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
         <!-- Basic Card Example -->
-
         <?php
-        if($customers['status'] == 200){
+            if(isset($response["result"])){
 
-            $informations = $customers['result'];
+                $data = $response['result'];  //table informations returned
 
-            foreach($informations as $key => $info) {
-                $location = $info['localisation'];
-                $description = $location['description'];
+                $customers = $data['docs']; //table of customers
 
-                if($description != ""){
-                    $description = $location['description'];
-                }else{
-                    $description = "Not set";
+                $totalDocs = $data['totalDocs']; //number of customers in the database
+                //$limit = $data['limit']; // limit of materials on a page
+                $totalPages = $data['totalPages']; //number of pages
+                $page = $data['page']; //current page
+                //$pagingCounter = $data['pagingCounter']; //paging counter
+                $hasPrevPage = $data['hasPrevPage']; //boolean if previous page exists
+                $hasNextPage = $data['hasNextPage']; //boolean if next page exists
+                $prevPage = $data['prevPage']; //index of the previous page
+                $nextPage = $data['nextPage']; //index of the next page
+
+                if(empty($page)){
+                    $page = 0;
                 }
 
-                $status = $info['status'];
-                $delete = $info['isDelete'];
-
-                if($status == 0){
-                    $card='bg-warning';
-                    $class='btn-warning';
-                    $badge = 'badge-warning';
-                    $state = 'Blocked';
+                if(empty($hasPrevPage)){
+                    $hasPrevPage = 0;
                 }
 
-                if(empty($status)){
-                    $status = 0;
+                if(empty($hasNextPage)){
+                    $hasNextPage = 0;
                 }
 
-
-                if($info['profileImage'] != "noPath"){
-                    $image = url('storage/'.$info['profileImage']);
-                }else{
-                    $image = "/img/undraw_profile.svg";
+                if(empty($prevPage)){
+                    $prevPage = 0;
                 }
 
-                if(!$delete && $status==0){
+                if(empty($nextPage)){
+                    $nextPage = 0;
+                }
 
-            ?>
+                if($totalDocs != 0) { //if there are customers in the database
 
+                    foreach($customers as $customer){
 
-            <div class="col-md-6 col-lg-4">
-                    <div class="card shadow mb-4" style="width:18rem;">
-                        <div class="card-header py-3 <?= $card ?>">
+                        //Verify if the person has many meters
+                        $status = $customer['status'];
+                        $delete = $customer['isDelete'];
+                        $description = $customer['localisation']['description'];
 
-                            <div class="row">
+                        if($status == 0){
+                            $card='bg-warning';
+                            $class='btn-warning';
+                            $state = 'Blocked';
+                            $badge = 'badge-warning';
+                        }
 
-                                <img class="img-profile rounded-circle float-left" src='<?= $image ?>' width="50" height="50"/>
+                        if(empty($status)){
+                            $status = 0;
+                        }
 
-                                <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
-                                    <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$info['name']?></h6>
+                        if($customer['profileImage'] != "noPath"){
+                            $image = url('storage/'.$customer['profileImage']);
+                        }else{
+                            $image = "/img/undraw_profile.svg";
+                        }
+
+                        $phones=""; //phone numbers as a string
+                        $meters=""; //meter numbers as a string
+                        $desc=""; //description as a string
+
+                        if(!empty($customer['phone'])){
+                            $i=0;
+                            foreach($customer['phone'] as $phone){
+                                $i++;
+                                if($i == count($customer['phone'])){
+                                    $phones = $phones.$phone;
+                                }else{
+                                    $phones = $phones.$phone." / ";
+                                }
+                            }
+                        }
+
+                        if(!empty($customer['idCompteur'])){
+                            $i=0;
+                            foreach($customer['idCompteur'] as $meter){
+                                $i++;
+                                if($i == count($customer['idCompteur'])){
+                                    $meters = $meters.$meter;
+                                }else{
+                                    $meters = $meters.$meter." / ";
+                                }
+                            }
+                        }
+
+                        if(!empty($description)){
+                            $i=0;
+                            foreach($description as $description){
+                                $i++;
+                                if($i == count($customer['localisation']['description'])){
+                                    $desc = $desc.$description;
+                                }else{
+                                    $desc = $desc.$description." / ";
+                                }
+                            }
+                        }
+
+                        if(!$delete && $status==0){ //Customer blocked and not deleted
+                        ?>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card shadow mb-4" style="width:18rem;">
+                                    <div class="card-header py-3 <?= $card ?>">
+
+                                        <div class="row">
+
+                                            <img class="person-img float-left" src='<?= $image ?>' width="50" height="50"/>
+
+                                            <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
+                                                <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$customer['name']?></h6>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="card-body ">
+                                        <hr>
+                                        <div class="text-center">
+                                            <table>
+                                                <tr>
+                                                    <td>CLIENT : <?= $customer['customerReference']?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>TEL : <?= $phones?> </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <hr>
+                                    </div>
+
+                                    <div class="card-footer <?= $card?>" >
+
+                                            <a href="/admin/customer/block/<?= $customer['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                </span>
+                                                <span class="text" style="margin:auto;"><?= $state ?></span>
+                                            </a>
+
+                                            <div class="float-right">
+
+                                                <a href="#" customerID="<?= $customer['_id'] ?>"  meters="<?=$meters?>" subs_amount="<?=$customer['subscriptionAmount']?>" subs_date="<?=$customer['subscriptionDate']?>" obs="<?=$customer['observation']?>" desc="<?=$desc?>" data-toggle="modal" data-target="#infoModal" class="btn <?= $card ?> infoModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                                    <span class="icon"  style="color:white;">
+                                                        <i class="fas fa-eye"></i></i>
+                                                    </span>
+                                                </a>
+
+                                                <a href="/admin/customer/edit/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                                    <span class="icon"  style="color:white;">
+                                                        <i class="fas fa-edit"></i>
+                                                    </span>
+                                                </a>
+
+                                                <a href="/admin/customer/delete/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                                    <span class="icon"  style="color:white;">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                </a>
+
+                                            </div>
+                                    </div>
                                 </div>
-
                             </div>
 
-                        </div>
+                        <?php
+                        }
 
-                        <div class="card-body ">
-                            <hr>
-
-                            <div class="text-center">
-
-                                <table>
-                                    <tr>
-                                        <td>Number: </td>
-                                        <td><?= $info['phone'] ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Address: </td>
-                                        <td><?= $description ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Meter ID: </td>
-                                        <td><?= $info['IdCompteur'] ?></td>
-                                    </tr>
-                                </table>
-
-                            </div>
-
-                            <hr>
-                        </div>
-
-                        <div class="card-footer <?= $card?>" >
-
-                                <a href="/admin/customer/block/<?= $info['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </span>
-                                    <span class="text" style="margin:auto;"><?= $state ?></span>
-                                </a>
-
-                                <div class="float-right">
-
-                                    <a href="locationModal" id="toLocation" locate="<?= $info['_id'] ?>" data-toggle="modal" data-target="#locationModal" class="btn <?= $card ?> locationModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="location">
-                                        <span class="icon"  style="color:white;">
-                                            <i class="fas fa-globe"></i></i>
-                                        </span>
-                                    </a>
-
-                                    <a href="/admin/customer/edit/<?= $info['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                        <span class="icon"  style="color:white;">
-                                            <i class="fas fa-edit"></i>
-                                        </span>
-                                    </a>
-
-                                    <a href="/admin/customer/delete/<?= $info['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-                                        <span class="icon"  style="color:white;">
-                                            <i class="fas fa-trash"></i>
-                                        </span>
-                                    </a>
-
-                                </div>
-                        </div>
-                    </div>
-                </div>
-     <?php
-                }
-            }
-        }
-     ?>
+                    }?>
 
     </div>
 
+            <div class="row">
+                <div class="container">
 
-    <!-- Location Modal -->
-    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    <div class="float-right">
+
+                        <?php
+                            //previous page
+                            if($hasPrevPage == 0){
+                                $prevDisabled = 'disabled';
+                                $prevAriadisabled = 'true';
+                                $prevHref = '#';
+                            }else{
+                                $prevDisabled = '';
+                                $prevAriadisabled = '';
+                                $prevHref = '/admin/customer/blockedCustomer/search/'.$prevPage.'/'.$size;
+                            }
+
+                            //next page
+                            if($hasNextPage == 0){
+                                $nextDisabled = 'disabled';
+                                $nextAriadisabled = 'true';
+                                $nextHref = '#';
+                            }else{
+                                $nextDisabled = '';
+                                $nextAriadisabled = '';
+                                $nextHref = '/admin/customer/blockedCustomer/search/'.$nextPage.'/'.$size;
+                            }
+
+                        ?>
+
+                        <!-- Pagination -->
+                            <small><?=$totalPages?>pages</small>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item <?= $prevDisabled?>">
+                                    <a class="page-link" href="<?=$prevHref?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                    </li>
+                                    <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/blockedCustomer/search/<?= $page ?>/<?=$size?>"><?= $page ?></a></li>
+
+                                    <li class="page-item <?=$nextDisabled?>">
+                                    <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <div class="form-pages">
+                                <form action="/admin/customer/blockedCustomer/search" method="post">
+                                    @csrf
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <div class="form-group mr-2">
+                                                <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-2">
+                                                        <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="mt-2">Limit :</div>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <input class="form-control" type="number" id="limit" name="limit" value="<?=$size?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        <?php
+        }
+    }
+?>
+
+<!-- Info Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Location</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Others Informations</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/admin/customer/location" class="user">
+                    <form method="post" action="" class="user">
                         @csrf
                         <input type="hidden" id="id" name="id"  value="">
-                        <input type="hidden" name="lat" id="lat"  value="">
-                        <input type="hidden" name="lng" id="lng"  value="">
 
-                        <div class="input-group mt-3">
-                            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase"><i class='fas fa-home'></i></span></div>
-                            <input type="text" class="form-control" placeholder="description of the location" id="description" name="description" value="" required>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="">Sites</label>
+                                    <input type="text" class="form-control" id="meters" name="meters" value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <textarea class="form-control" id="desc" readonly></textarea>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="input-group mt-3">
-                            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">Lat</i></span></div>
-                            <input type="number" class="form-control" name="latsee" id="latsee" value="" disabled>
-                        </div>
-
-                        <div class="input-group mt-3">
-                            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">Lng</i></span></div>
-                            <input type="text" class="form-control" name="lngsee" id="lngsee" value="" disabled>
+                        <div class="part3">Subscription</div>
+                        <div class="form-group mt-2">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="date" class="form-control" id="subs_date" name="subs_date" value="" readonly>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" id="subs_amount" name="subs_amount" value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <input type="text" class="form-control" id="observation" name="observation" value="" readonly>
+                                </div>
+                            </div>
                         </div>
 
                         <hr>
                         <div class="row float-right mt-3">
                             <a href="#">
-                                <button href="#" class="btn btn-primary btn-user" name="submit" type="submit">
-                                    Proceed
-                                </button>
-                            </a>
-                            <a href="#">
-                                <button class="btn btn-secondary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
                             </a>
                         </div>
                     </form>
@@ -307,44 +452,22 @@
 
 
     <script>
+        $("body").on('click','.infoModal',function(event){
 
-    $("body").on('click','#toLocation',function(event){
+            var id = $(this).attr('customerID');
+            var subs_date = $(this).attr('subs_date')
+            var subs_amount = $(this).attr('subs_amount');
+            var obs = $(this).attr('obs');
+            var meters = $(this).attr('meters');
+            var desc = $(this).attr('desc');
 
-        event.preventDefault();
+            $('#meters').val(meters);
+            $('#subs_date').val(subs_date);
+            $('#subs_amount').val(subs_amount);
+            $('#observation').val(obs);
+            $('#desc').val(desc);
 
-        var id = $(this).attr('locate');
-
-       function myPosition(position) {
-
-        $('#lat').val(position.coords.latitude);
-        $('#latsee').val(position.coords.latitude);
-        $('#lng').val(position.coords.longitude);
-        $('#lngsee').val(position.coords.longitude);
-        $('#id').val(id);
-       }
-
-       function errorPosition(error) {
-          var info = "Error while getting your location : ";
-
-          switch(error.code) {
-              case error.TIMEOUT:
-                  info += "Timeout !";
-              break;
-              case error.PERMISSION_DENIED:
-              info += "Permission denied";
-              break;
-              case error.POSITION_UNAVAILABLE:
-                  info += "Your location could not be determined";
-              break;
-              case error.UNKNOWN_ERROR:
-                  info += "Unknown Error";
-              break;
-          }
-       }
-
-      if(navigator.geolocation)
-        navigator.geolocation.getCurrentPosition(myPosition,errorPosition,{enableHighAccuracy:true});
-    });
+        });
 
     </script>
 

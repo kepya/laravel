@@ -431,7 +431,10 @@ class ManageAdminController extends Controller
     }
 
     public function blockedCustomers(){
-        $url = "http://172.17.0.3:4000/admin/auth/getClient";
+
+        $size = 10;
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -445,7 +448,8 @@ class ManageAdminController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($response,true);
-        return view('admin/blockedCustomer',['customers' => $response]);
+
+        return view('admin/blockedCustomer',['response' => $response,'size'=>$size]);
     }
 
     public function addCustomers(){
@@ -650,6 +654,50 @@ class ManageAdminController extends Controller
 
         return view('admin/editCustomer',['data' => $userdata]);
 
+    }
+
+    public function viewCustomersBlockedBySearch(Request $request){
+        $page = $request->page;
+        $size = $request->limit;
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response,true);
+
+        //print_r($response);
+
+        return view('admin/blockedCustomer',['response' => $response,'size'=>$size]);
+    }
+
+    public function viewCustomersBlockedByPage($page,$size){
+
+        $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response,true);
+
+        return view('admin/blockedCustomer',['response' => $response,'size'=>$size]);
     }
 
     public function saveCustomer($id,Request $request){
