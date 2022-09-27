@@ -2395,24 +2395,9 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $year = date("Y");
-        //echo $year;
-
-        $month = date("m");
-        //echo $month;
-
-        $page = 1;
-
-        $size = 5;
-
-        $page_en_cours = 1;
-        $previous_page = 1;
-        $next_page = 1;
-
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/factureByYear/' . $year,
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2426,6 +2411,8 @@ class AdminController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response);
+
+        dd($response);
 
         $i = 0;
         $invoices = array();
@@ -2496,7 +2483,6 @@ class AdminController extends Controller
                 $i = $i + 1;
             }
         }
-        // dump($invoicesWithPaginator);
 
         return view('admin/consumption', [
             'invoices' => $invoicesWithPaginator,
@@ -3499,8 +3485,8 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
         $tokentab = explode('=', $token);
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
-
-
+    
+    
         $newIndex = $_POST['newIndex'];
         $date = $_POST['date'];
         $idClient = $_POST['userId'];
@@ -3508,10 +3494,10 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
         $meter = $_POST['meter'];
         $meters = [];
         array_push($meters,$meter);
-
+    
         // je definie l'url de connexion.
         $url = "http://172.17.0.3:4000/admin/facture/" . $idClient;
-
+    
         $data1 = array(
             'idCompteur'=> $meters,
             'newIndex' => $newIndex,
@@ -3519,7 +3505,7 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
             'dateReleveNewIndex' => $date
         );
         $data_json1 = json_encode($data1);
-
+    
         $ch1 = curl_init();
         curl_setopt($ch1, CURLOPT_URL, $url);
         curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
@@ -3529,108 +3515,40 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
         $response1  = curl_exec($ch1);
         curl_close($ch1);
         $response1 = json_decode($response1, true);
-
+    
         //dump($data_json1);
         if ($response1['status'] == 200) {
             Session::flash('message', 'Invoice created!');
             Session::flash('alert-class', 'alert-success');
-
-            $url = curl_init();
-            curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/doInvoiceWithDate/' . $date,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-            ));
-
-            $data = curl_exec($url);
-            $data = json_decode($data);
-            $users = array();
-            $users = $data->result;
-
-            $userHasInvoices = array();
-
-            $length = count($users);
-            for ($i=0; $i < $length; $i++) {
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/haveInvoice/' . $users[$i] -> _id,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                ));
-
-                $response = curl_exec($curl);
-                $response = json_decode($response);
-
-                array_push($userHasInvoices,array(
-                    "user"  => $users[$i],
-                    "hasInvoice" => $response->result,
-                ));
-            }
-
-            return view('admin/facture', ['users' => $users, 'date' => $date,'userHasInvoices' => $userHasInvoices]);
-
         } else {
-            $url = curl_init();
-            curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/doInvoiceWithDate/' . $date,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-            ));
-
-            $data = curl_exec($url);
-            $data = json_decode($data);
-            $users = array();
-            $users = $data->result;
-
-            $userHasInvoices = array();
-
-            $length = count($users);
-            for ($i=0; $i < $length; $i++) {
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/haveInvoice/' . $users[$i] -> _id,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                ));
-
-                $response = curl_exec($curl);
-                $response = json_decode($response);
-
-                array_push($userHasInvoices,array(
-                    "user"  => $users[$i],
-                    "hasInvoice" => $response->result,
-                ));
-            }
-
             Session::flash('message', ucfirst($response1['error']));
             Session::flash('alert-class', 'alert-danger');
-            return redirect()->back()->with($users)->with($date)->with($userHasInvoices);
         }
+    
+        
+        $url = curl_init();
+        curl_setopt_array($url, array(
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+        ));
 
+        $response = curl_exec($url);
+        $response = json_decode($response);
+
+        $invoices = $response -> result;
+        if ($invoices == null) {
+            $invoices = [];
+        }
+        
+        return redirect()->back()->with($date)->with($invoices);
+    
     }
 
     public function map()
@@ -3734,37 +3652,12 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
                     $response = curl_exec($url);
                     $response = json_decode($response);
 
-                    dump($response);
-                    // $users = array();
-                    // $userHasInvoices = array();
+                    $invoices = $response -> result;
+                    if ($invoices == null) {
+                        $invoices = [];
+                    }
 
-                    // if ($response->status == 200) {
-                    //     $users = $response->result;
-                    //     $length = count($users);
-                    //     for ($i=0; $i < $length; $i++) {
-                    //         $curl = curl_init();
-                    //         curl_setopt_array($curl, array(
-                    //             CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/haveInvoice/' . $users[$i] -> _id,
-                    //             CURLOPT_RETURNTRANSFER => true,
-                    //             CURLOPT_ENCODING => '',
-                    //             CURLOPT_MAXREDIRS => 10,
-                    //             CURLOPT_TIMEOUT => 0,
-                    //             CURLOPT_FOLLOWLOCATION => true,
-                    //             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    //             CURLOPT_CUSTOMREQUEST => 'GET',
-                    //             CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                    //         ));
-
-                    //         $response = curl_exec($curl);
-                    //         $response = json_decode($response);
-
-                    //         array_push($userHasInvoices,array(
-                    //             "user"  => $users[$i],
-                    //             "hasInvoice" => $response->result,
-                    //         ));
-                    //     }
-                    //     return view('admin/facture', ['users' => $users, 'date' => $date, 'userHasInvoices' => $userHasInvoices]);
-                    // }
+                    return view('admin/facture', ['invoices' => $invoices, 'date' => $date]);
                 } else {
                     $messageErr = "Please entrer the static informations in the ";
                     Session::flash('messageErr', $messageErr);
