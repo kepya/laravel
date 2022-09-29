@@ -191,9 +191,11 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::get('/admin/detail-consumption/{invoice_id}/edit',[AdminController::class, 'detailInvoive'])->name('detailInvoive');
 
+		Route::get('/admin/invoice/delete/{invoice_id}',[AdminController::class, 'deleteInvoive'])->name('deleteInvoive');
+
         Route::get('/admin/customer/blockedCustomer',[ManageAdminController::class, 'blockedCustomers']);
 
-		Route::post('/admin/facture/{invoice_id}',[AdminController::class, 'updateInvoice'])->name('updateInvoice');
+		Route::put('/admin/facture/{invoice_id}',[AdminController::class, 'updateInvoice'])->name('updateInvoice');
 
 		Route::get('/admin/paid/{invoice_id}/client/{client_id}',[AdminController::class, 'getClientByInvoices'])->name('getClientByInvoices');
 

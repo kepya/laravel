@@ -91,14 +91,6 @@ class HomeController extends Controller
 		        }else{
 		            return redirect()->route('clientHome');
 		        }
-			     //    if(!empty($location['longitude']) && !empty($location['latitude'])){
-
-			     //    }else{
-			     //    	  $request->session()->put('profile',$userdata['profile']);
-						  // setcookie('token', $cookie[0],time() + $timeout,null,null,false,true);
-			     //          return redirect()->route('seeClauses');
-			     //    }
-
 	        }
 	    }else{
 	        $err  = $informations['error'];
@@ -156,7 +148,6 @@ class HomeController extends Controller
 
     public function adminHome()
 	{
-
 		$alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -187,31 +178,12 @@ class HomeController extends Controller
         if(array_key_exists('result', $response)) {
             $invoicesAdvenced = $response['result'];
         }
-        // $i=0;
-        // $invoicesAdvenced = array();
 
         $year = date("Y");
-
         $month = date("m");
-
-        // foreach($response as $key => $value){
-        //     if($i >= 1){
-        //         $invoicesAdvenced = $value;
-        //         //dump($value);
-        //     }
-        //     $i = $i + 1;
-        //     //dump($key);
-        // }
-
-        //dump($invoicesAdvenced);
-        // if (gettype($invoicesAdvenced) != "array") {
-        //     $invoicesAdvenced = array();
-        // }
-
         $client = array();
 
         foreach($invoicesAdvenced as $invoice){
-
             $idClient = $invoice['idClient'];
             $url = curl_init();
             curl_setopt_array($url, array(
@@ -225,29 +197,16 @@ class HomeController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'GET',
                 CURLOPT_HTTPHEADER => array('Authorization: '.$Authorization),
             ));
-
             $response = curl_exec($url);
             $response = json_decode($response);
-
             $i=0;
-
             array_push($client,$response->result);
-            // foreach($response as $key => $value){
-            //     if($i >= 1){
-            //         //$client = $value;
-            //         array_push($client,$value);
-            //         //dump($value);
-            //     }
-            //     $i = $i + 1;
-            //     //dump($key);
-            // }
-
         }
 
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/'.$year.'/'.$month.'/0/1',
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/'.$year.'/'.$month.'/0/5',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -263,13 +222,11 @@ class HomeController extends Controller
         $res = json_decode($re);
         $resu = $res->result;
 
-
         $earnly = 0;
         $invoices_paid = array();
         $invoices_month = array();
         $invoices_year = array();
         $row = 0;
-        //array_push($invoices_paid,$value);
 
         $invoices_month = $res->result;
         foreach ($resu as $tab) {
@@ -335,8 +292,7 @@ class HomeController extends Controller
         if($numberOfAllClient != 0){
             $pourcent = number_format((($number0fClient / $numberOfAllClient) * 100), 2);
         }
-        //dump($invoicesAdvenced);
-
+        
         // annuel
         $url_annuel = curl_init();
         curl_setopt_array($url_annuel, array(
@@ -353,15 +309,12 @@ class HomeController extends Controller
 
         $invoices_annuel = curl_exec($url_annuel);
         $invoices_annuel = json_decode($invoices_annuel);
-        $invoices_annuel_list = $invoices_annuel->result;
 
-        // foreach($invoices_annuel as $key => $value){
-        //     if($i >= 3){
-        //         $invoices_annuel_list = $value;
-        //     }
-        //     $i = $i + 1;
-        // }
-
+        if ($invoices_annuel->status >= 200 && $invoices_annuel->status <= 299  ) {
+            $invoices_annuel_list = $invoices_annuel->result;
+        } else {
+            $invoices_annuel_list = [];
+        }
 
         $url1 = "http://172.17.0.3:4000/stock/getAll";
         $data1 = array(

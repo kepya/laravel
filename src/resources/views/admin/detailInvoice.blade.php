@@ -158,8 +158,8 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <div class="input-group">Consumption</div>
-                            <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> consommation?>" required>
+                            <div class="input-group">Id Counter</div>
+                            <input type="text" disabled class="form-control" placeholder="Id Counter" id="idCompteur" name="idCompteur" value="<?= $invoice  -> idCompteur?>" required>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -184,19 +184,25 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="form-group mb-3">
+                        <div class="input-group">Consumption</div>
+                        <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> consommation?>" required>
+                    </div>
+                    <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Amount</div>
                             <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> montantConsommation?>" required>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Paid</div>
                             <input type="number" class="form-control" placeholder="money who give" id="amountPaid" name="amountPaid" value="<?= $invoice  -> montantVerse?>" required disabled>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">UnPaid</div>
                             <input type="number" disabled class="form-control" id="oldIndex" name="oldIndex"  value="<?= $invoice  -> montantImpaye?>" required>
@@ -214,7 +220,9 @@
                     </div>
                     <div class="float-right">
                         @if($invoice  -> facturePay == false)
-                            <button class="btn btn-primary" name="connect" type="submit">Update</button>
+                            <button  title="update invoice" type="button" class="btn btn-xs btn-outline-dark pull-right" role="button" data-toggle="modal" data-target="#modal-update-{{ $invoice->_id }}">
+                                Update Invoice
+                            </button>
                         @endif
                         <a href="/admin/home">
                             <a class="ml-2 btn btn-primary" type="button" href="{{ url('/admin/print/'.$invoice->_id) }}">Print to pdf</a>
@@ -260,6 +268,67 @@
                 </div>
             </form>
             @endif
+
+            <div class="modal fade" tabindex="-1" id="modal-update-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumDeleteModalLabel" data-backdrop="static" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <section>
+                                Update Invoice
+                            </section>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="updateInvoice"  action="/admin/facture/{{$invoice->_id}}"  method="put" role="form" class="col-lg-8 offset-lg-2">
+                                @csrf
+                                {{method_field('put')}}
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3" hidden>
+                                            <div class="input-group">Id Invoice</div>
+                                            <input type="text" class="form-control" placeholder="idInvoice" id="idInvoice" name="idInvoice" value="<?= $invoice ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <div class="input-group">New index</div>
+                                            <input type="number" class="form-control" placeholder="new index" id="newIndex" name="newIndex" value="<?= $invoice  -> newIndex?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <div class="input-group">Date of spicy</div>
+                                            <input type="text" class="form-control" id="dateSpicy" name="dateSpicy" placeholder="Date of spicy" value="<?= date('d-m-Y ', strtotime($invoice  -> dateReleveNewIndex))?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <div class="input-group">Paid</div>
+                                            <input type="number" class="form-control" placeholder="money who give" id="amountPaid" name="amountPaid" value="<?= $invoice  -> montantVerse?>" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex justify-content-end">
+                                    <button class="btn btn-primary" id="connect" name="connect" type="submit">Update Invoice</button>
+                                    <button class="btn btn-secondary ml-2 back" id="showDetail" type="button">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -267,7 +336,7 @@
 <script type="text/javascript">
 
 $('.back').on('click', function(){
-    //history.back();
+    history.back();
     // admin/consumption-that-are-unpaid
 });
 
