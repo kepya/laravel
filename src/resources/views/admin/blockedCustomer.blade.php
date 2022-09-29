@@ -112,8 +112,14 @@
 @section('content')
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800"><a href="/admin/customer" class="mr-3"><i class="fas fa-chevron-circle-left"></i></a>Blocked Customers</h1>
+    <div class="d-sm-flex align-items-right justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800"><a href="/admin/customer" class="mr-3"><i class="fas fa-chevron-circle-left"></i></a></h1>
+        </div>
+        <h1 class="h3 mb-0 text-gray-800">Blocked Customers</h1>
+        <div>
+            <button mode="<?=$mode?>" class="btn btn-primary showTable" id="showTable"><i class="fa fa-table"></i></button>
+        </div>
     </div>
 
     @if(Session::has('error'))
@@ -126,269 +132,426 @@
         </div>
     @endif
 
+
+    <!-- bloc normal -->
+
+    <?php
+        if(isset($response["result"])){
+
+            $data = $response['result'];  //table informations returned
+
+            $customers = $data['docs']; //table of customers
+
+            $totalDocs = $data['totalDocs']; //number of customers in the database
+            //$limit = $data['limit']; // limit of materials on a page
+            $totalPages = $data['totalPages']; //number of pages
+            $page = $data['page']; //current page
+            //$pagingCounter = $data['pagingCounter']; //paging counter
+            $hasPrevPage = $data['hasPrevPage']; //boolean if previous page exists
+            $hasNextPage = $data['hasNextPage']; //boolean if next page exists
+            $prevPage = $data['prevPage']; //index of the previous page
+            $nextPage = $data['nextPage']; //index of the next page
+
+            if(empty($page)){
+                $page = 0;
+            }
+
+            if(empty($hasPrevPage)){
+                $hasPrevPage = 0;
+            }
+
+            if(empty($hasNextPage)){
+                $hasNextPage = 0;
+            }
+
+            if(empty($prevPage)){
+                $prevPage = 0;
+            }
+
+            if(empty($nextPage)){
+                $nextPage = 0;
+            }
+
+            if($totalDocs!=0) {
+    ?>
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
         <!-- Basic Card Example -->
-        <?php
-            if(isset($response["result"])){
 
-                $data = $response['result'];  //table informations returned
+            <?php
+                foreach($customers as $customer){
 
-                $customers = $data['docs']; //table of customers
+                    //Verify if the person has many meters
+                    $status = $customer['status'];
+                    $delete = $customer['isDelete'];
+                    $description = $customer['localisation']['description'];
 
-                $totalDocs = $data['totalDocs']; //number of customers in the database
-                //$limit = $data['limit']; // limit of materials on a page
-                $totalPages = $data['totalPages']; //number of pages
-                $page = $data['page']; //current page
-                //$pagingCounter = $data['pagingCounter']; //paging counter
-                $hasPrevPage = $data['hasPrevPage']; //boolean if previous page exists
-                $hasNextPage = $data['hasNextPage']; //boolean if next page exists
-                $prevPage = $data['prevPage']; //index of the previous page
-                $nextPage = $data['nextPage']; //index of the next page
+                    if($status == 0){
+                        $card='bg-warning';
+                        $class='btn-warning';
+                        $state = 'Blocked';
+                        $badge = 'badge-warning';
+                    }
 
-                if(empty($page)){
-                    $page = 0;
-                }
+                    if(empty($status)){
+                        $status = 0;
+                    }
 
-                if(empty($hasPrevPage)){
-                    $hasPrevPage = 0;
-                }
+                    if($customer['profileImage'] != "noPath"){
+                        $image = url('storage/'.$customer['profileImage']);
+                    }else{
+                        $image = "/img/undraw_profile.svg";
+                    }
 
-                if(empty($hasNextPage)){
-                    $hasNextPage = 0;
-                }
+                    $phones=""; //phone numbers as a string
+                    $meters=""; //meter numbers as a string
+                    $desc=""; //description as a string
 
-                if(empty($prevPage)){
-                    $prevPage = 0;
-                }
-
-                if(empty($nextPage)){
-                    $nextPage = 0;
-                }
-
-                if($totalDocs != 0) { //if there are customers in the database
-
-                    foreach($customers as $customer){
-
-                        //Verify if the person has many meters
-                        $status = $customer['status'];
-                        $delete = $customer['isDelete'];
-                        $description = $customer['localisation']['description'];
-
-                        if($status == 0){
-                            $card='bg-warning';
-                            $class='btn-warning';
-                            $state = 'Blocked';
-                            $badge = 'badge-warning';
-                        }
-
-                        if(empty($status)){
-                            $status = 0;
-                        }
-
-                        if($customer['profileImage'] != "noPath"){
-                            $image = url('storage/'.$customer['profileImage']);
-                        }else{
-                            $image = "/img/undraw_profile.svg";
-                        }
-
-                        $phones=""; //phone numbers as a string
-                        $meters=""; //meter numbers as a string
-                        $desc=""; //description as a string
-
-                        if(!empty($customer['phone'])){
-                            $i=0;
-                            foreach($customer['phone'] as $phone){
-                                $i++;
-                                if($i == count($customer['phone'])){
-                                    $phones = $phones.$phone;
-                                }else{
-                                    $phones = $phones.$phone." / ";
-                                }
+                    if(!empty($customer['phone'])){
+                        $i=0;
+                        foreach($customer['phone'] as $phone){
+                            $i++;
+                            if($i == count($customer['phone'])){
+                                $phones = $phones.$phone;
+                            }else{
+                                $phones = $phones.$phone." / ";
                             }
                         }
+                    }
 
-                        if(!empty($customer['idCompteur'])){
-                            $i=0;
-                            foreach($customer['idCompteur'] as $meter){
-                                $i++;
-                                if($i == count($customer['idCompteur'])){
-                                    $meters = $meters.$meter;
-                                }else{
-                                    $meters = $meters.$meter." / ";
-                                }
+                    if(!empty($customer['idCompteur'])){
+                        $i=0;
+                        foreach($customer['idCompteur'] as $meter){
+                            $i++;
+                            if($i == count($customer['idCompteur'])){
+                                $meters = $meters.$meter;
+                            }else{
+                                $meters = $meters.$meter." / ";
                             }
                         }
+                    }
 
-                        if(!empty($description)){
-                            $i=0;
-                            foreach($description as $description){
-                                $i++;
-                                if($i == count($customer['localisation']['description'])){
-                                    $desc = $desc.$description;
-                                }else{
-                                    $desc = $desc.$description." / ";
-                                }
+                    if(!empty($description)){
+                        $i=0;
+                        foreach($description as $description){
+                            $i++;
+                            if($i == count($customer['localisation']['description'])){
+                                $desc = $desc.$description;
+                            }else{
+                                $desc = $desc.$description." / ";
                             }
                         }
+                    }
 
-                        if(!$delete && $status==0){ //Customer blocked and not deleted
-                        ?>
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card shadow mb-4" style="width:18rem;">
-                                    <div class="card-header py-3 <?= $card ?>">
+                    if(!$delete && $status==0){
+            ?>
 
-                                        <div class="row">
+            <div class="col-md-6 col-lg-4 custBloc">
+                <div class="card shadow mb-4" style="width:18rem;">
+                    <div class="card-header py-3 <?= $card ?>">
 
-                                            <img class="person-img float-left" src='<?= $image ?>' width="50" height="50"/>
+                        <div class="row">
 
-                                            <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
-                                                <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$customer['name']?></h6>
-                                            </div>
+                            <img class="person-img float-left" src='<?= $image ?>' width="50" height="50"/>
 
-                                        </div>
-
-                                    </div>
-
-                                    <div class="card-body ">
-                                        <hr>
-                                        <div class="text-center">
-                                            <table>
-                                                <tr>
-                                                    <td>CLIENT : <?= $customer['customerReference']?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>TEL : <?= $phones?> </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <hr>
-                                    </div>
-
-                                    <div class="card-footer <?= $card?>" >
-
-                                            <a href="/admin/customer/block/<?= $customer['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-exclamation-triangle"></i>
-                                                </span>
-                                                <span class="text" style="margin:auto;"><?= $state ?></span>
-                                            </a>
-
-                                            <div class="float-right">
-
-                                                <a href="#" customerID="<?= $customer['_id'] ?>"  meters="<?=$meters?>" subs_amount="<?=$customer['subscriptionAmount']?>" subs_date="<?=$customer['subscriptionDate']?>" obs="<?=$customer['observation']?>" desc="<?=$desc?>" data-toggle="modal" data-target="#infoModal" class="btn <?= $card ?> infoModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
-                                                    <span class="icon"  style="color:white;">
-                                                        <i class="fas fa-eye"></i></i>
-                                                    </span>
-                                                </a>
-
-                                                <a href="/admin/customer/edit/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                                    <span class="icon"  style="color:white;">
-                                                        <i class="fas fa-edit"></i>
-                                                    </span>
-                                                </a>
-
-                                                <a href="/admin/customer/delete/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-                                                    <span class="icon"  style="color:white;">
-                                                        <i class="fas fa-trash"></i>
-                                                    </span>
-                                                </a>
-
-                                            </div>
-                                    </div>
-                                </div>
+                            <div class="ml-2" style="position:absolute;left:60;margin:auto;top:30;">
+                                <h6 class="font-weight-bold text-white" style="font-size:18px;"><?=$customer['name']?></h6>
                             </div>
 
-                        <?php
-                        }
-
-                    }?>
-
-    </div>
-
-            <div class="row">
-                <div class="container">
-
-                    <div class="float-right">
-
-                        <?php
-                            //previous page
-                            if($hasPrevPage == 0){
-                                $prevDisabled = 'disabled';
-                                $prevAriadisabled = 'true';
-                                $prevHref = '#';
-                            }else{
-                                $prevDisabled = '';
-                                $prevAriadisabled = '';
-                                $prevHref = '/admin/customer/blockedCustomer/search/'.$prevPage.'/'.$size;
-                            }
-
-                            //next page
-                            if($hasNextPage == 0){
-                                $nextDisabled = 'disabled';
-                                $nextAriadisabled = 'true';
-                                $nextHref = '#';
-                            }else{
-                                $nextDisabled = '';
-                                $nextAriadisabled = '';
-                                $nextHref = '/admin/customer/blockedCustomer/search/'.$nextPage.'/'.$size;
-                            }
-
-                        ?>
-
-                        <!-- Pagination -->
-                            <small><?=$totalPages?>pages</small>
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
-                                    <li class="page-item <?= $prevDisabled?>">
-                                    <a class="page-link" href="<?=$prevHref?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                    </li>
-                                    <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/blockedCustomer/search/<?= $page ?>/<?=$size?>"><?= $page ?></a></li>
-
-                                    <li class="page-item <?=$nextDisabled?>">
-                                    <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                            <div class="form-pages">
-                                <form action="/admin/customer/blockedCustomer/search" method="post">
-                                    @csrf
-                                    <div class="form-group">
-                                        <div class="form-row">
-                                            <div class="form-group mr-2">
-                                                <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-2">
-                                                        <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="mt-2">Limit :</div>
-                                                    </div>
-                                                    <div class="form-group col-md-2">
-                                                        <input class="form-control" type="number" id="limit" name="limit" value="<?=$size?>">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                        </div>
 
                     </div>
 
+                    <div class="card-body ">
+                        <hr>
+                        <div class="text-center">
+                            <table>
+                                <tr>
+                                    <td>CLIENT : <?= $customer['customerReference']?></td>
+                                </tr>
+                                <tr>
+                                    <td>TEL : <?= $phones?> </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                    </div>
+
+                    <div class="card-footer <?= $card?>" >
+
+                            <a href="/admin/customer/block/<?= $customer['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                                <span class="text" style="margin:auto;"><?= $state ?></span>
+                            </a>
+
+                            <div class="float-right">
+
+                                <a href="#" customerID="<?= $customer['_id'] ?>"  meters="<?=$meters?>" subs_amount="<?=$customer['subscriptionAmount']?>" subs_date="<?=$customer['subscriptionDate']?>" obs="<?=$customer['observation']?>" desc="<?=$desc?>" data-toggle="modal" data-target="#infoModal" class="btn <?= $card ?> infoModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-eye"></i></i>
+                                    </span>
+                                </a>
+
+                                <a href="/admin/customer/edit/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                </a>
+
+                                <a href="/admin/customer/delete/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </a>
+
+                            </div>
+                    </div>
                 </div>
+            </div>
+            <?php
+                    }
+                }
+            ?>
+    </div>
+
+    <div class="flex d-flex justify-content-between mb-1">
+        <!-- Detail Part -->
+        <form action="/admin/customer/blockedCustomer" class="tableBloc" method="post" role="form" style="display:none;">
+            @csrf
+            <div class="flex d-flex align-items-center">
+                entries :
+                <select class="form-control ml-2" style="width: 70px;" id="size" name="size">
+                    <option <?=$size == 10 ? 'selected' : ''?> value="10">10</option>
+                    <option <?=$size == 15 ? 'selected' : ''?> value="15">15</option>
+                    <option <?=$size == 20 ? 'selected' : ''?> value="20">20</option>
+                    <option <?=$size == 25 ? 'selected' : ''?> value="25">25</option>
+                </select>
+                <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
+                <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
+                <input type="submit" name="send_pagination" id="send_pagination" placeholder="Show" class="ml-1 btn btn-primary">
+            </div>
+        </form>
+    </div>
+
+    <div class="row" >
+        <!-- Detail Part -->
+        <div class="col-lg-12 tableBloc" style="display:none;">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Customers</h6>
+                </div>
+                <div class="card-body container-fluid">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                    <thead class="thead thead-danger">
+                        <tr>
+                            <th>ID</th>
+                            <th style="text-align: center">Name</th>
+                            <th style="text-align: center">Phone</th>
+                            <th style="text-align: right">State</th>
+                            <th style="text-align: right">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php
+                            foreach($customers as $customer){
+
+                                //Verify if the person has many meters
+                                $status = $customer['status'];
+                                $delete = $customer['isDelete'];
+                                $description = $customer['localisation']['description'];
+
+                                if($status == 0){
+                                    $card='bg-primary';
+                                    $class='btn-primary';
+                                    $state = 'Blocked';
+                                    $badge = 'badge-primary';
+                                }
+
+                                if(empty($status)){
+                                    $status = 0;
+                                }
+
+                                if($customer['profileImage'] != "noPath"){
+                                    $image = url('storage/'.$customer['profileImage']);
+                                }else{
+                                    $image = "/img/undraw_profile.svg";
+                                }
+
+                                $phones=""; //phone numbers as a string
+                                $meters=""; //meter numbers as a string
+                                $desc=""; //description as a string
+
+                                if(!empty($customer['phone'])){
+                                    $i=0;
+                                    foreach($customer['phone'] as $phone){
+                                        $i++;
+                                        if($i == count($customer['phone'])){
+                                            $phones = $phones.$phone;
+                                        }else{
+                                            $phones = $phones.$phone." / ";
+                                        }
+                                    }
+                                }
+
+                                if(!empty($customer['idCompteur'])){
+                                    $i=0;
+                                    foreach($customer['idCompteur'] as $meter){
+                                        $i++;
+                                        if($i == count($customer['idCompteur'])){
+                                            $meters = $meters.$meter;
+                                        }else{
+                                            $meters = $meters.$meter." / ";
+                                        }
+                                    }
+                                }
+
+                                if(!empty($description)){
+                                    $i=0;
+                                    foreach($description as $description){
+                                        $i++;
+                                        if($i == count($customer['localisation']['description'])){
+                                            $desc = $desc.$description;
+                                        }else{
+                                            $desc = $desc.$description." / ";
+                                        }
+                                    }
+                                }
+
+                                if(!$delete && $status==0){ //Not deleted and blocked
+                        ?>
+                        <tr>
+                            <td><?= $customer['customerReference']?></td>
+                            <td style="text-align: center"><?=$customer['name']?></td>
+                            <td style="text-align: center"><?= $phones?></td>
+                            <td style="text-align: right">
+                                <a href="/admin/customer/block/<?= $customer['_id']?>/<?= $status ?>" class="btn <?= $class ?>">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </span>
+                                    <span class="text" style="margin:auto;"><?= $state ?></span>
+                                </a>
+                            </td>
+                            <td style="text-align: right">
+                                <a href="#" customerID="<?= $customer['_id'] ?>"  meters="<?=$meters?>" subs_amount="<?=$customer['subscriptionAmount']?>" subs_date="<?=$customer['subscriptionDate']?>" obs="<?=$customer['observation']?>" desc="<?=$desc?>" data-toggle="modal" data-target="#infoModal" class="btn <?= $card ?> infoModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-eye"></i></i>
+                                    </span>
+                                </a>
+
+                                <a href="/admin/customer/edit/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                </a>
+
+                                <a href="/admin/customer/delete/<?= $customer['_id'] ?>" class="btn <?= $card ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                    <span class="icon"  style="color:white;">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php
+                            }
+                        }
+                    ?>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container">
+
+            <div class="float-right">
+
+                <?php
+                    //previous page
+                    if($hasPrevPage == 0){
+                        $prevDisabled = 'disabled';
+                        $prevAriadisabled = 'true';
+                        $prevHref = '#';
+                    }else{
+                        $prevDisabled = '';
+                        $prevAriadisabled = '';
+                        $prevHref = '/admin/customer/blockedCustomer/search/'.$prevPage.'/'.$size;
+                    }
+
+                    //next page
+                    if($hasNextPage == 0){
+                        $nextDisabled = 'disabled';
+                        $nextAriadisabled = 'true';
+                        $nextHref = '#';
+                    }else{
+                        $nextDisabled = '';
+                        $nextAriadisabled = '';
+                        $nextHref = '/admin/customer/blockedCustomer/search/'.$nextPage.'/'.$size;
+                    }
+
+                ?>
+
+                <!-- Pagination -->
+                    <small><?=$totalPages?>pages</small>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item <?= $prevDisabled?>">
+                            <a class="page-link" href="<?=$prevHref?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                            </li>
+                            <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/search/<?= $page ?>/<?=$size ?? ''?>"><?= $page ?></a></li>
+
+                            <li class="page-item <?=$nextDisabled?>">
+                            <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="form-pages">
+                        <form action="/admin/customer/blockedCustomer/search" method="post">
+                            @csrf
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="form-group mr-2">
+                                        <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-2 pageSearch">
+                                                <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
+                                            </div>
+                                            <div class="form-group pageSearchLimit">
+                                                <div class="mt-2">Limit :</div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <input class="form-control pageSearchLimit" type="number" id="limit" name="limit" value="<?=$size ?? ''?>">
+                                                <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
 
             </div>
-        <?php
+
+        </div>
+
+            </div>
+    <?php
+            }
         }
-    }
-?>
+    ?>
+
 
 <!-- Info Modal -->
 <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -452,6 +615,44 @@
 
 
     <script>
+
+        var mode = "<?=$mode?>";
+
+        if(mode == "custBloc"){
+            $('.custBloc').css('display','block');
+            $('.tableBloc').css('display','none');
+            $('.pageSearchLimit').show();
+            $('.pageSearch').removeClass('col-md-3').addClass('col-md-2');
+        }else{
+            $('.custBloc').css('display','none');
+            $('.tableBloc').css('display','block');
+            $('.pageSearchLimit').hide();
+            $('.pageSearch').removeClass('col-md-2').addClass('col-md-3');
+        }
+
+        $("body").on('click','.showTable',function() {
+            var mode = $(this).attr('mode');
+            //passage en mode tableBloc
+            if (mode == "custBloc"){
+                $('.custBloc').css('display','none');
+                $('.tableBloc').css('display','block');
+                $('.pageSearchLimit').hide();
+                $('.pageSearch').removeClass('col-md-2').addClass('col-md-3');
+                mode = "tableBloc";
+                $('#mode').val(mode);
+                $(this).attr('mode',mode);
+            //passage en mode custBloc
+            }else{
+                $('.custBloc').css('display','block');
+                $('.tableBloc').css('display','none');
+                $('.pageSearchLimit').show();
+                $('.pageSearch').removeClass('col-md-3').addClass('col-md-2');
+                mode = "custBloc";
+                $('#mode').val(mode);
+                $(this).attr('mode',mode);
+            }
+        });
+
         $("body").on('click','.infoModal',function(event){
 
             var id = $(this).attr('customerID');
