@@ -158,24 +158,24 @@
 <div class="container-fluid mt-5" id="users">
     <section class="row">
 
-        <?php if($userHasInvoices != null){
-                foreach ($userHasInvoices as $userHasInvoice){
+        <?php if($invoices ?? '' != null && count($invoices ?? '') > 0 ){
+                foreach ($invoices ?? '' as $invoice){
             ?>
 
             <div class="col-md-6 col-lg-4 mb-2 mt-3">
                 <div class="w-75 d-inline-block" style="height:200px;border-radius: 10px; border-color: black;border-style: solid;background-color: rgba(0,0,255,.1)">
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
-                            @if ($userHasInvoice['user']->profileImage != "noPath")
-                                <img src="{{url('storage/'.$userHasInvoice['user']->profileImage)}}" class="mt-2 mb-2 person-img" alt="illisible">
+                            @if ($invoice->user->profileImage != "noPath")
+                                <img src="{{url('storage/'.$invoice->user->profileImage)}}" class="mt-2 mb-2 person-img" alt="illisible">
                             @else
                                 <img src="/img/undraw_profile.svg" class="mt-2 mb-2 person-img" alt="illisible">
                             @endif
                         </div>
                         <div class="col-12">
-                            <h5 class="ml-2 d-flex justify-content-center">CLIENT : {{$userHasInvoice['user']->customerReference}}</h5>
-                            <h6 class="ml-2 d-flex justify-content-center">{{$userHasInvoice['user']->name}}</h6>
-                            <a href="#modal{{$userHasInvoice['user']->_id}}" class="d-inline-flex btn btn-primary ml-4" style="border-radius: 10px; color:white" user=<?= $userHasInvoice['user']->_id ?> data-toggle="modal" data-target="#modal{{$userHasInvoice['user']->_id}}" class="btn btn-sm bg-primary addInvoiceModal ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Invoice">
+                            <h5 class="ml-2 d-flex justify-content-center">CLIENT : {{$invoice->user->customerReference}}</h5>
+                            <h6 class="ml-2 d-flex justify-content-center">{{$invoice->user->name}}</h6>
+                            <a href="#modal{{$invoice->user->_id}}" class="d-inline-flex btn btn-primary ml-4" style="border-radius: 10px; color:white" user=<?= $invoice->user->_id ?> data-toggle="modal" data-target="#modal{{$invoice->user->_id}}" class="btn btn-sm bg-primary addInvoiceModal ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Invoice">
                                 Add Invoice
                             </a>
                         </div>
@@ -183,7 +183,7 @@
                 </div>
             </div>
 
-            <div class="modal fade" tabindex="-1" id="modal{{$userHasInvoice['user']->_id}}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" tabindex="-1" id="modal{{$invoice->user->_id}}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -198,7 +198,7 @@
                                 {{method_field('post')}}
                                 <div class="form-group mb-3" id="b_userId" hidden>
                                     <div class="input-group">User Id</div>
-                                    <input type="text" class="form-control" value="{{$userHasInvoice['user']->_id}}" placeholder="user Id" name="userId" id="userId">
+                                    <input type="text" class="form-control" value="{{$invoice->user->_id}}" placeholder="user Id" name="userId" id="userId">
                                 </div>
                                 <div class="form-group mb-3" id="b_date" hidden>
                                     <div class="input-group">Date</div>
@@ -209,7 +209,7 @@
                                     <div class="input-group">Meters</div>
                                     <select id="meter"  name="meter" class="form-control" aria-label="multiple select" required>
                                         <option value="">Choose a meter</option>
-                                        @foreach($userHasInvoice['user']->idCompteur as $meter)
+                                        @foreach($invoice->idCompteur as $meter)
                                             <option value="{{$meter}}">{{$meter}}</option>
                                         @endforeach
                                     </select>
@@ -219,7 +219,7 @@
                                     <div class="input-group">New index</div>
                                     <input type="number" min="0" class="form-control" placeholder="new index" id="newIndex" name="newIndex" required>
                                 </div>
-                                <?php if($userHasInvoice['hasInvoice'] == false) { ?>
+                                <?php if($invoice->hasAtLeastOneInvoice == false) { ?>
                                     <div class="form-group mb-3" id="b_oldIndex">
                                         <div class="input-group">Old index</div>
                                         <input type="number" min="0" class="form-control" placeholder="old index" id="oldIndex" name="oldIndex" value="0">

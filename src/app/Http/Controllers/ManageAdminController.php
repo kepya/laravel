@@ -329,17 +329,17 @@ class ManageAdminController extends Controller
         $mode = $request->mode;
 
         if(empty($subs_date)){
-            $subs_date = "";
+            $subs_date = " ";
         }
 
         if(empty($idCompteur)){
-            $idCompteur = "";
+            $idCompteur = " ";
         }
 
         if(empty($customerRef)){
-            $customerRef = "";
+            $customerRef = "0";
         }
-
+        
         $url = "http://172.17.0.3:4000/admin/auth/client/find/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -350,14 +350,15 @@ class ManageAdminController extends Controller
 
         $data = array(
             "date"=> $subs_date,
-            "refId"=> $customerRef,
+            "refId"=>  intval($customerRef),
             "counterId"=> $idCompteur,
             "order"=> $order,
         );
 
         $data_json = json_encode($data);
 
-        //print_r($data_json);
+        // print_r($data_json);
+        // dd($data);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -368,18 +369,10 @@ class ManageAdminController extends Controller
         $response  = curl_exec($ch);
         curl_close($ch);
 
-        // print_r($response);
+        $response = json_decode($response,true);
+        $results = $response['result']["docs"];
 
-
-        $url2 = "http://172.17.0.3:4000/client/auth/count";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url2);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response2 = curl_exec($ch);
-        curl_close($ch);
-        $response2 = json_decode($response2,true);
-        $nbrCl = $response2['result'];
+        $nbrCl = count($results);
 
         return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,"date"=> $subs_date,"refId"=> $customerRef,"counterId"=> $idCompteur,"order"=> $order,'mode'=>$mode]);
 

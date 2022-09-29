@@ -113,6 +113,14 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">UnPaid Consumption</h1>
+    @if(Session::has('message'))
+        <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
+            {{ Session::get('message') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 </div>
 
 <div class="flex d-flex justify-content-between mb-1">
@@ -179,6 +187,10 @@
                                         <i class="fa fa-pencil-alt" style="font-size: 20px;">
                                         </i>
                                     </a>
+                                    <button  title="delete invoice" type="button" class="btn btn-xs btn-danger pull-right" role="button" data-toggle="modal" data-target="#modal-delete-{{ $invoice->_id }}">
+                                        <i class="fa fa-trash" style="font-size: 20px;">
+                                        </i>
+                                    </button>
                                     <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-penalty-{{ $invoice->_id }}">
                                         <i class="far fa-eye" style="font-size: 20px;">
                                         </i> P
@@ -216,36 +228,61 @@
                                     </div>
 
                                     <div class="modal fade" tabindex="-1" id="modal-tranche-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumTrancheModalLabel" data-backdrop="static"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <section>
-                                                    Tranches
-                                                </section>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                @foreach($invoice -> tranche as $value)
-                                                    <div class="d-flex flex">
-                                                        <p>{{$value->montant}}</p>
-                                                    </div>
-                                                @endforeach
-                                                <?php
-                                                    $tranche = $invoice->tranche;
-                                                    $length = count($tranche);
-                                                    for ($i = 0; $i < $length; $i++) {
-                                                        echo nl2br('Montant: '.$tranche[$i] -> montant.'<br/>');
-                                                        echo nl2br('Date: '.$tranche[$i] -> date);
-                                                    }
-                                                    ?>
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <section>
+                                                        Tranches
+                                                    </section>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @foreach($invoice -> tranche as $value)
+                                                        <div class="d-flex flex">
+                                                            <p>{{$value->montant}}</p>
+                                                        </div>
+                                                    @endforeach
+                                                    <?php
+                                                        $tranche = $invoice->tranche;
+                                                        $length = count($tranche);
+                                                        for ($i = 0; $i < $length; $i++) {
+                                                            echo nl2br('Montant: '.$tranche[$i] -> montant.'<br/>');
+                                                            echo nl2br('Date: '.$tranche[$i] -> date);
+                                                        }
+                                                        ?>
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                    <div class="modal fade" tabindex="-1" id="modal-delete-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumDeleteModalLabel" data-backdrop="static" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <section>
+                                                        Delete Invoice
+                                                    </section>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this invoice ?
+                                                    <div class="d-flex flex justify-content-end align-items-center">
+                                                        <button type="button" class="btn mt-1 btn-xs btn-danger pull-right" role="button">
+                                                            <a href="{{ url('/admin/invoice/delete/'.$invoice->_id) }}" class="ms-3 text-white">
+                                                                Delete
+                                                            </a>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
