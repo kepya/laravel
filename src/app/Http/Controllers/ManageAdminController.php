@@ -272,9 +272,15 @@ class ManageAdminController extends Controller
         return view('Client/dashboard',['informations' => $informations, 'res' => $response]);
     }
 
-    public function viewCustomers(){
+    public function viewCustomers(Request $request){
 
-        $size = 10;
+        if(isset($request->size)){
+            $size = $request->size;
+            $mode = 'tableBloc';
+        }else{
+            $size = 10;
+            $mode  = 'custBloc';
+        }
 
         $url = "http://172.17.0.3:4000/admin/auth/client/1/".$size;
         $alltoken = $_COOKIE['token'];
@@ -310,7 +316,7 @@ class ManageAdminController extends Controller
         //     return Storage::url($image);
         // }
         // return Storage::url() http://127.0.0.1:8000/storage/cathedraledouala.jpg
-       return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
+       return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
     }
 
     public function viewCustomersSort(Request $request){
@@ -320,6 +326,7 @@ class ManageAdminController extends Controller
         $idCompteur = $request->meter;
         $subs_date = $request->subs_date;
         $size = $request->limit;
+        $mode = $request->mode;
 
         if(empty($subs_date)){
             $subs_date = "";
@@ -374,11 +381,13 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,"date"=> $subs_date,"refId"=> $customerRef,"counterId"=> $idCompteur,"order"=> $order]);
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,"date"=> $subs_date,"refId"=> $customerRef,"counterId"=> $idCompteur,"order"=> $order,'mode'=>$mode]);
 
     }
 
-    public function viewCustomersByPage($page,$size){
+    public function viewCustomersByPage($page,$size,Request $request){
+
+        $mode = $request->mode;
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
@@ -405,12 +414,13 @@ class ManageAdminController extends Controller
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
 
-        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl, 'size'=>$size]);
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl, 'size'=>$size,'mode'=>$mode]);
     }
 
     public function viewCustomersBySearch(Request $request){
         $page = $request->page;
         $size = $request->limit;
+        $mode = $request->mode;
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
@@ -438,13 +448,18 @@ class ManageAdminController extends Controller
         $nbrCl = $response2['result'];
 
         //print_r($response);
-
-        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
+        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
     }
 
-    public function blockedCustomers(){
+    public function blockedCustomers(Request $request){
 
-        $size = 10;
+        if(isset($request->size)){
+            $size = $request->size;
+            $mode = 'tableBloc';
+        }else{
+            $size = 10;
+            $mode  = 'custBloc';
+        }
 
         $url = "http://172.17.0.3:4000/admin/auth/client/1/".$size;
         $alltoken = $_COOKIE['token'];
@@ -461,7 +476,7 @@ class ManageAdminController extends Controller
         curl_close($ch);
         $response = json_decode($response,true);
 
-        return view('admin/blockedCustomer',['response' => $response,'size'=>$size]);
+        return view('admin/blockedCustomer',['response' => $response,'size'=>$size,'mode'=>$mode]);
     }
 
     public function addCustomers(){
@@ -671,6 +686,7 @@ class ManageAdminController extends Controller
     public function viewCustomersBlockedBySearch(Request $request){
         $page = $request->page;
         $size = $request->limit;
+        $mode = $request->mode;
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
@@ -689,10 +705,12 @@ class ManageAdminController extends Controller
 
         //print_r($response);
 
-        return view('admin/blockedCustomer',['response' => $response,'size'=>$size]);
+        return view('admin/blockedCustomer',['response' => $response,'size'=>$size,'mode'=>$mode]);
     }
 
-    public function viewCustomersBlockedByPage($page,$size){
+    public function viewCustomersBlockedByPage($page,$size,Request $request){
+
+        $mode = $request->mode;
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
@@ -709,7 +727,7 @@ class ManageAdminController extends Controller
         curl_close($ch);
         $response = json_decode($response,true);
 
-        return view('admin/blockedCustomer',['response' => $response,'size'=>$size]);
+        return view('admin/blockedCustomer',['response' => $response,'size'=>$size,'mode'=>$mode]);
     }
 
     public function saveCustomer($id,Request $request){
@@ -817,7 +835,7 @@ class ManageAdminController extends Controller
         }
     }
 
-    public function searchCustomer(){
+    public function searchCustomer(Request $request){
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
@@ -825,6 +843,8 @@ class ManageAdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer '.$tokenVal;
         $users = array();
+
+        $mode = $request->mode;
 
     	if (isset($_POST['search'])) {
 
@@ -879,7 +899,7 @@ class ManageAdminController extends Controller
                     "result" => json_decode(json_encode($customers), true),
                 );
                 //dump($array);
-                return view('admin/customer',['customerSearch' => $array['result'],'nbrCl' => $nbrCl,'size'=>$size]);
+                return view('admin/customer',['customerSearch' => $array['result'],'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
 
             }else{
 
@@ -892,7 +912,7 @@ class ManageAdminController extends Controller
                 curl_close($ch);
                 $response = json_decode($response,true);
 
-                return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size]);
+                return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
             }
 
         }
