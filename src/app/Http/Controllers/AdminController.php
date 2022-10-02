@@ -2404,18 +2404,29 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $page = 1;
+        $size = $request->size;
+        $page = $request->page;
 
-        $size = 5;
+        if(isset($size)){
+            if (empty($size)) {
+                $size = 5;
+            }
+        } else {
+            $size = 1;
+        }
 
-        $page_en_cours = 1;
-        $previous_page = 1;
-        $next_page = 1;
+        if(isset($page)){
+            if (empty($page)) {
+                $page = 1;
+            }
+        } else {
+            $page = 1;
+        }
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getByStatus/true',
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/true/'.$page.'/'.$size,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2430,79 +2441,30 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
-        $i = 0;
-        $invoices = array();
-        $invoicesWithPaginator = array();
+        $bill = $response-> result -> docs;
+        $previous_page = $response-> result -> prevPage;
+        $next_page = $response-> result -> nextPage;
+        $hasPrevPage = $response-> result -> hasPrevPage;
+        $hasNextPage = $response-> result -> hasNextPage;
+        $page_en_cours = $response-> result -> page;
+        $size = count($bill);
 
-        $client = array();
+        return view('admin/consumptionThatArePaid', [
+            'invoices' => $bill,
+            'size' => $size,
+            'url' => "/admin/consumption-that-are-paid",
+            'page_en_cours' => $page_en_cours,
+            'previous_page' => $previous_page,
+            'hasPrevPage' => $hasPrevPage,
+            'hasNextPage' => $hasNextPage,
+            'next_page' => $next_page,
+            'isSearch' => false,
 
-        if ($response->status == 200) {
-            foreach ($response->result as $key => $value) {
-                //$invoices = $value;
-                array_push($invoices, $value);
-            }
-        }
-
-        if (gettype($invoices) != 'array') {
-            return view('admin/consumptionThatArePaid', [
-                'invoices' => $invoicesWithPaginator,
-                'client' => $client,
-                'page' => $page,
-                'size' => $size,
-                'page_en_cours' => $page_en_cours,
-                'previous_page' => $previous_page,
-                'next_page' => $next_page
-            ]);
-        } else {
-            $arrLength = count($invoices);
-            if ($arrLength < $size) {
-                $size = $arrLength;
-                $page_en_cours = 1;
-            } else {
-                $page = $arrLength / $size;
-                $next_page = $page_en_cours + 1;
-            }
-
-            for ($i = 0; $i < $size; $i++) {
-                array_push($invoicesWithPaginator, $invoices[$i]);
-            }
-
-            if (gettype($invoices) != "array") {
-                $invoices = array();
-            }
-
-            foreach ($invoicesWithPaginator as $invoice) {
-                $idClient = $invoice->idClient;
-                $url = curl_init();
-                curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                ));
-
-                $response = curl_exec($url);
-                $response = json_decode($response);
-
-                $user = $response->result;
-
-                array_push($client, $user);
-            }
-            return view('admin/consumptionThatArePaid', [
-                'invoices' => $invoicesWithPaginator,
-                'client' => $client,
-                'page' => $page,
-                'size' => $size,
-                'page_en_cours' => $page_en_cours,
-                'previous_page' => $previous_page,
-                'next_page' => $next_page
-            ]);
-        }
+            "username"=> "",
+            "consumption"=>  0,
+            "year"=> 0,
+            "month"=> 0,
+        ]);
     }
 
     public function getPenalty()
@@ -3172,8 +3134,6 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
             $messageOK = null;
 
             $response = json_decode($response);
-            dd($response);
-
 
             if ($response->status == 200) {
                 $messageOK = "Action Done Successfully";
