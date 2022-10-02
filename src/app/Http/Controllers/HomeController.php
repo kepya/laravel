@@ -206,7 +206,7 @@ class HomeController extends Controller
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/'.$year.'/'.$month.'/0/5',
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/all/'.$year.'/'.$month.'/0/5',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

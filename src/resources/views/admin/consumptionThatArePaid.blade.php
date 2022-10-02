@@ -25,7 +25,7 @@
                     <h6 class="collapse-header">Consumption</h6>
                     <a class="collapse-item" href="/admin/consumption" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">All</a>
                     <a class="collapse-item" href="/admin/consumption-that-are-paid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">Consumption Paid</a>
-                    <a class="collapse-item" href="/admin/consumption-that-are-paid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices unpaid">Consumption UnPaid</a>
+                    <a class="collapse-item" href="/admin/consumption-that-are-unpaid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices unpaid">Consumption UnPaid</a>
                 </div>
             </div>
         </li>
@@ -118,18 +118,18 @@
     </div>
 
     <div class="flex d-flex justify-content-start mb-3">
-    <form action="{{url('/admin/search_invoices')}}" method="post" role="form" class="w-100">
-        @csrf
-        <div class="flex d-flex align-items-center justify-content-between">
-            <h5 class="me-2 mr-2 w-50">search By :</h5>
-            <input type="number" name="month" id="month" placeholder="Month" title="Month" class="form-control ml-2" />
-            <input type="number" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2"/>
-            <input type="number" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" class="form-control ml-2"/>
-            <input type="text" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2"/>
-            <input type="submit" name="send_search_consumption_paid" id="send_search_consumption_paid" class="ml-1 btn btn-primary">
-        </div>
-    </form>
-</div>
+        <form action="{{url('/admin/search_invoices')}}" method="post" role="form" class="w-100">
+            @csrf
+            <div class="flex d-flex align-items-center justify-content-between">
+                <h5 class="me-2 mr-2 w-50">search By :</h5>
+                <input type="number" name="month" id="month" placeholder="Month" title="Month" class="form-control ml-2" />
+                <input type="number" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2"/>
+                <input type="number" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" class="form-control ml-2"/>
+                <input type="text" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2"/>
+                <input type="submit" name="send_search_consumption_paid" id="send_search_consumption_paid" class="ml-1 btn btn-primary">
+            </div>
+        </form>
+    </div>
     <div class="row">
         <!-- Detail Part -->
         <div class="col-lg-12">
@@ -289,7 +289,7 @@
                         <button class="btn bg-white" style="color: blue;border-radius: 0px;">{{$previous_page}}</button>
                     </a>
                 @else
-                    <button class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
+                    <button disabled class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
                 @endif
                 <a href="{{ url('/admin/consumption-that-are-paid/page/'.$page_en_cours.'/size/'.$size) }}">
                     <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
@@ -302,7 +302,7 @@
                         <button class="btn bg-white" style="width: 40px;border: none;border-radius: 0px;"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
                     </a>
                 @else
-                    <button class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
+                    <button disabled class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
                 @endif
             </div>
         @else
@@ -319,14 +319,14 @@
                     <button class="btn bg-white" name="previous_page" id="previous_page"  type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
                     <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
                 @else
-                    <button class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
+                    <button disabled class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
                 @endif
                     <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
                 @if($hasNextPage == true)
                     <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
                     <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
                 @else
-                    <button class="btn bg-white" style="width: 40px;border-radius: 0px;"  type="button"> <i class="fas fa-angle-double-right"></i> </button>
+                    <button disabled class="btn bg-white" style="width: 40px;border-radius: 0px;"  type="button"> <i class="fas fa-angle-double-right"></i> </button>
                 @endif
             </form>
         @endif
