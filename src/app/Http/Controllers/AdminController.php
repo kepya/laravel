@@ -2217,8 +2217,8 @@ class AdminController extends Controller
             ]);
         }
     }
-
-    public function allInvoices()
+   
+    public function allInvoices(Request $request)
     {
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -2227,9 +2227,29 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
+        $size = $request->size;
+        $page = $request->page;
+
+        if(isset($size)){
+            if (empty($size)) {
+                $size = 5;
+            }
+        } else {
+            $size = 1;
+        }
+
+        if(isset($page)){
+            if (empty($page)) {
+                $page = 1;
+            }
+        } else {
+            $page = 1;
+        }
+
         $curl = curl_init();
+
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture',
+            CURLOPT_URL =>  'http://172.17.0.3:4000/admin/facture/'.$page.'/'.$size,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2244,82 +2264,29 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
-        $i = 0;
-        $invoices = array();
-        $invoicesWithPaginator = array();
+        $bill = $response-> result -> docs;
+        $previous_page = $response-> result -> prevPage;
+        $next_page = $response-> result -> nextPage;
+        $hasPrevPage = $response-> result -> hasPrevPage;
+        $hasNextPage = $response-> result -> hasNextPage;
+        $page_en_cours = $response-> result -> page;
+        $size = count($bill);
 
-        foreach ($response as $key => $value) {
-            if ($i >= 1) {
-                
-                $invoices = $value;
-                //array_push($invoices,$value);
-                
-            }
-            $i = $i + 1;
-            
-        }
-
-        $arrLength = count($invoices);
-        
-
-        if ($arrLength < $size) {
-            $size = $arrLength;
-            $page_en_cours = 1;
-        } else {
-            $page = $arrLength / $size;
-            $next_page = $page_en_cours + 1;
-        }
-
-        for ($i = 0; $i < $size; $i++) {
-            array_push($invoicesWithPaginator, $invoices[$i]);
-        }
-
-
-        if (gettype($invoices) != "array") {
-            $invoices = array();
-        }
-
-        
-
-        $client = array();
-
-        foreach ($invoicesWithPaginator as $invoice) {
-
-            $idClient = $invoice->idClient;
-            $url = curl_init();
-            curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-            ));
-
-            $response = curl_exec($url);
-            $response = json_decode($response);
-
-            $i = 0;
-
-            foreach ($response as $key => $value) {
-                if ($i >= 1) {
-                    array_push($client, $value);
-                }
-                $i = $i + 1;
-            }
-        }
-
-        return view('admin/consumption', [
-            'invoices' => $invoicesWithPaginator,
-            'client' => $client,
-            'page' => $page,
+        return view('admin/consumptionThatAreNotPaid', [
+            'invoices' => $bill,
             'size' => $size,
+            'url' => "/admin/consumption-that-are-unpaid",
             'page_en_cours' => $page_en_cours,
             'previous_page' => $previous_page,
-            'next_page' => $next_page
+            'hasPrevPage' => $hasPrevPage,
+            'hasNextPage' => $hasNextPage,
+            'next_page' => $next_page,
+            'isSearch' => false,
+
+            "username"=> "",
+            "consumption"=>  0,
+            "year"=> 0,
+            "month"=> 0,
         ]);
     }
 
@@ -2395,7 +2362,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function allPaidInvoices()
+    public function allPaidInvoices(Request $request)
     {
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
