@@ -1352,7 +1352,26 @@ class AdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-            dd($response);
+            
+            if ($response->status == 500) {
+                return view('admin/'.$url, [
+                    'invoices' => [],
+                    'size' => 0,
+                    'url' => "/admin/consumption-that-are-paid",
+                    'page_en_cours' => 1,
+                    'previous_page' => 1,
+                    'hasPrevPage' => false,
+                    'hasNextPage' => false,
+                    'next_page' => 1,
+                    'isSearch' => true,
+        
+                    "username"=> "",
+                    "consumption"=>  0,
+                    "year"=> 0,
+                    "month"=> 0,
+                ]);
+            }
+
             $bill = $response-> result -> docs;
             $previous_page = $response-> result -> prevPage;
             $next_page = $response-> result -> nextPage;
@@ -2069,6 +2088,25 @@ class AdminController extends Controller
 
             $response = json_decode($response);
 
+            if ($response->status == 500) {
+                return view('admin/consumptionThatAreNotPaid', [
+                    'invoices' => [],
+                    'size' => 0,
+                    'url' => "/admin/consumption-that-are-unpaid",
+                    'page_en_cours' => 1,
+                    'previous_page' => 1,
+                    'hasPrevPage' => false,
+                    'hasNextPage' => false,
+                    'next_page' => 1,
+                    'isSearch' => false,
+        
+                    "username"=> "",
+                    "consumption"=>  0,
+                    "year"=> 0,
+                    "month"=> 0,
+                ]);
+            }
+
             $bill = $response-> result -> docs;
             $previous_page = $response-> result -> prevPage;
             $next_page = $response-> result -> nextPage;
@@ -2264,6 +2302,25 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
+        if ($response->status == 500) {
+            return view('admin/consumption', [
+                'invoices' => [],
+                'size' => 0,
+                'url' => "/admin/consumption",
+                'page_en_cours' => 1,
+                'previous_page' => 1,
+                'hasPrevPage' => false,
+                'hasNextPage' => false,
+                'next_page' => 1,
+                'isSearch' => false,
+    
+                "username"=> "",
+                "consumption"=>  0,
+                "year"=> 0,
+                "month"=> 0,
+            ]);
+        }
+
         $bill = $response-> result -> docs;
         $previous_page = $response-> result -> prevPage;
         $next_page = $response-> result -> nextPage;
@@ -2335,6 +2392,25 @@ class AdminController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response);
+
+        if ($response->status == 500) {
+            return view('admin/consumptionThatAreNotPaid', [
+                'invoices' => [],
+                'size' => 0,
+                'url' => "/admin/consumption-that-are-unpaid",
+                'page_en_cours' => 1,
+                'previous_page' => 1,
+                'hasPrevPage' => false,
+                'hasNextPage' => false,
+                'next_page' => 1,
+                'isSearch' => false,
+    
+                "username"=> "",
+                "consumption"=>  0,
+                "year"=> 0,
+                "month"=> 0,
+            ]);
+        }
 
         $bill = $response-> result -> docs;
         $previous_page = $response-> result -> prevPage;
@@ -2408,6 +2484,24 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
+        if ($response->status == 500) {
+            return view('admin/consumptionThatArePaid', [
+                'invoices' => [],
+                'size' => 0,
+                'url' => "/admin/consumption-that-are-paid",
+                'page_en_cours' => 1,
+                'previous_page' => 1,
+                'hasPrevPage' => false,
+                'hasNextPage' => false,
+                'next_page' => 1,
+                'isSearch' => false,
+    
+                "username"=> "",
+                "consumption"=>  0,
+                "year"=> 0,
+                "month"=> 0,
+            ]);
+        }
         $bill = $response-> result -> docs;
         $previous_page = $response-> result -> prevPage;
         $next_page = $response-> result -> nextPage;
