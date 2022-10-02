@@ -1255,149 +1255,133 @@ class AdminController extends Controller
 
     public function searchAllUnPaid($page_size, $size)
     {
+        return redirect()->route('ConsumptionUnPaidInvoices', ['page' => $page_size,
+        'size' => $size]);
+    }
+
+    public function searchInvoicesWithPagination(Request $request)
+    {
         $alltoken = $_COOKIE['token'];
-        $alltokentab = explode(';', $alltoken);
-        $token = $alltokentab[0];
-        $tokentab = explode('=', $token);
-        $tokenVal = $tokentab[1];
-        $Authorization = 'Bearer ' . $tokenVal;
+            $alltokentab = explode(';', $alltoken);
+            $token = $alltokentab[0];
+            $tokentab = explode('=', $token);
+            $tokenVal = $tokentab[1];
+            $Authorization = 'Bearer ' . $tokenVal;
 
-        $year = date("Y");
-        
-
-        $month = date("m");
-        
-
-        $page = 1;
-        $invoices_paid = array();
-        $invoices_unpaid = array();
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/factureByYear/' . $year,
-
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $response = json_decode($response);
-
-        $i = 0;
-        $invoices = array();
-        $invoicesWithPaginator = array();
-
-        foreach ($response as $key => $value) {
-            if ($i >= 1) {
-                $invoices = $value;
+            $month = $request->month;
+            $year = $request->year;
+            $consumption = $request->consumption;
+            $username = $request->username;
+            $size = $request->size;
+            $page = $request->page;
+            $type = $request->type;
+            $url ='';
+            if(empty($month)){
+                $month = 0;
             }
-            $i = $i + 1;
-        }
-
-        foreach ($invoices as $invoice) {
-            if ($invoice->facturePay) {
-                array_push($invoices_paid, $invoice);
-            } else {
-                array_push($invoices_unpaid, $invoice);
+    
+            if(empty($year)){
+                $year = 0;
             }
-        }
 
-        $page_en_cours = $page_size;
-        $previous_page = 1;
-        $next_page = 1;
-
-        $arrLength = count($invoices_unpaid);
-
-        $size_final = $size * $page_size;
-
-        if ($arrLength < $size) {
-            $size = $arrLength;
-        } else {
-            $page = $arrLength / $size;
-            //$next_page = $page + 1;
-        }
-
-        if ($page_en_cours > 1) {
-            $previous_page = $page_en_cours - 1;
-        }
-
-        if ($arrLength < $size_final) {
-            $size_final = $arrLength;
-            $next_page = $page - 1;
-        } else {
-            if ($page_size == $size) {
-                $next_page = $page;
+            if(empty($consumption)){
+                $consumption = 0;
             }
-        }
-
-        if ($size == $size_final) {
-            for ($i = 0; $i < $size; $i++) {
-                array_push($invoicesWithPaginator, $invoices_unpaid[$i]);
+    
+            if(empty($username)){
+                $username = " ";
             }
-        } else {
-            for ($i = $size; $i < $size_final; $i++) {
-                array_push($invoicesWithPaginator, $invoices_unpaid[$i]);
+
+            if(empty($size)){
+                $size = 5;
             }
-        }
 
-        if (gettype($invoices_unpaid) != "array") {
-            $invoices_unpaid = array();
-        }
+            if(empty($page)){
+                $page = 1;
+            }
 
-        
+            if (isset($_POST['previous_page'])) {
+                $page = $page - 1;
+            }
 
-        $client = array();
+            if (isset($_POST['current_page'])) {
+                
+            }
 
-        foreach ($invoicesWithPaginator as $invoice) {
+            if (isset($_POST['next_page'])) {
+                $page = $page + 1;
+            }
 
-            $idClient = $invoice->idClient;
-            $url = curl_init();
-            curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-            ));
+            if ($type == "unpaid") {
+                $url = "consumptionThatAreNotPaid";
+            }
 
-            $response = curl_exec($url);
+            if ($type == "paid") {
+                $url = "consumptionThatArePaid";
+            }
+
+            if ($type == "all") {
+                $url = "consumption";
+            }
+
+            $url = "http://172.17.0.3:4000/admin/facture/search/".$page."/".$size;
+            $alltoken = $_COOKIE['token'];
+            $alltokentab = explode(';', $alltoken);
+            $token = $alltokentab[0];
+            $tokentab = explode('=',$token);
+            $tokenVal = $tokentab[1];
+            $Authorization = 'Bearer '.$tokenVal;
+    
+            $data = array(
+                "username"=> $username,
+                "consumption"=>  intval($consumption),
+                "year"=> intval($year),
+                "month"=> intval($month),
+                "type"=> $type,
+            );
+    
+            $data_json = json_encode($data);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response  = curl_exec($ch);
+            curl_close($ch);
+
             $response = json_decode($response);
+            dd($response);
+            $bill = $response-> result -> docs;
+            $previous_page = $response-> result -> prevPage;
+            $next_page = $response-> result -> nextPage;
+            $hasPrevPage = $response-> result -> hasPrevPage;
+            $hasNextPage = $response-> result -> hasNextPage;
+            $page_en_cours = $response-> result -> page;
+            $size = count($bill);
+    
+            return view('admin/'.$url, [
+                'invoices' => $bill,
+                'size' => $size,
+                'url' => "/admin/consumption-that-are-unpaid",
+                'page_en_cours' => $page_en_cours,
+                'previous_page' => $previous_page,
+                'hasPrevPage' => $hasPrevPage,
+                'hasNextPage' => $hasNextPage,
+                'next_page' => $next_page,
 
-            $i = 0;
+                "username"=> $username,
+                'isSearch' => true,
+                "consumption"=>  intval($consumption),
+                "year"=> intval($year),
+                "month"=> intval($month),
+            ]);
 
-            foreach ($response as $key => $value) {
-                if ($i >= 1) {
-                    array_push($client, $value);
-                }
-                $i = $i + 1;
-            }
-        }
-
-        return view('admin/consumption-that-are-unpaid', [
-            'invoices' => $invoicesWithPaginator,
-            'client' => $client,
-            'page' => $page,
-            'size' => $size,
-            'page_en_cours' => $page_en_cours,
-            'previous_page' => $previous_page,
-            'next_page' => $next_page
-        ]);
     }
 
     //All Invoice that the admin have
-    public function searchByMonthOrYear()
+    public function searchInvoices(Request $request)
     {
         // all Invoices
         if (isset($_POST['send_search'])) {
@@ -2024,227 +2008,90 @@ class AdminController extends Controller
             $tokentab = explode('=', $token);
             $tokenVal = $tokentab[1];
             $Authorization = 'Bearer ' . $tokenVal;
-            $type = $_POST['type'];
 
-            if ($type === "month" || $type === 'year') {
+            $month = $request->month;
+            $year = $request->year;
+            $consumption = $request->consumption;
+            $username = $request->username;
+            $size = $request->size;
+            $page = $request->page;
 
-                $month = '';
-                $year = '';
-
-                if ($type === "month") {
-                    $month = $_POST['search'];
-                    $year = date("Y");
-                } else if ($type === 'year') {
-                    $month = date("m");
-                    $year = $_POST['search'];
-                }
-
-                $page = 1;
-                $size = 20;
-                $page_en_cours = $page;
-                $previous_page = 1;
-                $next_page = 1;
-
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                ));
-
-                $response = curl_exec($curl);
-                curl_close($curl);
-                $response = json_decode($response);
-
-                $i = 0;
-                $invoices = array();
-                $invoices_paid = array();
-                $invoices_unpaid = array();
-
-                foreach ($response as $key => $value) {
-                    if ($i >= 1) {
-                        
-                        $invoices = $value;
-                        
-                    }
-                    $i = $i + 1;
-                    
-                }
-
-                if (gettype($invoices) != "array") {
-                    
-                    $invoices = array();
-                }
-
-                
-                foreach ($invoices as $invoice) {
-                    if ($invoice->facturePay) {
-                        array_push($invoices_paid, $invoice);
-                    } else {
-                        array_push($invoices_unpaid, $invoice);
-                    }
-                }
-
-                $client = array();
-
-                foreach ($invoices_unpaid as $invoice) {
-
-                    $idClient = $invoice->idClient;
-                    
-                    $url = curl_init();
-                    curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'GET',
-                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                    ));
-
-                    $response = curl_exec($url);
-                    $response = json_decode($response);
-
-                    $i = 0;
-
-                    foreach ($response as $key => $value) {
-                        if ($i >= 1) {
-                            array_push($client, $value);
-                        }
-                        $i = $i + 1;
-                    }
-                }
-                return view('admin/consumptionThatAreNotPaid', [
-                    'invoices' => $invoices_unpaid,
-                    'client' => $client,
-                    'page' => $page,
-                    'size' => $size,
-                    'page_en_cours' => $page_en_cours,
-                    'previous_page' => $previous_page,
-                    'next_page' => $next_page
-                ]);
-            } else {
-                if ($type === "username" || $type === "meterId") {
-                    $month = date("m");
-                    $year = date("Y");
-                    $page = 1;
-                    $size = 20;
-                    $page_en_cours = $page;
-                    $previous_page = 1;
-                    $next_page = 1;
-                    $username = '';
-                    $meterId = '';
-                    if ($type === "username") {
-                        $username = $_POST['searchT'];
-                    } else if ($type === "meterId") {
-                        $meterId = $_POST['searchT'];
-                    }
-
-                    $curl = curl_init();
-
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/' . $year . '/' . $month . '/' . $size . '/' . $page,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'GET',
-                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                    ));
-
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-
-                    $i = 0;
-                    $invoices = array();
-                    $invoices_paid = array();
-                    $invoices_unpaid = array();
-                    $clients = array();
-
-                    foreach ($response as $key => $value) {
-                        if ($i >= 1) {
-                            $invoices = $value;
-                            // array_push($clients,$invoice);
-                        }
-                        $i = $i + 1;
-                    }
-
-                    if (gettype($invoices) != "array") {
-                        $invoices = array();
-                    }
-
-                    foreach ($invoices as $invoice) {
-                        if ($invoice->facturePay) {
-                            array_push($invoices_paid, $invoice);
-                        } else {
-                            array_push($invoices_unpaid, $invoice);
-                        }
-                    }
-
-                    foreach ($invoices_unpaid as $invoice) {
-
-                    $idClient = $invoice->idClient;
-                    $url = curl_init();
-                    curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'GET',
-                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                    ));
-
-                    $response = curl_exec($url);
-                    $response = json_decode($response);
-
-                    $user = $response -> result;
-
-                    array_push($clients, $user);
-
-                }
-
-                $bill = array();
-                $usagers = array();
-
-                foreach ($clients as $key => $user) {
-                    $name = $user->name;
-                    if (strcasecmp($username, $name)) {
-                        unset($invoices[$key]);
-                        unset($clients[$key]);
-                    } else {
-                        array_push($usagers, $clients[$key]);
-                        array_push($bill, $invoices[$key]);
-
-                    }
-                }
-
-                return view('admin/consumptionThatAreNotPaid', [
-                    'invoices' => $bill,
-                    'client' => $usagers,
-                    'page' => $page,
-                    'size' => $size,
-                    'page_en_cours' => $page_en_cours,
-                    'previous_page' => $previous_page,
-                    'next_page' => $next_page
-                ]);
-
-                }
+            if(empty($month)){
+                $month = 0;
             }
+    
+            if(empty($year)){
+                $year = 0;
+            }
+
+            if(empty($consumption)){
+                $consumption = 0;
+            }
+    
+            if(empty($username)){
+                $username = " ";
+            }
+
+            if(empty($size)){
+                $size = 5;
+            }
+
+            if(empty($page)){
+                $page = 1;
+            }
+
+            $url = "http://172.17.0.3:4000/admin/facture/search/".$page."/".$size;
+            $alltoken = $_COOKIE['token'];
+            $alltokentab = explode(';', $alltoken);
+            $token = $alltokentab[0];
+            $tokentab = explode('=',$token);
+            $tokenVal = $tokentab[1];
+            $Authorization = 'Bearer '.$tokenVal;
+    
+            $data = array(
+                "username"=> $username,
+                "consumption"=>  intval($consumption),
+                "year"=> intval($year),
+                "month"=> intval($month),
+                "type"=> "unpaid",
+            );
+    
+            $data_json = json_encode($data);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response  = curl_exec($ch);
+            curl_close($ch);
+
+            $response = json_decode($response);
+
+            $bill = $response-> result -> docs;
+            $previous_page = $response-> result -> prevPage;
+            $next_page = $response-> result -> nextPage;
+            $hasPrevPage = $response-> result -> hasPrevPage;
+            $hasNextPage = $response-> result -> hasNextPage;
+            $page_en_cours = $response-> result -> page;
+            $size = count($bill);
+            return view('admin/consumptionThatAreNotPaid', [
+                'invoices' => $bill,
+                'size' => $size,
+                'url' => "/admin/consumption-that-are-unpaid",
+                'page_en_cours' => $page_en_cours,
+                'previous_page' => $previous_page,
+                'hasPrevPage' => $hasPrevPage,
+                'hasNextPage' => $hasNextPage,
+                'next_page' => $next_page,
+
+                "username"=> $username,
+                'isSearch' => true,
+                "consumption"=>  intval($consumption),
+                "year"=> intval($year),
+                "month"=> intval($month),
+            ]);
         }
         if (isset($_POST['send_pagination_consumption_unpaid'])) {
             $alltoken = $_COOKIE['token'];
@@ -2476,7 +2323,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function allUnPaidInvoices()
+    public function allUnPaidInvoices(Request $request)
     {
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -2485,18 +2332,29 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $page = 1;
+        $size = $request->size;
+        $page = $request->page;
 
-        $size = 5;
+        if(isset($size)){
+            if (empty($size)) {
+                $size = 5;
+            }
+        } else {
+            $size = 1;
+        }
 
-        $page_en_cours = 1;
-        $previous_page = 1;
-        $next_page = 1;
+        if(isset($page)){
+            if (empty($page)) {
+                $page = 1;
+            }
+        } else {
+            $page = 1;
+        }
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getByStatus/false',
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/false/'.$page.'/'.$size,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2511,78 +2369,30 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
-        $i = 0;
-        $invoices = array();
-        $invoicesWithPaginator = array();
-        $client = array();
+        $bill = $response-> result -> docs;
+        $previous_page = $response-> result -> prevPage;
+        $next_page = $response-> result -> nextPage;
+        $hasPrevPage = $response-> result -> hasPrevPage;
+        $hasNextPage = $response-> result -> hasNextPage;
+        $page_en_cours = $response-> result -> page;
+        $size = count($bill);
 
-        if ($response->status == 200) {
-            foreach ($response->result as $key => $value) {
-                array_push($invoices, $value);
-            }
-        }
+        return view('admin/consumptionThatAreNotPaid', [
+            'invoices' => $bill,
+            'size' => $size,
+            'url' => "/admin/consumption-that-are-unpaid",
+            'page_en_cours' => $page_en_cours,
+            'previous_page' => $previous_page,
+            'hasPrevPage' => $hasPrevPage,
+            'hasNextPage' => $hasNextPage,
+            'next_page' => $next_page,
+            'isSearch' => false,
 
-        
-        if (gettype($invoices) === 'array') {
-            $arrLength = count($invoices);
-
-            if ($arrLength < $size) {
-                $size = $arrLength;
-                $page_en_cours = 1;
-            } else {
-                $page = $arrLength / $size;
-                $next_page = $page_en_cours + 1;
-            }
-
-            for ($i = 0; $i < $size; $i++) {
-                //$invoicesWithPaginator = $invoices[$i];
-                array_push($invoicesWithPaginator, $invoices[$i]);
-            }
-
-            foreach ($invoicesWithPaginator as $invoice) {
-
-                $idClient = $invoice->idClient;
-                $url = curl_init();
-                curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                ));
-
-                $response = curl_exec($url);
-                $response = json_decode($response);
-
-                $user = $response->result;
-
-                array_push($client, $user);
-            }
-
-            return view('admin/consumptionThatAreNotPaid', [
-                'invoices' => $invoicesWithPaginator,
-                'client' => $client,
-                'page' => $page,
-                'size' => $size,
-                'page_en_cours' => $page_en_cours,
-                'previous_page' => $previous_page,
-                'next_page' => $next_page
-            ]);
-        } else {
-            return view('admin/consumptionThatAreNotPaid',[
-                'invoices' => $invoicesWithPaginator,
-                'client' => $client,
-                'page' => $page,
-                'size' => $size,
-                'page_en_cours' => $page_en_cours,
-                'previous_page' => $previous_page,
-                'next_page' => $next_page
-            ]);
-        }
+            "username"=> "",
+            "consumption"=>  0,
+            "year"=> 0,
+            "month"=> 0,
+        ]);
     }
 
     public function allPaidInvoices()
@@ -3329,7 +3139,6 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
     {
         if (isset($_POST['connect'])) {
             $url = "http://172.17.0.3:4000/admin/facture/one/" . $invoice_id;
-
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
             $token = $alltokentab[0];
@@ -3341,44 +3150,30 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
             $dateSpicy = $_POST['dateSpicy'];
             $amountPaid = $_POST['amountPaid'];
 
-            // je definie la donnée de ma facture.
             $facture = array(
-                "newIndex"  => $newIndex,
-                "montantVerse"  => $amountPaid,
+                "newIndex"  => intval($newIndex),
+                "montantVerse"  => intval($amountPaid),
                 "dateReleveNewIndex"  => $dateSpicy
             );
 
-            // j'encode cette donnée là'.
             $data_json = json_encode($facture);
 
-            // Initialisez une session CURL.
             $ch = curl_init();
-
-            // Je definie les propriétés de connexion
-            //CURLOPT_URL : permet de definir l'url
             curl_setopt($ch, CURLOPT_URL, $url);
-
-            /*
-                on renseignement l'option "CURLOPT_HEADER" avec "true" comme valeur
-                pour inclure l'en-tête dans la réponse
-            */
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
-
-            //CURLOPT_POST : si la requête doit utiliser le protocole POST pour sa résolution (boolean)
-            curl_setopt($ch, CURLOPT_PUT, 1);
-
-            //j'insere la donnée à etre envoyé
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-            //enfin d'avoir un retour sur l'etat de la requette on a CURLOPT_RETURNTRANSFER = true
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response  = curl_exec($ch);
-            
             curl_close($ch);
+            dd($response);
 
             $messageErr = null;
             $messageOK = null;
 
             $response = json_decode($response);
+            dd($response);
+
 
             if ($response->status == 200) {
                 $messageOK = "Action Done Successfully";

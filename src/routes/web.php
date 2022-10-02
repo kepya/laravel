@@ -154,6 +154,8 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::get('/admin/facture',[AdminController::class, 'allClient']);
 
+		Route::post('/admin/facture/update/{invoice_id}',[AdminController::class, 'updateInvoice'])->name('updateInvoice');
+
 		Route::post('/admin/facture/addInvoice',[AdminController::class, 'addOneInvoice'])->name('addOneInvoice');
 
 		Route::get('/admin/addInvoice',[AdminController::class, 'createInvoice'])->name('createInvoice');;
@@ -166,7 +168,8 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::post('/admin/paidInvoce',[ManageAdminController::class, 'paidInvoice']);
 
-		Route::post('/admin/search_invoices',[AdminController::class, 'searchByMonthOrYear'])->name('searchByMonthOrYear');
+		Route::post('/admin/search_invoices',[AdminController::class, 'searchInvoices'])->name('searchInvoices');
+		Route::post('/admin/search_invoices_pagination',[AdminController::class, 'searchInvoicesWithPagination'])->name('searchInvoicesWithPagination');
 
 		Route::post('/admin/invoice/information',[AdminController::class, 'getPenaltyAndTranche'])->name('getPenaltyAndTranche');
 
@@ -194,8 +197,6 @@ Route::group(['middleware' => 'checksession'], function () {
 		Route::get('/admin/invoice/delete/{invoice_id}',[AdminController::class, 'deleteInvoive'])->name('deleteInvoive');
 
         Route::get('/admin/customer/blockedCustomer',[ManageAdminController::class, 'blockedCustomers']);
-
-		Route::put('/admin/facture/{invoice_id}',[AdminController::class, 'updateInvoice'])->name('updateInvoice');
 
 		Route::get('/admin/paid/{invoice_id}/client/{client_id}',[AdminController::class, 'getClientByInvoices'])->name('getClientByInvoices');
 

@@ -123,32 +123,15 @@
     @endif
 </div>
 
-<div class="flex d-flex justify-content-between mb-1">
-    <!-- Detail Part -->
-    <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
+<div class="flex d-flex justify-content-start mb-3">
+    <form action="{{url('/admin/search_invoices')}}" method="post" role="form" class="w-100">
         @csrf
-        <div class="flex d-flex align-items-center">
-            entries :
-            <select class="form-control ml-2" style="width: 70px;" id="select_size" name="select_size" value="<?= $size ?>">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-            </select>
-            <input type="submit" name="send_pagination_consumption_unpaid" id="send_pagination_consumption_unpaid" placeholder="Show" class="ml-1 btn btn-primary">
-        </div>
-    </form>
-    <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
-        @csrf
-        <div class="flex d-flex align-items-center">
-            search By :
-            <select onchange="onChange(this)" class="form-control ml-2" #type name="type" id="type" style="width: 100px;">
-                <option value="month">Month</option>
-                <option value="year">Year</option>
-                <option value="username">Username</option>
-            </select>
-            <input type="number" name="search" id="search" class="form-control ml-2" style="width: 100px;" />
-            <input type="text" name="searchT" id="searchT" class="form-control ml-2" style="width: 100px;"/>
+        <div class="flex d-flex align-items-center justify-content-between">
+            <h5 class="me-2 mr-2 w-50">search By :</h5>
+            <input type="number" name="month" id="month" placeholder="Month" title="Month" class="form-control ml-2" />
+            <input type="number" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2"/>
+            <input type="number" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" class="form-control ml-2"/>
+            <input type="text" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2"/>
             <input type="submit" name="send_search_consumption_unpaid" id="send_search_consumption_unpaid" class="ml-1 btn btn-primary">
         </div>
     </form>
@@ -177,31 +160,31 @@
                         <tbody>
                             @foreach($invoices as $invoice)
                             <tr>
-                                <td>{{$client[$loop ->index]->name}}</td>
-                                <td style="text-align: center">{{$invoice -> consommation}} m<sup>3</sup></td>
-                                <td style="text-align: center">{{$invoice -> montantConsommation}}</td>
-                                <td style="text-align: center">{{$invoice -> montantImpaye}} FCFA</td>
-                                <td style="text-align: center">{{date('d-m-Y H:i:s', strtotime($invoice -> dataLimitePaid))}}</td>
+                                <td>{{$invoice->user->name}}</td>
+                                <td style="text-align: center">{{$invoice -> invoice -> consommation}} m<sup>3</sup></td>
+                                <td style="text-align: center">{{$invoice -> invoice -> montantConsommation}}</td>
+                                <td style="text-align: center">{{$invoice -> invoice -> montantImpaye}} FCFA</td>
+                                <td style="text-align: center">{{date('d-m-Y H:i:s', strtotime($invoice -> invoice -> dataLimitePaid))}}</td>
                                 <td style="text-align: right">
-                                    <a href="{{ url('/admin/detail-consumption/'.$invoice->_id.'/edit') }}" class="btn btn-xs btn-primary pull-right">
+                                    <a href="{{ url('/admin/detail-consumption/'.$invoice-> invoice ->_id.'/edit') }}" class="btn btn-xs btn-primary pull-right">
                                         <i class="fa fa-pencil-alt" style="font-size: 20px;">
                                         </i>
                                     </a>
-                                    <button  title="delete invoice" type="button" class="btn btn-xs btn-danger pull-right" role="button" data-toggle="modal" data-target="#modal-delete-{{ $invoice->_id }}">
+                                    <button  title="delete invoice" type="button" class="btn btn-xs btn-danger pull-right" role="button" data-toggle="modal" data-target="#modal-delete-{{ $invoice-> invoice ->_id }}">
                                         <i class="fa fa-trash" style="font-size: 20px;">
                                         </i>
                                     </button>
-                                    <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-penalty-{{ $invoice->_id }}">
+                                    <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-penalty-{{ $invoice-> invoice ->_id }}">
                                         <i class="far fa-eye" style="font-size: 20px;">
                                         </i> P
                                     </button>
-                                    <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-tranche-{{ $invoice->_id }}">
+                                    <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-tranche-{{ $invoice-> invoice ->_id }}">
                                         <i class="far fa-eye" style="font-size: 20px;">
                                         </i> T
                                     </button>
 
                                     <!-- medium modal -->
-                                    <div class="modal fade" tabindex="-1" id="modal-penalty-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumPenaltyModalLabel" data-backdrop="static" aria-hidden="true">
+                                    <div class="modal fade" tabindex="-1" id="modal-penalty-{{ $invoice-> invoice ->_id }}" role="dialog" aria-labelledby="mediumPenaltyModalLabel" data-backdrop="static" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -214,7 +197,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <?php
-                                                    $penalty = $invoice->penalty;
+                                                    $penalty = $invoice-> invoice ->penalty;
                                                     $length = count($penalty);
                                                     for ($i = 0; $i < $length; $i++) {
                                                         echo nl2br('Montant: '.$penalty[$i] -> montant.'<br/>');
@@ -227,7 +210,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="modal fade" tabindex="-1" id="modal-tranche-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumTrancheModalLabel" data-backdrop="static"
+                                    <div class="modal fade" tabindex="-1" id="modal-tranche-{{ $invoice-> invoice ->_id }}" role="dialog" aria-labelledby="mediumTrancheModalLabel" data-backdrop="static"
                                         aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -240,13 +223,13 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    @foreach($invoice -> tranche as $value)
+                                                    @foreach($invoice -> invoice -> tranche as $value)
                                                         <div class="d-flex flex">
                                                             <p>{{$value->montant}}</p>
                                                         </div>
                                                     @endforeach
                                                     <?php
-                                                        $tranche = $invoice->tranche;
+                                                        $tranche = $invoice-> invoice ->tranche;
                                                         $length = count($tranche);
                                                         for ($i = 0; $i < $length; $i++) {
                                                             echo nl2br('Montant: '.$tranche[$i] -> montant.'<br/>');
@@ -259,7 +242,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="modal fade" tabindex="-1" id="modal-delete-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumDeleteModalLabel" data-backdrop="static" aria-hidden="true">
+                                    <div class="modal fade" tabindex="-1" id="modal-delete-{{ $invoice-> invoice ->_id }}" role="dialog" aria-labelledby="mediumDeleteModalLabel" data-backdrop="static" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -274,7 +257,7 @@
                                                     Are you sure you want to delete this invoice ?
                                                     <div class="d-flex flex justify-content-end align-items-center">
                                                         <button type="button" class="btn mt-1 btn-xs btn-danger pull-right" role="button">
-                                                            <a href="{{ url('/admin/invoice/delete/'.$invoice->_id) }}" class="ms-3 text-white">
+                                                            <a href="{{ url('/admin/invoice/delete/'.$invoice-> invoice ->_id) }}" class="ms-3 text-white">
                                                                 Delete
                                                             </a>
                                                         </button>
@@ -293,59 +276,72 @@
         </div>
     </div>
 </div>
-<div class="flex d-flex justify-content-end mb-1">
-    <div style="border: 1px; border-style: solid; border-radius: 5px;">
-        @if($previous_page > 1 || ($previous_page == 1 && $page_en_cours > 1))
-        <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$previous_page.'/size/'.$size) }}">
-            <button class="btn bg-white"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
-        </a>
-        <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$previous_page.'/size/'.$size) }}">
-            <button class="btn bg-white" style="color: blue;border-radius: 0px;">{{$previous_page}}</button>
-        </a>
-        @else
-        <button class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
-        @endif
-        <!-- Detail Part -->
-        <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$page_en_cours.'/size/'.$size) }}">
-            <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
-        </a>
-        @if($next_page > 1)
-        <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$next_page.'/size/'.$size) }}">
-            <button class="btn" style="width: 40px;border-radius: 0px; color: black;" name="page_search" id="page_search">{{$next_page}}</button>
-        </a>
-        <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$next_page.'/size/'.$size) }}">
-            <button class="btn bg-white" style="width: 40px;border: none;border-radius: 0px;"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
-        </a>
-        @else
-        <button class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
-        @endif
-    </div>
+<div class="flex d-flex justify-content-between mb-1">
+<form action="{{url('/admin/search_invoices')}}" method="post" role="form">
+        @csrf
+        <div class="flex d-flex align-items-center">
+            entries :
+            <input type="text" name="url" id="url" placeholder="url" title="url" class="form-control" value="<?= $url ?>" hidden/>
+
+            <select class="form-control ml-2" style="width: 70px;" id="select_size" name="select_size" value="<?= $size ?>">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+            <input type="submit" name="send_pagination_consumption_unpaid" id="send_pagination_consumption_unpaid" placeholder="Show" class="ml-1 btn btn-primary">
+        </div>
+    </form>
+    @if($isSearch == false)
+        <div style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;">
+            @if($hasPrevPage == true)
+                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$previous_page.'/size/'.$size) }}">
+                    <button class="btn bg-white"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
+                </a>
+                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$previous_page.'/size/'.$size) }}">
+                    <button class="btn bg-white" style="color: blue;border-radius: 0px;">{{$previous_page}}</button>
+                </a>
+            @else
+                <button class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
+            @endif
+            <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$page_en_cours.'/size/'.$size) }}">
+                <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
+            </a>
+            @if($hasNextPage == true)
+                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$next_page.'/size/'.$size) }}">
+                    <button class="btn" style="width: 40px;border-radius: 0px; color: black;" name="page_search" id="page_search">{{$next_page}}</button>
+                </a>
+                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$next_page.'/size/'.$size) }}">
+                    <button class="btn bg-white" style="width: 40px;border: none;border-radius: 0px;"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
+                </a>
+            @else
+                <button class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
+            @endif
+        </div>
+    @else
+        <form style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;" action="{{url('/admin/search_invoices_pagination')}}" method="post" role="form">
+            <input type="number" value="<?= $month ?>" name="month" id="month" placeholder="Month" title="Month" class="form-control ml-2" hidden/>
+            <input type="number" value="<?= $year ?>" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2" hidden/>
+            <input type="number" value="<?= $consumption ?>" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" hidden class="form-control ml-2"/>
+            <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
+            <input type="number" value="<?= $size ?>" name="size" id="size" placeholder="size" title="size" hidden class="form-control ml-2"/>
+            <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
+            <input type="text" value="unpaid" name="type" id="type" placeholder="type" title="type" class="form-control ml-2" hidden/>
+
+            @if($hasPrevPage == true)
+                <button class="btn bg-white" name="previous_page" id="previous_page"  type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
+                <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
+            @else
+                <button class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
+            @endif
+                <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
+            @if($hasNextPage == true)
+                <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
+                <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
+            @else
+                <button class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
+            @endif
+        </form>
+    @endif
 </div>
-
-<script type="text/javascript">
-
-const searchT = document.getElementById('searchT');
-searchT.hidden=true;
-
-function onChange(event) {
-    value = event.value;
-    const search = document.getElementById('search');
-    const searchT = document.getElementById('searchT');
-
-    if (value === "year") {
-        searchT.value = null;
-        searchT.hidden=true;
-        search.hidden=false;
-    } else if (value === "month") {
-        searchT.value = null;
-        searchT.hidden=true;
-        search.hidden=false;
-    } else {
-        searchT.hidden=false;
-        search.value = null;
-        search.hidden=true;
-    }
-}
-
-</script>
 @stop
