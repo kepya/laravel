@@ -182,7 +182,7 @@ Route::group(['middleware' => 'checksession'], function () {
 		Route::get('/admin/consumption/page/{page_size}/size/{size}',[AdminController::class, 'searchAll'])->name('searchAll');
 
 
-		Route::get('/admin/consumption-that-are-paid',[AdminController::class, 'allPaidInvoices'])->name('allPaidInvoicesCom');
+		Route::get('/admin/consumption-that-are-paid',[AdminController::class, 'allPaidInvoices'])->name('ConsumptionPaidInvoices');
 
 		Route::get('/admin/consumption-that-are-paid/page/{page_size}/size/{size}',[AdminController::class, 'searchAllPaid'])->name('searchAllPaid');
 

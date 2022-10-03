@@ -240,7 +240,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Are you sure you want to delete this invoice ?
+                                                <span class="d-flex flex justify-content-start align-items-center">Are you sure you want to delete this invoice ?</span>
                                                     <div class="d-flex flex justify-content-end align-items-center">
                                                         <button type="button" class="btn mt-1 btn-xs btn-danger pull-right" role="button">
                                                             <a href="{{ url('/admin/invoice/delete/'.$invoice-> invoice ->_id) }}" class="ms-3 text-white">

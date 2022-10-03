@@ -155,7 +155,7 @@
                     <tbody>
                         @foreach($invoices as $invoice)
                         <tr>
-                            <td>{{$client[$loop ->index]->name}}</td>
+                        <td>{{$invoice->user->name}}</td>
                             <td style="text-align: center">{{$invoice -> invoice -> consommation}} m<sup>3</sup></td>
                             <td style="text-align: center">{{$invoice -> invoice -> montantConsommation}}</td>
                             <td style="text-align: center">{{$invoice -> invoice -> montantVerse}} FCFA</td>
@@ -239,7 +239,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Are you sure you want to delete this invoice ?
+                                                <span class="d-flex flex justify-content-start align-items-center">Are you sure you want to delete this invoice ?</span>
                                                     <div class="d-flex flex justify-content-end align-items-center">
                                                         <button type="button" class="btn mt-1 btn-xs btn-danger pull-right" role="button">
                                                             <a href="{{ url('/admin/invoice/delete/'.$invoice-> invoice ->_id) }}" class="ms-3 text-white">

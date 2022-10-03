@@ -118,7 +118,14 @@
     </div>
     <div class="card-body">
         <div class="container">
-
+            @if(Session::has('message'))
+                <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
+                    {{ Session::get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <?php if (isset($messageOK)){?>
                     <div class="alert alert-success alert-dismissible fade show"><i class="fas fa-check-circle"></i> <?= $messageOK ?>
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -136,7 +143,7 @@
                     <div class="input-group">Personnel</div>
 
                     <select name="idClient" id="idClient" class="form-control" disabled>
-                        <option value={{$client -> _id}}>{{ $client -> name }}</option>
+                        <option value="{{$client -> _id}}">{{ $client -> name }}</option>
                     </select>
                 </div>
 
@@ -241,7 +248,7 @@
                     <div class="input-group">Personnel</div>
 
                     <select name="idClient" id="idClient" class="form-control" disabled>
-                        <option value={{$client -> _id}}>{{ $client -> name }}</option>
+                        <option value="{{$client -> _id}}">{{ $client -> name }}</option>
                     </select>
                 </div>
 
@@ -265,11 +272,10 @@
 
                 <div class="d-flex flex justify-content-end">
                     <button class="btn btn-primary" id="connect" name="connect" type="submit">Paid Invoice</button>
-                    <button class="btn btn-secondary ml-2 back" id="showDetail" type="button"><a href="admin/consumption-that-are-unpaid">Cancel</a></button>
+                    <button class="btn btn-secondary ml-2 back text-white" id="showDetail" type="button">Cancel</button>
                 </div>
             </form>
-            @endif
-
+            @else
             <div class="modal fade" tabindex="-1" id="modal-update-{{ $invoice->_id }}" role="dialog" aria-labelledby="mediumDeleteModalLabel" data-backdrop="static" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -330,6 +336,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
