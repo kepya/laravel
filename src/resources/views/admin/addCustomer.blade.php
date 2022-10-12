@@ -139,7 +139,7 @@
                 <div class="form-group mt-2">
                     <div class="form-row">
                         <div class="form-group col-md-2">
-                            <input type="number" class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="@if(isset($nbrCl)){{$nbrCl+1}}@else{{ old('ref_client') }}@endif" required>
+                            <input type="number" disabled class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="@if(isset($nbrCl)){{$nbrCl+1}}@else{{ old('ref_client') }}@endif" required>
                         </div>
                         <div class="form-group col-md-10">
                             <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="full name" id="name" name="name" value="{{ old('name') }}" required>

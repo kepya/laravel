@@ -532,6 +532,26 @@ class ManageAdminController extends Controller
             $subs_amount = $request->input('subs_amount');
             $observation = $request->input('observation');
 
+            if(empty($name)){
+                $name = 'not';
+            }
+
+            if(empty($subs_date) || !isset($subs_date)){
+                $subs_date = 'not';
+            }
+    
+            if(empty($ref_client) || !isset($ref_client)){
+                $ref_client = 0;
+            }
+
+            if(empty($subs_amount) || !isset($subs_amount)){
+                $subs_amount = 0;
+            }
+
+            if(empty($observation) || !isset($observation)){
+                $observation = "not";
+            }
+
             //tableaux de récupération
             $phones = [];
             $homes = [];
@@ -577,6 +597,7 @@ class ManageAdminController extends Controller
                 "profileImage" => $photoPath,
             );
 
+            //dd($data);
             //print_r($data);
 
             $data_json = json_encode($data);
