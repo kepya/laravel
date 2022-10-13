@@ -306,16 +306,6 @@ class ManageAdminController extends Controller
         curl_close($ch);
         $response2 = json_decode($response2,true);
         $nbrCl = $response2['result'];
-
-        //print_r($response);
-        //print($nbrCl);
-
-        // $informations = $response['result'];
-        // foreach ($informations as $key => $value) {
-        //     $image = $value['profileImage'];
-        //     return Storage::url($image);
-        // }
-        // return Storage::url() http://127.0.0.1:8000/storage/cathedraledouala.jpg
        return view('admin/customer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
     }
 
@@ -596,9 +586,6 @@ class ManageAdminController extends Controller
                 'observation' => $observation,
                 "profileImage" => $photoPath,
             );
-
-            //dd($data);
-            //print_r($data);
 
             $data_json = json_encode($data);
 

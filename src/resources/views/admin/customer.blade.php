@@ -83,15 +83,6 @@
         </li>
 
         <!-- Nav Item - Payment -->
-        <!-- <li class="nav-item">
-            <a class="nav-link collapsed" href="/admin/map">
-            <i class="fas fa-map-marker-alt"></i>
-            <span>Map</span>
-            </a>
-        </li> -->
-
-
-        <!-- Nav Item - Payment -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/clauses">
             <i class="fas fa-list"></i>
@@ -131,9 +122,9 @@
             <a href="/admin/customer/addCustomer" class="btn btn-primary"> Add a customer </a>
             <a href="/admin/customer/blockedCustomer" class="btn ml-3 btn-warning"><i class="fas fa-exclamation-triangle mr-2"></i>Blocked</a>
         </div>
-        <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Customers</h1>
+        <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Customers, <b><?= $response["result"]['totalPages'].' ' ?></b> Pages</h1>
         <div>
-            <button mode="<?=$mode?>" class="btn btn-primary showTable" id="showTable"><i class="fa fa-table"></i></button>
+            <button mode="<?=$mode?>" class="btn btn-primary showTable" id="showTable"><i class="fa fa-table"></i> Change view</button>
             <!-- <h2>View Customers</h2> -->
         </div>
     </div>
@@ -151,57 +142,67 @@
 
     <br>
 
-    <div class="d-sm-flex align-items-right justify-content-between mt-4">
-        <div>
-            <h3>Sort</h3>
+    <div class="d-flex mt-4">
+        <div class="form-group w-100">
+            <div class="row justify-content-between">
+                <div class="col-7 col-md-7">
+                    <form action="/admin/search/customer" novalidate method="post" enctype="multipart/form-data" class="w-100 d-flex justify-content-between form-horizontal row-border">
+                        @csrf
+                        <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
+                        <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
+                        <input type="text" class="form-control form-control-user" id="name" name="name" placeholder="Search User by name">
+                        <button class="btn btn-primary ml-3" style="width: 40%;" type="submit" name="search" id="search"><i class="fas fa-search"></i> Search by name</button>
+                    </form>
+                </div>
+                <div class="col-4 col-md-4">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a href="{{ url('/admin/customer') }}" class="btn btn-danger"><i class="fas fa-search"></i> Reload Page</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <form action="/admin/customer/sort" class="ml-4" method="post">
-                <div class="form-row">
+    </div>
+    <div class="d-flex mt-4">
+        <div class="form-group w-100">
+            <form action="/admin/customer/sort" class="w-100" method="post">
+                <div class="form-row w-100">
                     @csrf
                     <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
                     <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
-                    <div class="form-group col-md-2">
-                        <input type="number" class="form-control" id="customerID" name="customerID" value="<?=$refId ?? ''?>" placeholder="ID">
+                    <div class="form-group mr-2 col-3  col-md-3">
+                        <div class="d-flex flex-column">
+                            <label for="">Customer Reference</label>
+                            <input type="number" class="form-control" id="customerID" name="customerID" value="<?=$refId ?? ''?>" placeholder="ID">
+                        </div>
                     </div>
-                    <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="meter" name="meter" value="<?=$counterId ?? ''?>" placeholder="UIX2000">
+                    <div class="form-group mr-2 col-3 col-md-3">
+                        <div class="d-flex flex-column">
+                            <label for="">Meter</label>
+                            <input type="text" class="form-control" id="meter" name="meter" value="<?=$counterId ?? ''?>" placeholder="UIX2000">
+                        </div>
                     </div>
-                    <div class="form-group col-md-2">
-                        <input type="date" class="form-control" id="subs_date" name="subs_date" value="<?=$date ?? ''?>" placeholder="Date">
+                    <div class="form-group mr-2 col-3 col-md-3">
+                        <div class="d-flex flex-column ">
+                            <label for="">Subscription Date</label>
+                            <input type="date" class="form-control" id="subs_date" name="subs_date" value="<?=$date ?? ''?>" placeholder="Date">
+                        </div>
                     </div>
-                    <div class="form-group col-md-2">
-                        <select id="order"  name="order" class="form-control" aria-label="multiple select" value="<?=$order ?? ''?>">
-                            <option selected value="asc">asc</option>
-                            <option value="desc">desc</option>
-                        </select>
+                    <div class="form-group mr-2 col-2 col-md-2">
+                        <div class="d-flex flex-column">
+                            <label for="">Order</label>
+                            <select id="order"  name="order" class="form-control" aria-label="multiple select" value="<?=$order ?? ''?>">
+                                <option selected value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group ml-2">
+                    <div class="form-group d-flex align-items-end justify-content-center">
                         <input class="btn btn-primary" type="submit" id="sort" name="sort" value="Sort">
                     </div>
                 </div>
             </form>
         </div>
-
-
-        <form action="/admin/search/customer" novalidate method="post" enctype="multipart/form-data" class="form-horizontal row-border">
-            <div class="col-sm-12">
-                <div class="row">
-                    @csrf
-                    <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
-                    <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
-                    <div class="col-9">
-                        <input type="text" class="form-control form-control-user" id="name" name="name" placeholder="Name of user">
-                    </div>
-                    <div class="col-2">
-                        <button class="btn-sm btn-success h-100" type="submit" name="search" id="search"><i class="fas fa-search"></i></button>
-                    </div>
-                </div>
-
-            </div>
-        </form>
     </div>
-
 
     <!-- bloc normal -->
 
@@ -337,7 +338,7 @@
                         <div class="text-center">
                             <table>
                                 <tr>
-                                    <td>CLIENT : <?= $customer['customerReference']?></td>
+                                    <td>CLIENT : <?= array_key_exists("customerReference", $customer) ? $customer['customerReference'] : null ?></td>
                                 </tr>
                                 <tr>
                                     <td>TEL : <?= $phones?> </td>
@@ -494,7 +495,7 @@
                                 if(!$delete && $status==1){
                         ?>
                         <tr>
-                            <td><?= $customer['customerReference']?></td>
+                            <td><?= array_key_exists("customerReference", $customer) ? $customer['customerReference'] : null ?></td>
                             <td style="text-align: center"><?=$customer['name']?></td>
                             <td style="text-align: center"><?= $phones?></td>
                             <td style="text-align: right">
@@ -538,9 +539,7 @@
     </div>
 
     <div class="row">
-        <div class="container">
-
-            <div class="float-right">
+        <div class="col-12 d-flex justify-content-between ">
 
                 <?php
                     //previous page
@@ -568,7 +567,7 @@
                 ?>
 
                 <!-- Pagination -->
-                    <small><?=$totalPages?>pages</small>
+                <div>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item <?= $prevDisabled?>">
@@ -585,34 +584,30 @@
                             </li>
                         </ul>
                     </nav>
-                    <div class="form-pages">
+                </div>
+                <div class="form-pages">
+                    <small></small>
                         <form action="/admin/customer/search" method="post">
                             @csrf
-                            <div class="form-group">
-                                <div class="form-row">
-                                    <div class="form-group mr-2">
-                                        <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-row">
-                                            <div class="form-group col-md-2 pageSearch">
-                                                <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
-                                            </div>
-                                            <div class="form-group pageSearchLimit">
-                                                <div class="mt-2">Limit :</div>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <input class="form-control pageSearchLimit" type="number" id="limit" name="limit" value="<?=$size ?? ''?>">
-                                                <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="form-group d-flex align-items-center justify-content-end">
+                                <div class="form-group">
+                                    <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
+                                </div>
+                                <div class="form-group pageSearch">
+                                    <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
+                                </div>
+                                <div class="form-group pageSearchLimit">
+                                    <div>Limit :</div>
+                                </div>
+                                <div class="form-group w-25">
+                                    <input class="form-control pageSearchLimit" type="number" id="limit" name="limit" value="<?=$size ?? ''?>">
+                                    <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
                                 </div>
                             </div>
+
                         </form>
                     </div>
 
-            </div>
 
         </div>
 
@@ -715,7 +710,7 @@
                             <div class="text-center">
                                 <table>
                                     <tr>
-                                        <td>CLIENT : <?= $customer['customerReference']?></td>
+                                        <td>CLIENT : <?= array_key_exists("customerReference", $customer) ? $customer['customerReference'] : null ?></td>
                                     </tr>
                                     <tr>
                                         <td>TEL : <?= $phones?> </td>
@@ -851,7 +846,7 @@
                                     if(!$delete && $status==1){
                             ?>
                             <tr>
-                                <td><?= $customer['customerReference']?></td>
+                                <td><?= array_key_exists("customerReference", $customer) ? $customer['customerReference'] : null ?></td>
                                 <td style="text-align: center"><?=$customer['name']?></td>
                                 <td style="text-align: center"><?= $phones?></td>
                                 <td style="text-align: right">

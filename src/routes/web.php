@@ -75,43 +75,6 @@ Route::group(['middleware' => 'checksession'], function () {
 		//[AuthController::class, 'login']
 		Route::get('/allInvoice', 'App\Http\Controllers\UtilisateurController@allInvoicesOfClient');
 
-		// Route::get('/avanceInvoice', function() {
-		//     return view('client/consumption');
-		// });
-		/*
-		Route::get('/consumption/monthly', function() {
-		    $data = "donné";
-		    return view('client/consumption') -> with('donne', $data);
-		});*/
-
-		// Route::get('/facture', function () {
-		//     return view('client/facture');
-		// });
-
-		// Route::post('/home', function() {
-		//     return view('client/client');
-		// });
-
-		// Route::get('/home', function() {
-		//     return view('client/client');
-		// });
-
-		// Route::get('/invoice', function() {
-		//     return view('client/factures');
-		// });
-
-		// Route::get('/invoices_paid', function() {
-		//     return view('client/paidInvoices');
-		// });
-
-		// Route::get('/unpaid_invoices', function() {
-		//     return view('client/unpaidInvoices');
-		// });
-
-		// Route::get('/user', function() {
-		//     return view('client/user');
-		// });
-
 		Route::get('/clauses', function() {
 		    return view('Client/clauses');
 		});
@@ -190,7 +153,6 @@ Route::group(['middleware' => 'checksession'], function () {
 		Route::get('/admin/consumption-that-are-unpaid',[AdminController::class, 'allUnPaidInvoices'])->name('ConsumptionUnPaidInvoices');
 
 		Route::get('/admin/consumption-that-are-unpaid/page/{page_size}/size/{size}',[AdminController::class, 'searchAllUnPaid'])->name('searchAllUnPaid');
-
 
 		Route::get('/admin/detail-consumption/{invoice_id}/edit',[AdminController::class, 'detailInvoive'])->name('detailInvoive');
 
