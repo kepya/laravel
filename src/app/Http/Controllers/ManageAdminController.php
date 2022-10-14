@@ -580,9 +580,9 @@ class ManageAdminController extends Controller
                 'password' => $password,
                 "idCompteur" => $meters,
                 "description" => $homes,
-                'customerReference' => $ref_client,
+                'customerReference' => intval($ref_client),
                 'subscriptionDate' => $subs_date,
-                'subscriptionAmount'=>$subs_amount,
+                'subscriptionAmount'=> intval($subs_amount),
                 'observation' => $observation,
                 "profileImage" => $photoPath,
             );
