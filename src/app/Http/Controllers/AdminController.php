@@ -2882,42 +2882,23 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
             $month = $_POST['month'];
             $year = $_POST['year'];
 
-            $time = strtotime($month . '/' . $day . '/' . $year);
-            $date = date('Y-m-d', $time);
-            session()->put('dateOfInvoices', $date);
-            $url = "" . $date;
+            if ($year <= date('Y')) {
+                if ($month <= date('m')) {
+                    $time = strtotime($month . '/' . $day . '/' . $year);
+                    $date = date('Y-m-d', $time);
+                    session()->put('dateOfInvoices', $date);
+                    $url = "" . $date;
 
-            $alltoken = $_COOKIE['token'];
-            $alltokentab = explode(';', $alltoken);
-            $token = $alltokentab[0];
-            $tokentab = explode('=', $token);
-            $tokenVal = $tokentab[1];
-            $Authorization = 'Bearer ' . $tokenVal;
-            
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getStaticInformation',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-            ));
-
-            $response = curl_exec($curl);
-            curl_close($curl);
-            $response = json_decode($response, true);
-
-            if(array_key_exists('result',$response)){
-
-                if (!empty($response['result'])) {
-
-                    $url = curl_init();
-                    curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date,
+                    $alltoken = $_COOKIE['token'];
+                    $alltokentab = explode(';', $alltoken);
+                    $token = $alltokentab[0];
+                    $tokentab = explode('=', $token);
+                    $tokenVal = $tokentab[1];
+                    $Authorization = 'Bearer ' . $tokenVal;
+                    
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getStaticInformation',
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -2928,27 +2909,55 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
                         CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
                     ));
 
-                    $response = curl_exec($url);
-                    $response = json_decode($response);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response, true);
 
-                    $invoices = $response -> result;
-                    if ($invoices == null) {
-                        $invoices = [];
+                    if(array_key_exists('result',$response)){
+
+                        if (!empty($response['result'])) {
+
+                            $url = curl_init();
+                            curl_setopt_array($url, array(
+                                CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date,
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'GET',
+                                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+                            ));
+
+                            $response = curl_exec($url);
+                            $response = json_decode($response);
+
+                            $invoices = $response -> result;
+                            if ($invoices == null) {
+                                $invoices = [];
+                            }
+
+                            return view('admin/facture', ['invoices' => $invoices, 'date' => $date]);
+                        } else {
+                            $messageErr = "Please entrer the static informations in the ";
+                            Session::flash('messageErr', $messageErr);
+                            Session::flash('alert-class', 'alert-danger');
+                            return redirect()->back();
+                        }
+                    } else {
+                        $message = "Something wrong happened";
+                        Session::flash('message', $message);
+                        Session::flash('alert-class', 'alert-danger');
+                        return redirect()->back();
                     }
-
-                    return view('admin/facture', ['invoices' => $invoices, 'date' => $date]);
-                } else {
-                    $messageErr = "Please entrer the static informations in the ";
-                    Session::flash('messageErr', $messageErr);
-                    Session::flash('alert-class', 'alert-danger');
-                    return redirect()->back();
                 }
-            } else {
-                $message = "Something wrong happened";
-                Session::flash('message', $message);
-                Session::flash('alert-class', 'alert-danger');
-                return redirect()->back();
             }
+
+            $message = "You cannot create invoice with date greater than date of today";
+            Session::flash('message', $message);
+            Session::flash('alert-class', 'alert-danger');
+            return redirect()->back();
         }else{
             return view('admin/addDateOfFacture');
         }
