@@ -920,7 +920,7 @@
                         <div class="form-group mt-2">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <input type="date" class="form-control" id="subs_date" name="subs_date" value="" readonly>
+                                    <input type="date" class="form-control" id="subs_date_2" name="subs_date" value="" readonly>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <input type="number" class="form-control" id="subs_amount" name="subs_amount" value="" readonly>
@@ -995,12 +995,14 @@
             var meters = $(this).attr('meters');
             var desc = $(this).attr('desc');
 
+            var newDate = subs_date.split('-');
+            let new_subs_date = `${newDate[0]}-${newDate[1]}-${newDate[2]}`;
+
             $('#meters').val(meters);
-            $('#subs_date').val(subs_date);
+            $('#subs_date_2').val(new_subs_date);
             $('#subs_amount').val(subs_amount);
             $('#observation').val(obs);
             $('#desc').val(desc);
-
         });
 
     </script>
