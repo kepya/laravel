@@ -286,48 +286,5 @@
 
 </script>
 
-<script>
-    // $( "#setLocation" ).on( "click", function() {
-
-    //     if($("#setLocation").is(':checked'))
-
-            // checked
-
-    //        function myPosition(position) {
-    //         $('#lat').val(position.coords.latitude);
-    //         $('#lng').val(position.coords.longitude);
-    //        }
-
-    //        function errorPosition(error) {
-    //           var info = "Error while getting your location : ";
-
-    //           switch(error.code) {
-    //               case error.TIMEOUT:
-    //                   info += "Timeout !";
-    //               break;
-    //               case error.PERMISSION_DENIED:
-    //               info += "Permission denied";
-    //               break;
-    //               case error.POSITION_UNAVAILABLE:
-    //                   info += "Your location could not be determined";
-    //               break;
-    //               case error.UNKNOWN_ERROR:
-    //                   info += "Unknown Error";
-    //               break;
-    //           }
-
-    //           alert(info);
-    //        }
-
-    //       if(navigator.geolocation)
-    //         navigator.geolocation.getCurrentPosition(myPosition,errorPosition,{enableHighAccuracy:true});
-
-    //     else
-    //         //unchecked
-    //         var message = "unchecked";
-    // });
-</script>
-
-
 
 @stop

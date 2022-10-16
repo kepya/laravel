@@ -148,7 +148,7 @@
                 <div class="form-group mt-2">
                     <div class="form-row">
                         <div class="form-group col-md-2">
-                            <input type="number" class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="<?= $data['customerReference']?>" required>
+                            <input type="number" disabled class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="<?= $data['customerReference']?>" required>
                         </div>
                         <div class="form-group col-md-10">
                             <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="full name" id="name" name="name" value="<?= $data['name']?>" required>
@@ -197,9 +197,9 @@
 
                 <div class="part2">Sites</div>
                 <div class="form-group mt-2" id="addHomeMeter">
-                    <input type="hidden" name="blocSites" id="blocSites" value="<?=count($data['localisation']['description'])?>">
+                    <input type="hidden" name="blocSites" id="blocSites" value="<?=count($data['description'])?>">
                     <?php
-                        if(count($data['localisation']['description']) <= 1){ ?>
+                        if(count($data['description']) <= 1){ ?>
                             <div class="form-row">
                                 <div class="form-group col-md-1">
                                     <i class="fas fa-plus ml-2 btn-primary" id="plusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
@@ -208,7 +208,7 @@
                                     <input type="text" class="form-control" placeholder="Meter_ID" id="meter0" name="meter0" value="<?= !empty($data['idCompteur']) ? $data['idCompteur'][0] : ''?>">
                                 </div>
                                 <div class="form-group col-md-8">
-                                    <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="<?= !empty($data['localisation']['description']) ? $data['localisation']['description'][0] : ''?>">
+                                    <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="<?= !empty($data['description']) ? $data['description'][0] : ''?>">
                                 </div>
                                 <div class="form-group col-md-1" id="minusform1" style="display:none;">
                                     <i class="fas fa-minus ml-3 btn-primary" id="minusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
@@ -224,20 +224,20 @@
                                     <input type="text" class="form-control" placeholder="Meter_ID" id="meter0" name="meter0" value="<?=$data['idCompteur'][0]?>">
                                 </div>
                                 <div class="form-group col-md-8">
-                                    <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="<?=$data['localisation']['description'][0]?>">
+                                    <input type="text" class="form-control" placeholder="location" id="home0" name="home0" value="<?=$data['description'][0]?>">
                                 </div>
                                 <div class="form-group col-md-1" id="minusform1">
                                     <i class="fas fa-minus ml-3 btn-primary" id="minusSites" style="display:flex; align-items:center; margin-top: 10px; border-radius:50%; height:20px; width:20px; justify-content:center; color:white; cursor:pointer;"></i>
                                 </div>
                             </div>
                     <?php
-                            for ($i=1;$i<count($data['localisation']['description']);$i++) {?>
+                            for ($i=1;$i<count($data['description']);$i++) {?>
                                 <div class="form-row" id="<?='blocSites'.$i?>">
                                     <div class="form-group col-md-2" style="margin-left:60px;" >
                                         <input type="text" class="form-control" placeholder="Meter_ID" id="<?='meter'.$i?>" name="<?='meter'.$i?>" value="<?=$data['idCompteur'][$i]?>">
                                     </div>
                                     <div class="form-group col-md-8">
-                                        <input type="text" class="form-control" placeholder="location" id="<?='meter'.$i?>" name="<?='home'.$i?>" value="<?=$data['localisation']['description'][$i]?>">
+                                        <input type="text" class="form-control" placeholder="location" id="<?='meter'.$i?>" name="<?='home'.$i?>" value="<?=$data['description'][$i]?>">
                                     </div>
                                 </div>
                         <?php
@@ -293,7 +293,7 @@
 
 <script>
     var nbrePhone = <?=count($data['phone'])?>;
-    var blocSites = <?=count($data['localisation']['description'])?>;
+    var blocSites = <?=count($data['description'])?>;
 
     $("#plusPhone").on("click", function(){
         $("#addPhone").append(

@@ -911,6 +911,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
+                                    <label for="">Description</label>
                                     <textarea class="form-control" id="desc" readonly></textarea>
                                 </div>
                             </div>
@@ -920,14 +921,17 @@
                         <div class="form-group mt-2">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="">Date</label>
                                     <input type="date" class="form-control" id="subs_date_2" name="subs_date" value="" readonly>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="">Amount</label>
                                     <input type="number" class="form-control" id="subs_amount" name="subs_amount" value="" readonly>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
+                                    <label for="">Observation</label>
                                     <input type="text" class="form-control" id="observation" name="observation" value="" readonly>
                                 </div>
                             </div>

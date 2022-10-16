@@ -501,11 +501,8 @@ class ManageAdminController extends Controller
         );
 
         if ($validator->fails()) {
-
             return back()->withErrors($validator)->withInput();
-
         }else{
-
             if($request->file()) {
                 $photo =  $request->file('image')->getClientOriginalName();
                 $photoPath = $request->image->storeAs('/customers',$photo);
@@ -599,8 +596,6 @@ class ManageAdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-
-            //print_r($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');
@@ -765,6 +760,27 @@ class ManageAdminController extends Controller
             $subs_amount = $request->input('subs_amount');
             $observation = $request->input('observation');
 
+            
+            if(empty($name)){
+                $name = 'not';
+            }
+
+            if(empty($subs_date) || !isset($subs_date)){
+                $subs_date = 'not';
+            }
+    
+            if(empty($ref_client) || !isset($ref_client)){
+                $ref_client = 0;
+            }
+
+            if(empty($subs_amount) || !isset($subs_amount)){
+                $subs_amount = 0;
+            }
+
+            if(empty($observation) || !isset($observation)){
+                $observation = "not";
+            }
+
             //tableaux de récupération
             $phones = [];
             $homes = [];
@@ -799,14 +815,12 @@ class ManageAdminController extends Controller
                 'phone' => $phones,
                 "idCompteur" => $meters,
                 "description" => $homes,
-                'customerReference' => $ref_client,
+                'customerReference' => intval($ref_client),
                 'subscriptionDate' => $subs_date,
-                'subscriptionAmount'=>$subs_amount,
+                'subscriptionAmount'=> intval($subs_amount),
                 'observation' => $observation,
                 "profileImage" => $photoPath,
             );
-
-            //print_r($data);
 
             $data_json = json_encode($data);
 
@@ -820,8 +834,6 @@ class ManageAdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-
-            // // print_r($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');
