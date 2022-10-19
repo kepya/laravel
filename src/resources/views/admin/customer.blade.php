@@ -122,7 +122,7 @@
             <a href="/admin/customer/addCustomer" class="btn btn-primary"> Add a customer </a>
             <a href="/admin/customer/blockedCustomer" class="btn ml-3 btn-warning"><i class="fas fa-exclamation-triangle mr-2"></i>Blocked</a>
         </div>
-        <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Customers, <b><?= $response["result"]['totalPages'].' ' ?></b> Pages</h1>
+        <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Customers, <b><?= isset($response) ? $response["result"]['totalPages'].' ' : '1 ' ?></b> Pages</h1>
         <div>
             <button mode="<?=$mode?>" class="btn btn-primary showTable" id="showTable"><i class="fa fa-table"></i> Change view</button>
             <!-- <h2>View Customers</h2> -->
@@ -207,7 +207,7 @@
     <!-- bloc normal -->
 
     <?php
-        if(isset($response["result"])){
+        if(isset($response) && isset($response["result"])){
 
             $data = $response['result'];  //table informations returned
 

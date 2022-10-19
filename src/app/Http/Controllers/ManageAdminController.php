@@ -584,6 +584,7 @@ class ManageAdminController extends Controller
                 "profileImage" => $photoPath,
             );
 
+            // dd($data);
             $data_json = json_encode($data);
 
             $ch = curl_init();
@@ -911,8 +912,8 @@ class ManageAdminController extends Controller
                     "status" => "200",
                     "result" => json_decode(json_encode($customers), true),
                 );
-                //dump($array);
-                return view('admin/customer',['customerSearch' => $array['result'],'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
+                // dd($array);
+                return view('admin/customer',['customerSearch' => $array['result'],'response' => null,'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
 
             }else{
 
