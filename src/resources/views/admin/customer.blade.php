@@ -255,7 +255,7 @@
                     //Verify if the person has many meters
                     $status = $customer['status'];
                     $delete = $customer['isDelete'];
-                    $description = $customer['localisation']['description'];
+                    $description = $customer['description'];
 
                     if($status == 1){
                         $card='bg-success';
@@ -306,7 +306,7 @@
                         $i=0;
                         foreach($description as $description){
                             $i++;
-                            if($i == count($customer['localisation']['description'])){
+                            if($i == count($customer['description'])){
                                 $desc = $desc.$description;
                             }else{
                                 $desc = $desc.$description." / ";
@@ -433,7 +433,7 @@
                                 //Verify if the person has many meters
                                 $status = $customer['status'];
                                 $delete = $customer['isDelete'];
-                                $description = $customer['localisation']['description'];
+                                $description = $customer['description'];
 
                                 if($status == 1){
                                     $card='bg-primary';
@@ -484,7 +484,7 @@
                                     $i=0;
                                     foreach($description as $description){
                                         $i++;
-                                        if($i == count($customer['localisation']['description'])){
+                                        if($i == count($customer['description'])){
                                             $desc = $desc.$description;
                                         }else{
                                             $desc = $desc.$description." / ";
@@ -628,7 +628,8 @@
             //Verify if the person has many meters
             $status = $customer['status'];
             $delete = $customer['isDelete'];
-            $description = $customer['localisation']['description'];
+            // $description = $customer['description'];
+            $description = $customer['description'];
 
             if($status == 1){
                 $card='bg-success';
@@ -679,7 +680,7 @@
                 $i=0;
                 foreach($description as $description){
                     $i++;
-                    if($i == count($customer['localisation']['description'])){
+                    if($i == count($customer['description'])){
                         $desc = $desc.$description;
                     }else{
                         $desc = $desc.$description." / ";
@@ -784,7 +785,7 @@
                                     //Verify if the person has many meters
                                     $status = $customer['status'];
                                     $delete = $customer['isDelete'];
-                                    $description = $customer['localisation']['description'];
+                                    $description = $customer['description'];
 
                                     if($status == 1){
                                         $card='bg-primary';
@@ -835,7 +836,7 @@
                                         $i=0;
                                         foreach($description as $description){
                                             $i++;
-                                            if($i == count($customer['localisation']['description'])){
+                                            if($i == count($customer['description'])){
                                                 $desc = $desc.$description;
                                             }else{
                                                 $desc = $desc.$description." / ";
@@ -998,7 +999,6 @@
             var obs = $(this).attr('obs');
             var meters = $(this).attr('meters');
             var desc = $(this).attr('desc');
-
             var newDate = subs_date.split('-');
             let new_subs_date = `${newDate[0]}-${newDate[1]}-${newDate[2]}`;
 
