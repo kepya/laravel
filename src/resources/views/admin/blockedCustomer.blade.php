@@ -184,7 +184,7 @@
                     //Verify if the person has many meters
                     $status = $customer['status'];
                     $delete = $customer['isDelete'];
-                    $description = $customer['localisation']['description'];
+                    $description = $customer['description'];
 
                     if($status == 0){
                         $card='bg-warning';
@@ -235,7 +235,7 @@
                         $i=0;
                         foreach($description as $description){
                             $i++;
-                            if($i == count($customer['localisation']['description'])){
+                            if($i == count($customer['description'])){
                                 $desc = $desc.$description;
                             }else{
                                 $desc = $desc.$description." / ";
@@ -362,7 +362,7 @@
                                 //Verify if the person has many meters
                                 $status = $customer['status'];
                                 $delete = $customer['isDelete'];
-                                $description = $customer['localisation']['description'];
+                                $description = $customer['description'];
 
                                 if($status == 0){
                                     $card='bg-primary';
@@ -413,7 +413,7 @@
                                     $i=0;
                                     foreach($description as $description){
                                         $i++;
-                                        if($i == count($customer['localisation']['description'])){
+                                        if($i == count($customer['description'])){
                                             $desc = $desc.$description;
                                         }else{
                                             $desc = $desc.$description." / ";
@@ -545,7 +545,7 @@
             }
         }
     ?>
-    
+
 <!-- Info Modal -->
 <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
