@@ -116,7 +116,7 @@
         <div>
             <h1 class="h3 mb-0 text-gray-800"><a href="/admin/customer" class="mr-3"><i class="fas fa-chevron-circle-left"></i></a></h1>
         </div>
-        <h1 class="h3 mb-0 text-gray-800">Blocked Customers</h1>
+        <h1 class="h3 mb-0 text-gray-800"><b><?= isset($nbrCl)? $nbrCl.' ' : ''?></b>Blocked Customers, <b><?= isset($response) ? ($response["result"]['totalPages'] + 1).' ' : '1 ' ?></b> Pages</h1>
         <div>
             <button mode="<?=$mode?>" class="btn btn-primary showTable" id="showTable"><i class="fa fa-table"></i></button>
         </div>
@@ -468,9 +468,7 @@
     </div>
 
     <div class="row">
-        <div class="container">
-
-            <div class="float-right">
+        <div class="col-12 d-flex justify-content-between ">
 
                 <?php
                     //previous page
@@ -481,7 +479,7 @@
                     }else{
                         $prevDisabled = '';
                         $prevAriadisabled = '';
-                        $prevHref = '/admin/customer/blockedCustomer/search/'.$prevPage.'/'.$size;
+                        $prevHref = '/admin/customer/search/'.$prevPage.'/'.$size ?? '';
                     }
 
                     //next page
@@ -492,13 +490,13 @@
                     }else{
                         $nextDisabled = '';
                         $nextAriadisabled = '';
-                        $nextHref = '/admin/customer/blockedCustomer/search/'.$nextPage.'/'.$size;
+                        $nextHref = '/admin/customer/search/'.$nextPage.'/'.$size ?? '' ;
                     }
 
                 ?>
 
                 <!-- Pagination -->
-                    <small><?=$totalPages?>pages</small>
+                <div>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item <?= $prevDisabled?>">
@@ -515,34 +513,30 @@
                             </li>
                         </ul>
                     </nav>
-                    <div class="form-pages">
-                        <form action="/admin/customer/blockedCustomer/search" method="post">
+                </div>
+                <div class="form-pages">
+                    <small></small>
+                        <form action="/admin/customer/search" method="post">
                             @csrf
-                            <div class="form-group">
-                                <div class="form-row">
-                                    <div class="form-group mr-2">
-                                        <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-row">
-                                            <div class="form-group col-md-2 pageSearch">
-                                                <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
-                                            </div>
-                                            <div class="form-group pageSearchLimit">
-                                                <div class="mt-2">Limit :</div>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <input class="form-control pageSearchLimit" type="number" id="limit" name="limit" value="<?=$size ?? ''?>">
-                                                <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="form-group d-flex align-items-center justify-content-end">
+                                <div class="form-group">
+                                    <input class="btn btn-primary" type="submit" id="pageSearch" name="PageSearch" value="Page N°">
+                                </div>
+                                <div class="form-group pageSearch">
+                                    <input class="form-control" type="number" id="page" name="page" value="<?=$page?>">
+                                </div>
+                                <div class="form-group pageSearchLimit">
+                                    <div>Limit :</div>
+                                </div>
+                                <div class="form-group w-25">
+                                    <input class="form-control pageSearchLimit" type="number" id="limit" name="limit" value="<?=$size ?? ''?>">
+                                    <input class="form-control" type="text" id="mode" name="mode" value="<?=$mode ?? ''?>" hidden>
                                 </div>
                             </div>
+
                         </form>
                     </div>
 
-            </div>
 
         </div>
 
@@ -551,8 +545,7 @@
             }
         }
     ?>
-
-
+    
 <!-- Info Modal -->
 <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">

@@ -343,6 +343,7 @@ class ManageAdminController extends Controller
             "refId"=>  intval($customerRef),
             "counterId"=> $idCompteur,
             "order"=> $order,
+            "status"=> "active",
         );
 
         $data_json = json_encode($data);
@@ -435,7 +436,6 @@ class ManageAdminController extends Controller
     }
 
     public function blockedCustomers(Request $request){
-
         if(isset($request->size)){
             $size = $request->size;
             $mode = 'tableBloc';
@@ -444,22 +444,39 @@ class ManageAdminController extends Controller
             $mode  = 'custBloc';
         }
 
-        $url = "http://172.17.0.3:4000/admin/auth/client/1/".$size;
+        $url = "http://172.17.0.3:4000/admin/auth/client/find/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
         $token = $alltokentab[0];
         $tokentab = explode('=',$token);
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer '.$tokenVal;
+
+        $data = array(
+            "date"=> " ",
+            "refId"=> 0,
+            "counterId"=> " ",
+            "order"=>  " ",
+            "status"=> "block",//block
+        );
+        $data_json = json_encode($data);
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
+        $response  = curl_exec($ch);
         curl_close($ch);
-        $response = json_decode($response,true);
 
-        return view('admin/blockedCustomer',['response' => $response,'size'=>$size,'mode'=>$mode]);
+        $response = json_decode($response,true);
+        $results = $response['result']["docs"];
+        $nbrCl = count($results);
+
+        // dd($response);
+
+        return view('admin/blockedCustomer',['response' => $response,'nbrCl' => $nbrCl,'size'=>$size,'mode'=>$mode]);
     }
 
     public function addCustomers(){
