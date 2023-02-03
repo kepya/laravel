@@ -304,11 +304,12 @@ class="d-sm-flex align-items-center justify-content-between mb-4"
 <!-- Content Row -->
 <div class="row">
 <!-- Content Column -->
-<div class="col-lg-10 offset-lg-1 mb-4">
+<div class="col-lg-12  mb-4">
   <!-- Project Card Example -->
   <div class="card shadow mb-4">
-    <div class="card-header py-3">
+    <div class="card-header w-100 py-3 d-flex flex justify-content-between align-items-center">
       <h6 class="m-0 font-weight-bold text-primary">Invoices</h6>
+      <a href="/admin/consumption-that-are-unpaid" class="text-red text-danger cursor-pointer">View more</a>
     </div>
     <div class="card-body container-fluid">
       <div class="table-responsive" *ngIf="classes.length>0">
@@ -324,17 +325,19 @@ class="d-sm-flex align-items-center justify-content-between mb-4"
 
           <tbody>
             @foreach($invoices as $invoice)
-              <tr>
-                <td>{{$client[$loop ->index]->name}}</td>
-                <td style="text-align: center">{{$invoice['montantConsommation']}}</td>
-                <td style="text-align: center">{{$invoice['montantImpaye']}}FCFA</td>
-                <td style="text-align: right">
-                  <i
-                    class="fas fa-lightbulb"
-                    style="font-size: 30px; color: red"
-                  ></i>
-                </td>
-              </tr>
+              @if($loop ->index < 5)
+                <tr>
+                  <td>{{$client[$loop ->index]->name}}</td>
+                  <td style="text-align: center">{{$invoice['montantConsommation']}}</td>
+                  <td style="text-align: center">{{$invoice['montantImpaye']}}FCFA</td>
+                  <td style="text-align: right">
+                    <i
+                      class="fas fa-lightbulb"
+                      style="font-size: 30px; color: red"
+                    ></i>
+                  </td>
+                </tr>
+              @endif
             @endforeach
           </tbody>
         </table>

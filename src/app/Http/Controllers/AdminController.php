@@ -153,6 +153,52 @@ class AdminController extends Controller
             }
         }
 
+        if (isset($_POST['reload'])) {
+            $url = curl_init();
+            curl_setopt_array($url, array(
+                CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+            ));
+
+            $response = curl_exec($url);
+            $response = json_decode($response);
+
+            $invoices = $response -> result;
+            if ($invoices == null) {
+                $invoices = [];
+            }
+
+
+            $page_en_cours = 0;
+            $previous_page = 0;
+            $size = 0;
+            $hasPrevPage= false;
+            $hasNextPage= false;
+            $next_page= 0;
+
+            return view('admin/facture', [
+                'invoices' => $invoices, 
+                'date' => $date,
+                'page_size' => $size,
+                'page_en_cours' => $page_en_cours,
+                'previous_page' => $previous_page,
+                'hasPrevPage' => $hasPrevPage,
+                'hasNextPage' => $hasNextPage,
+                'next_page' => $next_page,
+                'isSearch' => false,
+    
+                "username"=> "",
+            ]);
+            
+        }
+
         return view('admin/facture', ['users' => $users, 'date' => $date]);
     }
 
@@ -2938,7 +2984,27 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
                                 $invoices = [];
                             }
 
-                            return view('admin/facture', ['invoices' => $invoices, 'date' => $date]);
+                            // return view('admin/facture', ['invoices' => $invoices, 'date' => $date]);
+                            $page_en_cours = 0;
+                            $previous_page = 0;
+                            $size = 0;
+                            $hasPrevPage= false;
+                            $hasNextPage= false;
+                            $next_page= 0;
+                
+                            return view('admin/facture', [
+                                'invoices' => $invoices, 
+                                'date' => $date,
+                                'page_size' => $size,
+                                'page_en_cours' => $page_en_cours,
+                                'previous_page' => $previous_page,
+                                'hasPrevPage' => $hasPrevPage,
+                                'hasNextPage' => $hasNextPage,
+                                'next_page' => $next_page,
+                                'isSearch' => false,
+                    
+                                "username"=> "",
+                            ]);
                         } else {
                             $messageErr = "Please entrer the static informations in the ";
                             Session::flash('messageErr', $messageErr);

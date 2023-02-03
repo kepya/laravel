@@ -415,8 +415,8 @@ class ManageClientController extends Controller
         $admin = json_decode($response3, true);
 
         $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin]);
-        return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
-
+        // return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');
+        return $pdf->stream('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');
     }
 
     public function overview($invoice_id){

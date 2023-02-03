@@ -8,7 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <style>
+        .container {
+            min-height: 100vh;
+        }
+        .container > .content:first-child {
+                height: 100vh;
+                position: relative;
+                align-items: center;
+            }
+    </style>
     <title>WebForage - Sign in </title>
 
     <!-- Custom fonts for this template-->
@@ -31,7 +40,7 @@
     <div class="container">
 
         <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <div class="row content justify-content-center">
 
             <div class="col-xl-10 col-lg-12 col-md-9">
 
