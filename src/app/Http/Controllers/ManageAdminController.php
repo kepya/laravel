@@ -852,6 +852,7 @@ class ManageAdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
+            dd($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');

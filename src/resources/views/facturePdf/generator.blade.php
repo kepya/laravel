@@ -34,7 +34,11 @@
             <td class="border" align="center"><?=date("m.d.y",strtotime($invoice['result']['dataLimitePaid']))?></td>
         </tr>
         <tr>
-            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['result']['name']?> <br> Localisation: <?=$client['result']['localisation']['description']?></td>
+            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['result']['name']?> <br> Localisation: 
+                @for ($i = 0; $i < count($client['result']['description']); $i++)
+                    <?=$client['result']['description'][$i]?>
+                @endfor
+            </td>
         </tr>
         <tr>
             <td rowspan="2" align="center" class="border">N° <br> Compteur </td>
@@ -51,7 +55,7 @@
             <td align="center" class="border">Ancien</td>
         </tr>
         <tr>
-            <td align="center" class="border"><?=$client['result']['IdCompteur']?></td>
+            <td align="center" class="border"><?=$invoice['result']['idCompteur']?></td>
             <td align="center" class="border"><?=$invoice['result']['newIndex']?></td>
             <td align="center" class="border"><?=$invoice['result']['oldIndex']?></td>
             <td align="center" class="border"><?=$invoice['result']['consommation']?></td>

@@ -2158,8 +2158,10 @@ class AdminController extends Controller
         curl_close($curl3);
         $admin = json_decode($response3, true);
 
+        // dd($invoice);
+
         $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin]);
-return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
+        return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
     }
 
     public function detailInvoive($invoice_id)
