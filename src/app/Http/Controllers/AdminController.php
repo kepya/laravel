@@ -2723,11 +2723,10 @@ return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') .
 
             $newIndex = $_POST['newIndex'];
             $dateSpicy = $_POST['dateSpicy'];
-            $amountPaid = $_POST['amountPaid'];
 
             $facture = array(
                 "newIndex"  => intval($newIndex),
-                "montantVerse"  => intval($amountPaid),
+                // "montantVerse"  => intval($amountPaid),
                 "dateReleveNewIndex"  => $dateSpicy
             );
 

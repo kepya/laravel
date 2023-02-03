@@ -151,13 +151,13 @@
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">New index</div>
-                            <input type="number" class="form-control" placeholder="new index" id="newIndex" name="newIndex" value="<?= $invoice  -> newIndex?>" required>
+                            <input type="number" disabled class="form-control" placeholder="new index" id="newIndex" name="newIndex" value="<?= $invoice  -> newIndex?>" required>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Old index</div>
-                            <input type="number" class="form-control" placeholder="old index" id="oldIndex" name="oldIndex" value="<?= $invoice  -> oldIndex?>" required>
+                            <input type="number" disabled class="form-control" placeholder="old index" id="oldIndex" name="oldIndex" value="<?= $invoice  -> oldIndex?>" required>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Surplus</div>
-                            <input type="number" class="form-control" placeholder="surplus" id="surplus" name="surplus" value="<?= $invoice  -> surplus?>" required>
+                            <input type="number" disabled class="form-control" placeholder="surplus" id="surplus" name="surplus" value="<?= $invoice  -> surplus?>" required>
                         </div>
                     </div>
                 </div>
@@ -314,15 +314,6 @@
                                         <div class="form-group mb-3">
                                             <div class="input-group">Date of spicy</div>
                                             <input type="text" class="form-control" id="dateSpicy" name="dateSpicy" placeholder="Date of spicy" value="<?= date('d-m-Y ', strtotime($invoice  -> dateReleveNewIndex))?>" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="form-group mb-3">
-                                            <div class="input-group">Paid</div>
-                                            <input type="number" class="form-control" placeholder="money who give" id="amountPaid" name="amountPaid" value="<?= $invoice  -> montantVerse?>" required>
                                         </div>
                                     </div>
                                 </div>
