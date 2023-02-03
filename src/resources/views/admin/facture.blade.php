@@ -37,7 +37,7 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Consumption</h6>
                     <a class="collapse-item" href="/admin/consumption" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">All</a>
-                    <a class="collapse-item" href="/admin/consumption-that-are-paid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">Consumption Paid</a>
+                    <a class="collapse-item" href=$url."" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">Consumption Paid</a>
                     <a class="collapse-item" href="/admin/consumption-that-are-unpaid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices unpaid">Consumption UnPaid</a>
                 </div>
             </div>
@@ -139,7 +139,12 @@
         Add Invoices
     </h4>
 
-    <form action="/admin/facture/search_custumer" novalidate method="post" enctype="multipart/form-data" class="form-horizontal row-border">
+    <form action="{{url('/admin/addInvoice')}}"  method="post" enctype="multipart/form-data" class="form-horizontal row-border">
+        <input type="number" value="<?= $page_size ?>" name="page_size" id="page_size" hidden class="form-control ml-2"/>
+        <input type="date" value="<?= $date ?>" id="date" name="date" hidden>
+        <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
+        <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
+
         <div class="col-sm-12">
             <div class="row">
                 @csrf
@@ -150,7 +155,8 @@
                     <button class="btn-sm btn-success h-100" type="submit" name="search" id="search"><i class="fas fa-search"></i></button>
                 </div>
                 <div class="col-2">
-                    <button class="btn-sm btn-warning h-100" type="submit" name="reload" id="reload"><i class="fas fa-reload"></i></button>
+                    <button class="btn-sm btn-warning h-100" type="submit" name="reload" id="reload"><svg style="width: 20px;
+    height: auto;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V448c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H176c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z"/></svg></button>
                 </div>
             </div>
 
@@ -158,7 +164,7 @@
     </form>
 
 </div>
-<div class="container-fluid mt-5" id="users">
+<div class="container-fluid mt-5" id="users" style="min-height: 50vh;">
     <section class="row">
 
         <?php if($invoices ?? '' != null && count($invoices ?? '') > 0 ){
@@ -242,78 +248,47 @@
         <?php } ?>
     </section>
 
-    <section class="row">
-        <section class="page-size">
+</div>
+<div class="flex d-flex align-items-center justify-content-between mb-3 mt-3">
+    <form action="{{url('/admin/addInvoice')}}" method="post" role="form">
+        @csrf
+        <div class="flex d-flex align-items-center">
+            entries :
 
-        </section>
-        <section class="page">
+            <input type="date" value="<?= $date ?>" id="date" name="date" hidden>
+            <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
+            <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
 
-        </section>
-    </section>
-    <div class="flex d-flex align-items-center justify-content-between mb-1">
-        <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
-            @csrf
-            <div class="flex d-flex align-items-center">
-                entries :
+            <select class="form-control ml-2" style="width: 70px;" id="page_size" name="page_size" value="<?= $page_size ?>">
+                <option value="6">6</option>
+                <option value="12">12</option>
+                <option value="18">18</option>
+                <option value="30">30</option>
+            </select>
+            <input type="submit" name="paginate_invoice" id="paginate_invoice" placeholder="Show" class="ml-1 btn btn-primary">
+        </div>
+    </form>
 
-                <select class="form-control ml-2" style="width: 70px;" id="select_page_size" name="select_page_size" value="<?= $page_size ?>">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                </select>
-                <input type="submit" name="paginate_invoice" id="paginate_invoice" placeholder="Show" class="ml-1 btn btn-primary">
-            </div>
-        </form>
-
-        @if($isSearch == false)
-            <div style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;">
-                @if($hasPrevPage == true)
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$previous_page.'/size/'.$page_size) }}">
-                        <button class="btn bg-white"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
-                    </a>
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$previous_page.'/size/'.$page_size) }}">
-                        <button class="btn bg-white" style="color: blue;border-radius: 0px;">{{$previous_page}}</button>
-                    </a>
-                @else
-                    <button disabled class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
-                @endif
-                <a href="{{ url('/admin/consumption-that-are-paid/page/'.$page_en_cours.'/size/'.$page_size) }}">
-                    <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
-                </a>
-                @if($hasNextPage == true)
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$next_page.'/size/'.$page_size) }}">
-                        <button class="btn" style="width: 40px;border-radius: 0px; color: black;" name="page_search" id="page_search">{{$next_page}}</button>
-                    </a>
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$next_page.'/size/'.$page_size) }}">
-                        <button class="btn bg-white" style="width: 40px;border: none;border-radius: 0px;"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
-                    </a>
-                @else
-                    <button disabled class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
-                @endif
-            </div>
+    <form style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;" action="{{ url('/admin/addInvoice')}}" method="post" role="form">
+        <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
+        <input type="number" value="<?= $page_size ?>" name="page_size" id="page_size" placeholder="page_size" title="page_size" hidden class="form-control ml-2"/>
+        <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
+        <input type="date" value="<?= $date ?>" id="date" name="date" hidden>
+        @csrf
+        @if($hasPrevPage == true)
+            <button class="btn bg-white" name="previous_page" id="previous_page" type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
+            <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
         @else
-            <form style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;" action="{{url('/admin/search_invoices_pagination')}}" method="post" role="form">
-                <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
-                <input type="number" value="<?= $page_size ?>" name="page_size" id="page_size" placeholder="page_size" title="page_size" hidden class="form-control ml-2"/>
-                <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
-
-                @if($hasPrevPage == true)
-                    <button class="btn bg-white" name="previous_page" id="previous_page"  type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
-                    <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
-                @else
-                    <button disabled class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
-                @endif
-                    <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
-                @if($hasNextPage == true)
-                    <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
-                    <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
-                @else
-                    <button disabled class="btn bg-white" style="width: 40px;border-radius: 0px;"  type="button"> <i class="fas fa-angle-double-right"></i> </button>
-                @endif
-            </form>
+            <button disabled class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
         @endif
-    </div>
+            <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
+        @if($hasNextPage == true)
+            <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
+            <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
+        @else
+            <button disabled class="btn bg-white" style="width: 40px;border-radius: 0px;"  type="button"> <i class="fas fa-angle-double-right"></i> </button>
+        @endif
+    </form>
 </div>
 
 

@@ -124,6 +124,8 @@ Route::group(['middleware' => 'checksession'], function () {
 		Route::get('/admin/addInvoice',[AdminController::class, 'createInvoice'])->name('createInvoice');;
 
 		Route::post('/admin/addInvoice',[AdminController::class, 'adminInvoiceInformation']);
+		
+		Route::post('/admin/addInvoice/page/{page}/size/{size}',[AdminController::class, 'adminInvoiceInformation']);
 
 		Route::get('/admin/invoice/addInformation',[AdminController::class, 'adminInvoiceInformation']);
 
