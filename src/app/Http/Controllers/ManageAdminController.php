@@ -842,7 +842,7 @@ class ManageAdminController extends Controller
                 'observation' => $observation,
                 "profileImage" => $photoPath,
             );
-            dd($data);
+            // dd($data);
             $data_json = json_encode($data);
 
             $ch = curl_init();
@@ -855,7 +855,7 @@ class ManageAdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-            dd($response);
+            // dd($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');
