@@ -820,6 +820,7 @@ class ManageAdminController extends Controller
                 array_push($meters,$meter);
             }
 
+            
             $url = "http://172.17.0.3:4000/admin/manageCompte/client/update/".$id;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
@@ -839,7 +840,7 @@ class ManageAdminController extends Controller
                 'observation' => $observation,
                 "profileImage" => $photoPath,
             );
-
+            dd($data);
             $data_json = json_encode($data);
 
             $ch = curl_init();
