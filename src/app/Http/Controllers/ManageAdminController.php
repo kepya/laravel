@@ -369,9 +369,11 @@ class ManageAdminController extends Controller
 
     }
 
-    public function viewCustomersByPage($page,$size,Request $request){
+    public function viewCustomersByPage($page,$size,$mode='tableBloc',Request $request){
 
-        $mode = $request->mode;
+        // $mode = $request->mode;
+        // $mode = 'tableBloc';
+        // $mode  = 'custBloc';
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];

@@ -571,14 +571,14 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item <?= $prevDisabled?>">
-                            <a class="page-link" href="<?=$prevHref?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                            <a class="page-link" href="<?=$prevHref.'/'.$mode ?? 'tableBloc'?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                             </li>
-                            <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/search/<?= $page ?>/<?=$size ?? ''?>"><?= $page ?></a></li>
+                            <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/customer/search/<?= $page ?>/<?=$size ?? ''?>/<?=$mode ?? ''?>"><?= $page ?></a></li>
 
                             <li class="page-item <?=$nextDisabled?>">
-                            <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                            <a class="page-link" href="<?= $nextHref.'/'.$mode ?? 'tableBloc' ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                             </li>
