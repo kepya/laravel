@@ -329,7 +329,7 @@ class ManageAdminController extends Controller
         if(empty($customerRef)){
             $customerRef = "0";
         }
-        
+
         $url = "http://172.17.0.3:4000/admin/auth/client/find/1/".$size;
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -543,7 +543,7 @@ class ManageAdminController extends Controller
             if(empty($subs_date) || !isset($subs_date)){
                 $subs_date = 'not';
             }
-    
+
             if(empty($ref_client) || !isset($ref_client)){
                 $ref_client = 0;
             }
@@ -778,7 +778,7 @@ class ManageAdminController extends Controller
             $subs_amount = $request->input('subs_amount');
             $observation = $request->input('observation');
 
-            
+
             if(empty($name)){
                 $name = 'not';
             }
@@ -786,7 +786,7 @@ class ManageAdminController extends Controller
             if(empty($subs_date) || !isset($subs_date)){
                 $subs_date = 'not';
             }
-    
+
             if(empty($ref_client) || !isset($ref_client)){
                 $ref_client = 0;
             }
@@ -833,12 +833,13 @@ class ManageAdminController extends Controller
                 'phone' => $phones,
                 "idCompteur" => $meters,
                 "description" => $homes,
-                'customerReference' => intval($ref_client),
+                'customerReference' => $ref_client,
                 'subscriptionDate' => $subs_date,
                 'subscriptionAmount'=> intval($subs_amount),
                 'observation' => $observation,
                 "profileImage" => $photoPath,
             );
+
 
             $data_json = json_encode($data);
 

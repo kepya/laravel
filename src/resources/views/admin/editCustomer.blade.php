@@ -148,7 +148,8 @@
                 <div class="form-group mt-2">
                     <div class="form-row">
                         <div class="form-group col-md-2">
-                            <input type="number" disabled class="form-control @error('ref_client') is-invalid @enderror" placeholder="ref_ID" id="ref_client" name="ref_client" value="<?= $data['customerReference']?>" required>
+                            <input type="hidden" id="ref_client" name="ref_client" value="<?= $data['customerReference']?>"/>
+                            <input type="number" class="form-control" placeholder="ref_ID" value="<?= $data['customerReference']?>" disabled>
                         </div>
                         <div class="form-group col-md-10">
                             <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="full name" id="name" name="name" value="<?= $data['name']?>" required>
