@@ -369,9 +369,11 @@ class ManageAdminController extends Controller
 
     }
 
-    public function viewCustomersByPage($page,$size,Request $request){
+    public function viewCustomersByPage($page,$size,$mode='tableBloc',Request $request){
 
-        $mode = $request->mode;
+        // $mode = $request->mode;
+        // $mode = 'tableBloc';
+        // $mode  = 'custBloc';
 
         $url = "http://172.17.0.3:4000/admin/auth/client/".$page."/".$size;
         $alltoken = $_COOKIE['token'];
@@ -820,6 +822,7 @@ class ManageAdminController extends Controller
                 array_push($meters,$meter);
             }
 
+
             $url = "http://172.17.0.3:4000/admin/manageCompte/client/update/".$id;
             $alltoken = $_COOKIE['token'];
             $alltokentab = explode(';', $alltoken);
@@ -841,6 +844,7 @@ class ManageAdminController extends Controller
             );
 
 
+            // dd($data);
             $data_json = json_encode($data);
 
             $ch = curl_init();
@@ -853,7 +857,7 @@ class ManageAdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
-            dd($response);
+            // dd($response);
 
             if ($response->status == 200){
                 Session::flash('message', 'Action Successfully done!');
