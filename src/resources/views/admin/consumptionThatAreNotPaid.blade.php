@@ -112,236 +112,353 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">UnPaid Consumption</h1>
-    @if(Session::has('message'))
-        <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
-            {{ Session::get('message') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-</div>
-
-<div class="flex d-flex justify-content-start mb-3">
-    <form action="{{url('/admin/search_invoices')}}" method="post" role="form" class="w-100">
-        @csrf
-        <div class="flex d-flex align-items-center justify-content-between">
-            <h5 class="me-2 mr-2 w-50">search By :</h5>
-            <input type="number" name="month" id="month" placeholder="Month" title="Month" class="form-control ml-2" />
-            <input type="number" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2"/>
-            <input type="number" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" class="form-control ml-2"/>
-            <input type="text" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2"/>
-            <input type="submit" name="send_search_consumption_unpaid" id="send_search_consumption_unpaid" class="ml-1 btn btn-primary">
-        </div>
-    </form>
-</div>
-<div class="row">
-    <!-- Detail Part -->
-    <div class="col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Invoices</h6>
+    <h1 class="h3 mb-0 text-gray-800">Client not in good standing</h1>
+    <?php
+        if (isset($messageOK)){?>
+            <div class="alert alert-success alert-dismissible fade show"><i class="fas fa-check-circle"></i> <?= $messageOK ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
-            <div class="card-body container-fluid">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="thead thead-danger">
-                            <tr>
-                                <th>Name</th>
-                                <th style="text-align: center">Consumption</th>
-                                <th style="text-align: center">Amount</th>
-                                <th style="text-align: center">UnPaid</th>
-                                <th style="text-align: center">Limite of paiement</th>
-                                <th style="text-align: right">Action</th>
-                            </tr>
-                        </thead>
+<?php   } ?>
+<?php if (isset($messageErr)){?>
+            <div class="alert alert-danger alert-dismissible fade show"><i class="fas fa-exclamation-triangle"></i><?= $messageErr ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+<?php   } ?>
+</div>
 
-                        <tbody>
-                            @foreach($invoices as $invoice)
-                            <tr>
-                                <td>{{$invoice->user->name}}</td>
-                                <td style="text-align: center">{{$invoice -> invoice -> consommation}} m<sup>3</sup></td>
-                                <td style="text-align: center">{{$invoice -> invoice -> montantConsommation}}</td>
-                                <td style="text-align: center">{{$invoice -> invoice -> montantImpaye}} FCFA</td>
-                                <td style="text-align: center">{{date('d-m-Y H:i:s', strtotime($invoice -> invoice -> dataLimitePaid))}}</td>
-                                <td style="text-align: right">
-                                    <a href="{{ url('/admin/detail-consumption/'.$invoice-> invoice ->_id.'/edit') }}" class="btn btn-xs btn-primary pull-right">
-                                        <i class="fa fa-pencil-alt" style="font-size: 20px;">
-                                        </i>
-                                    </a>
-                                    <button  title="delete invoice" type="button" class="btn btn-xs btn-danger pull-right" role="button" data-toggle="modal" data-target="#modal-delete-{{ $invoice-> invoice ->_id }}">
-                                        <i class="fa fa-trash" style="font-size: 20px;">
-                                        </i>
-                                    </button>
-                                    <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-penalty-{{ $invoice-> invoice ->_id }}">
-                                        <i class="far fa-eye" style="font-size: 20px;">
-                                        </i> P
-                                    </button>
-                                    <button type="button" class="btn btn-xs btn-primary pull-right" role="button" data-toggle="modal" data-target="#modal-tranche-{{ $invoice-> invoice ->_id }}">
-                                        <i class="far fa-eye" style="font-size: 20px;">
-                                        </i> T
-                                    </button>
-
-                                    <!-- medium modal -->
-                                    <div class="modal fade" tabindex="-1" id="modal-penalty-{{ $invoice-> invoice ->_id }}" role="dialog" aria-labelledby="mediumPenaltyModalLabel" data-backdrop="static" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <section>
-                                                        Penalty
-                                                    </section>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <?php
-                                                    $penalty = $invoice-> invoice ->penalty;
-                                                    $length = count($penalty);
-                                                    for ($i = 0; $i < $length; $i++) {
-                                                        echo nl2br('Montant: '.$penalty[$i] -> montant.'<br/>');
-                                                        echo nl2br('Date: '.$penalty[$i] -> date);
-                                                    }
-                                                    ?>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal fade" tabindex="-1" id="modal-tranche-{{ $invoice-> invoice ->_id }}" role="dialog" aria-labelledby="mediumTrancheModalLabel" data-backdrop="static"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <section>
-                                                        Tranches
-                                                    </section>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    @foreach($invoice -> invoice -> tranche as $value)
-                                                        <div class="d-flex flex">
-                                                            <p>{{$value->montant}}</p>
-                                                        </div>
-                                                    @endforeach
-                                                    <?php
-                                                        $tranche = $invoice-> invoice ->tranche;
-                                                        $length = count($tranche);
-                                                        for ($i = 0; $i < $length; $i++) {
-                                                            echo nl2br('Montant: '.$tranche[$i] -> montant.'<br/>');
-                                                            echo nl2br('Date: '.$tranche[$i] -> date);
-                                                        }
-                                                        ?>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal fade" tabindex="-1" id="modal-delete-{{ $invoice-> invoice ->_id }}" role="dialog" aria-labelledby="mediumDeleteModalLabel" data-backdrop="static" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <section>
-                                                        Delete Invoice
-                                                    </section>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <span class="d-flex flex justify-content-start align-items-center">Are you sure you want to delete this invoice ?</span>
-                                                    <div class="d-flex flex justify-content-end align-items-center">
-                                                        <button type="button" class="btn mt-1 btn-xs btn-danger pull-right" role="button">
-                                                            <a href="{{ url('/admin/invoice/delete/'.$invoice-> invoice ->_id) }}" class="ms-3 text-white">
-                                                                Delete
-                                                            </a>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+<div class="d-flex mt-4">
+    <div class="form-group w-100">
+        <div class="row justify-content-between">
+            <div class="col-7 col-md-7">
+                <form action="/admin/consumption-that-are-unpaid/searchCustomer" novalidate method="post" enctype="multipart/form-data" class="w-100 d-flex justify-content-between form-horizontal row-border">
+                    @csrf
+                    <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
+                    <input class="form-control" type="number" id="page" name="page" value="<?=$page ?? ''?>" hidden>
+                    <input type="text" class="form-control form-control-user" id="name" name="name" placeholder="Search User by name">
+                    <button class="btn btn-primary ml-3" style="width: 40%;" type="submit" name="search" id="search"><i class="fas fa-search"></i> Search by name</button>
+                </form>
+            </div>
+            <div class="col-4 col-md-4">
+                <div class="d-flex align-items-center justify-content-end">
+                    <a href="{{ url('/admin/consumption-that-are-unpaid') }}" class="btn btn-danger"><i class="fas fa-search"></i> Reload Page</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="flex d-flex justify-content-between mb-1">
-    <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
-        @csrf
-        <div class="flex d-flex align-items-center">
-            entries :
-            <input type="text" name="url" id="url" placeholder="url" title="url" class="form-control" value="<?= $url ?>" hidden/>
 
-            <select class="form-control ml-2" style="width: 70px;" id="select_size" name="select_size" value="<?= $size ?>">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-            </select>
-            <input type="submit" name="send_pagination_consumption_unpaid" id="send_pagination_consumption_unpaid" placeholder="Show" class="ml-1 btn btn-primary">
-        </div>
-    </form>
-    @if($isSearch == false)
-        <div style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;">
-            @if($hasPrevPage == true)
-                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$previous_page.'/size/'.$size) }}">
-                    <button class="btn bg-white"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
-                </a>
-                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$previous_page.'/size/'.$size) }}">
-                    <button class="btn bg-white" style="color: blue;border-radius: 0px;">{{$previous_page}}</button>
-                </a>
-            @else
-                <button class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
-            @endif
-            <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$page_en_cours.'/size/'.$size) }}">
-                <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
-            </a>
-            @if($hasNextPage == true)
-                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$next_page.'/size/'.$size) }}">
-                    <button class="btn" style="width: 40px;border-radius: 0px; color: black;" name="page_search" id="page_search">{{$next_page}}</button>
-                </a>
-                <a href="{{ url('/admin/consumption-that-are-unpaid/page/'.$next_page.'/size/'.$size) }}">
-                    <button class="btn bg-white" style="width: 40px;border: none;border-radius: 0px;"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
-                </a>
-            @else
-                <button class="btn bg-white" style="width: 40px;border-radius: 0px;"> <i class="fas fa-angle-double-right"></i> </button>
-            @endif
-        </div>
-    @else
-        <form style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;" action="{{url('/admin/search_invoices_pagination')}}" method="post" role="form">
-            <input type="number" value="<?= $month ?>" name="month" id="month" placeholder="Month" title="Month" class="form-control ml-2" hidden/>
-            <input type="number" value="<?= $year ?>" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2" hidden/>
-            <input type="number" value="<?= $consumption ?>" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" hidden class="form-control ml-2"/>
-            <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
-            <input type="number" value="<?= $size ?>" name="size" id="size" placeholder="size" title="size" hidden class="form-control ml-2"/>
-            <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
-            <input type="text" value="unpaid" name="type" id="type" placeholder="type" title="type" class="form-control ml-2" hidden/>
 
-            @if($hasPrevPage == true)
-                <button class="btn bg-white" name="previous_page" id="previous_page"  type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
-                <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
-            @else
-                <button class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
-            @endif
-                <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
-            @if($hasNextPage == true)
-                <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
-                <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
-            @else
-                <button class="btn bg-white" style="width: 40px;border-radius: 0px;"  type="button"> <i class="fas fa-angle-double-right"></i> </button>
-            @endif
-        </form>
-    @endif
-</div>
+
+<?php
+
+    if(isset($response) || isset($response2)){
+
+        if (isset($response2['search'])){
+
+            $customers = $response2['result']; ?>
+
+            <div class="row" >
+                <!-- Detail Part -->
+                <div class="col-lg-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Customers</h6>
+                        </div>
+                        <div class="card-body container-fluid">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="thead thead-danger">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Subscription Date</th>
+                                            <th>Unpaid Amount</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <?php
+                                            foreach($customers as $customer){
+
+                                                //Verify if the person has many meters
+                                                $status = $customer['client']['status'];
+                                                $delete = $customer['client']['isDelete'];
+                                                $unpaidAmount = $customer['unPaidAmount'];
+
+                                                if($status == 1){
+                                                    $card='bg-primary';
+                                                    $class='btn-primary';
+                                                    $state = 'Active';
+                                                    $badge = 'badge-success';
+                                                }
+
+                                                if(empty($status)){
+                                                    $status = 0;
+                                                }
+
+                                                if(!$delete && $status==1){
+                                        ?>
+                                        <tr>
+                                            <td><?=$customer['client']['name']?></td>
+                                            <td><?= $customer['client']['subscriptionDate'] ? $customer['client']['subscriptionDate'] : '' ?></td>
+                                            <td><?= $unpaidAmount ?></td>
+                                            <td>
+                                                <a href="#" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="pay">
+                                                    <span class="icon"  style="color:white;">
+                                                        Pay <i class="fas fa-file-invoice-dollar"></i>
+                                                    </span>
+                                                </a>
+                                                <a href="#" class="btn <?= $card ?>" customerID="<?= $customer['client']['_id'] ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                                    <span class="icon"  style="color:white;">
+                                                        See <i class="fas fa-eye"></i>
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                            <?php
+                                    }
+                                }
+                            ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<?php
+        }else{
+
+            $data = $response->result;
+
+            $customers = $data->docs; //table of customers
+
+            $totalDocs = $data->totalDocs; //number of customers not in good standing
+            //$limit = $data['limit']; // limit of materials on a page
+            $totalPages = $data->totalPages; //number of pages
+            $page = $data->page; //current page
+            //$pagingCounter = $data['pagingCounter']; //paging counter
+            $hasPrevPage = $data->hasPrevPage; //boolean if previous page exists
+            $hasNextPage = $data->hasNextPage; //boolean if next page exists
+            $prevPage = $data->prevPage; //index of the previous page
+            $nextPage = $data->nextPage; //index of the next page
+
+            if(empty($page)){
+                $page = 0;
+            }
+
+            if(empty($hasPrevPage)){
+                $hasPrevPage = 0;
+            }
+
+            if(empty($hasNextPage)){
+                $hasNextPage = 0;
+            }
+
+            if(empty($prevPage)){
+                $prevPage = 0;
+            }
+
+            if(empty($nextPage)){
+                $nextPage = 0;
+            }
+
+            if($totalDocs!=0) {
+?>
+                <div class="flex d-flex justify-content-between mb-1">
+                    <!-- Detail Part -->
+                    <form action="/admin/consumption-that-are-unpaid" class="tableBloc" method="post" role="form">
+                        @csrf
+                        <div class="flex d-flex align-items-center">
+                            entries :
+                            <select class="form-control ml-2" style="width: 70px;" id="entrySize" name="entrySize">
+                                <option <?=$size == 10 ? 'selected' : ''?> value="10">10</option>
+                                <option <?=$size == 15 ? 'selected' : ''?> value="15">15</option>
+                                <option <?=$size == 20 ? 'selected' : ''?> value="20">20</option>
+                                <option <?=$size == 25 ? 'selected' : ''?> value="25">25</option>
+                            </select>
+                            <input class="form-control" type="number" id="limit" name="limit" value="<?=$size ?? ''?>" hidden>
+                            <input class="form-control" type="number" id="page" name="page" value="<?=$page ?? ''?>" hidden>
+                            <input type="submit" name="send_pagination" id="send_pagination" placeholder="Show" class="ml-1 btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row" >
+                    <!-- Detail Part -->
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Customers</h6>
+                            </div>
+                            <div class="card-body container-fluid">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="thead thead-danger">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Subscription Date</th>
+                                                <th>Unpaid Amount</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <?php
+                                                foreach($customers as $customer){
+
+                                                    //Verify if the person has many meters
+                                                    $status = $customer->client->status;
+                                                    $delete = $customer->client->isDelete;
+                                                    $unpaidAmount = $customer->unpaidAmount;
+
+                                                    if($status == 1){
+                                                        $card='bg-primary';
+                                                        $class='btn-primary';
+                                                        $state = 'Active';
+                                                        $badge = 'badge-success';
+                                                    }
+
+                                                    if(empty($status)){
+                                                        $status = 0;
+                                                    }
+
+                                                    if(!$delete && $status==1){
+                                            ?>
+                                            <tr>
+                                                <td><?=$customer->client->name?></td>
+                                                <td><?= $customer->client->subscriptionDate ? $customer->client->subscriptionDate : '' ?></td>
+                                                <td><?= $unpaidAmount ?></td>
+                                                <td>
+                                                    <a href="#modal-pay-{{ $customer->client->_id }}" class="btn btn-warning" role="button" data-toggle="modal" data-target="#modal-pay-{{ $customer->client->_id }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="pay">
+                                                        <span class="icon"  style="color:white;">
+                                                            Pay <i class="fas fa-file-invoice-dollar"></i>
+                                                        </span>
+                                                    </a>
+                                                    <a href="/admin/consumption-that-are-unpaid/<?= $customer->client->_id ?>" class="btn <?= $card ?>" customerID="<?= $customer->client->_id ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                                        <span class="icon"  style="color:white;">
+                                                            See <i class="fas fa-eye"></i>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                <?php
+                                        } ?>
+
+                                        <div class="modal fade" tabindex="-1" id="modal-pay-{{ $customer->client->_id }}" role="dialog" aria-labelledby="payModalLabel" data-backdrop="static"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <section>
+                                                            Pay
+                                                        </section>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="post" action="/admin/consumption-that-are-unpaid/pay" class="user" enctype="multipart/form-data">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <input type="hidden" id="id" name="id"  value="<?= $customer->client->_id ?>">
+                                                            <input type="hidden" id="page" name="page"  value="<?= $page ?>">
+                                                            <input type="hidden" id="size" name="size"  value="<?= $size ?>">
+
+                                                            <div class="amount">
+                                                                Amount
+                                                                <input type="number" class="form-control @error('amount') is-invalid @enderror"
+                                                                    id="amount" name="amount" placeholder="amount" value="" required>
+                                                                    @error('amount')
+                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row float-right mt-3">
+                                                                <a href="#">
+                                                                    <button href="#" class="btn btn-primary btn-user" name="submit" type="submit">
+                                                                        Proceed
+                                                                    </button>
+                                                                </a>
+                                                                <a href="#">
+                                                                    <button class="btn btn-secondary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
+                                                                </a>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                <?php
+                                    }
+                                ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between ">
+
+                            <?php
+                                //previous page
+                                if($hasPrevPage == 0){
+                                    $prevDisabled = 'disabled';
+                                    $prevAriadisabled = 'true';
+                                    $prevHref = '#';
+                                }else{
+                                    $prevDisabled = '';
+                                    $prevAriadisabled = '';
+                                    $prevHref = '/admin/consumption-that-are-unpaid/'.$prevPage.'/'.$size ?? '';
+                                }
+
+                                //next page
+                                if($hasNextPage == 0){
+                                    $nextDisabled = 'disabled';
+                                    $nextAriadisabled = 'true';
+                                    $nextHref = '#';
+                                }else{
+                                    $nextDisabled = '';
+                                    $nextAriadisabled = '';
+                                    $nextHref = '/admin/consumption-that-are-unpaid/'.$nextPage.'/'.$size ?? '' ;
+                                }
+
+                            ?>
+
+                            <!-- Pagination -->
+                            <div>
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item <?= $prevDisabled?>">
+                                        <a class="page-link" href="<?=$prevHref?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                        </li>
+                                        <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/consumption-that-are-unpaid/<?= $page ?>/<?=$size ?? ''?>"><?= $page ?></a></li>
+
+                                        <li class="page-item <?=$nextDisabled?>">
+                                        <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+                    </div>
+
+                </div>
+<?php
+            }
+        }
+    }
+?>
+
 @stop

@@ -31,10 +31,10 @@
         <tr>
             <td colspan="7"></td>
             <td class="border">Date limite <br> de paiement :</td>
-            <td class="border" align="center"><?=date("m.d.y",strtotime($invoice['result']['dataLimitePaid']))?></td>
+            <td class="border" align="center"><?=date("d.m.y",strtotime($invoice['result']['dataLimitePaid']))?></td>
         </tr>
         <tr>
-            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['result']['name']?> <br> Localisation: 
+            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['result']['name']?> <br> Localisation:
                 @for ($i = 0; $i < count($client['result']['description']); $i++)
                     <?=$client['result']['description'][$i]?>
                 @endfor
