@@ -801,7 +801,7 @@ class AdminController extends Controller
             $name = $request->input('name');
             $email = $request->input('email');
             $phone = $request->input('phone');
-            $home = $request->input('home');
+            $home = empty($request->input('home')) ? "Not set" : $request->input('home');
 
 
             $url = "http://172.17.0.3:4000/admin/auth/update";
@@ -811,25 +811,6 @@ class AdminController extends Controller
             $tokentab = explode('=', $token);
             $tokenVal = $tokentab[1];
             $Authorization = 'Bearer ' . $tokenVal;
-
-            if (!empty($home)) {
-                $data = array(
-                    'name' => $name,
-                    'birthday' => $birthdate,
-                    'phone' => $phone,
-                    'email' => $email,
-                    "profileImage" => $photoPath,
-                    "description" => $home,
-                );
-            } else {
-                $data = array(
-                    'name' => $name,
-                    'birthday' => $birthdate,
-                    'phone' => $phone,
-                    'email' => $email,
-                    "profileImage" => $photoPath,
-                );
-            }
 
             $data = array(
                 'name' => $name,
