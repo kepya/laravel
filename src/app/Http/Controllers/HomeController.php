@@ -19,7 +19,7 @@ class HomeController extends Controller
     	$phone = $request->input('phone');
         $password = md5(sha1($request->input('password')));
 
-	    $url = "http://172.17.0.3:4000/login";
+	    $url = "http://172.17.0.5:4000/login";
 	    $data = array(
 	        'phone' => $phone,
 	        'password' => $password,
@@ -109,7 +109,7 @@ class HomeController extends Controller
 
         $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "http://172.17.0.3:4000/login/userInfo/".$phone,
+                CURLOPT_URL => "http://172.17.0.5:4000/login/userInfo/".$phone,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -158,7 +158,7 @@ class HomeController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getByStatus/false',
+            CURLOPT_URL => 'http://172.17.0.5:4000/admin/facture/getByStatus/false',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -187,7 +187,7 @@ class HomeController extends Controller
             $idClient = $invoice['idClient'];
             $url = curl_init();
             curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/'.$idClient,
+                CURLOPT_URL => 'http://172.17.0.5:4000/client/auth/'.$idClient,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -206,7 +206,7 @@ class HomeController extends Controller
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/all/'.$year.'/'.$month.'/0/5',
+            CURLOPT_URL => 'http://172.17.0.5:4000/admin/facture/all/'.$year.'/'.$month.'/0/5',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -245,7 +245,7 @@ class HomeController extends Controller
                 $idClient = $invoice->idClient;
                 $url = curl_init();
                 curl_setopt_array($url, array(
-                    CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/'.$idClient,
+                    CURLOPT_URL => 'http://172.17.0.5:4000/client/auth/'.$idClient,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -267,7 +267,7 @@ class HomeController extends Controller
 
         $url_client = curl_init();
         curl_setopt_array($url_client, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/auth/getClient',
+            CURLOPT_URL => 'http://172.17.0.5:4000/admin/auth/getClient',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -296,7 +296,7 @@ class HomeController extends Controller
         // annuel
         $url_annuel = curl_init();
         curl_setopt_array($url_annuel, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/factureByYear/'.$year,
+            CURLOPT_URL => 'http://172.17.0.5:4000/admin/facture/factureByYear/'.$year,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -316,7 +316,7 @@ class HomeController extends Controller
             $invoices_annuel_list = [];
         }
 
-        $url1 = "http://172.17.0.3:4000/stock/getAll";
+        $url1 = "http://172.17.0.5:4000/stock/getAll";
         $data1 = array(
             'page' => 1,
             'limit' => 0,
