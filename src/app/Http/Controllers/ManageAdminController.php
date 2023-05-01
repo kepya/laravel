@@ -603,7 +603,7 @@ class ManageAdminController extends Controller
                 "profileImage" => $photoPath,
             );
 
-            // dd($data);
+            dd($data);
             $data_json = json_encode($data);
 
             $ch = curl_init();

@@ -3235,9 +3235,11 @@ class AdminController extends Controller
                 $page_en_cours = $page;
             }
 
-            if ($page_size || $page_size == null || $page_size == "") {
+            if ($page_size == null || $page_size == "") {
                 $page_size = $size;
             }
+
+            // dd($page_size);
 
             if(isset($_POST['reload'])) {
                 $page =  1;
