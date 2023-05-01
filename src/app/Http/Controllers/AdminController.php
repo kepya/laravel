@@ -1889,22 +1889,14 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        if($page=0 || $size=0){
-            $size = $request->limit;
-            $page = $request->page;
+        if(empty($page) && empty($size)){
+            $size = isset($request->limit) ? $request->limit: 10;
+            $page = isset($request->page) ? $request->page : 1;
         }
 
 
         if (isset($request->entrySize)){
             $size = $request->entrySize;
-        }
-
-        if (empty($size)) {
-            $size = 10;
-        }
-
-        if (empty($page)) {
-            $page = 1;
         }
 
         $curl = curl_init();
@@ -1924,6 +1916,9 @@ class AdminController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response);
+
+        // echo 'http://172.17.0.3:4000/admin/auth/getClientsWithTotalCostUnpaidWithPagination/'.$page.'/'.$size,
+        // print_r($response);
 
         return view('admin/consumptionThatAreNotPaid', [
             'response' => $response,
@@ -3007,7 +3002,7 @@ class AdminController extends Controller
             $response1 = json_decode($response1, true);
 
             if ($response1['status'] == 200) {
-                Session::flash('message', 'Invoice created!'.$url);
+                Session::flash('message', 'Invoice created!');
                 Session::flash('alert-class', 'alert-success');
             } else {
                 Session::flash('message', ucfirst($response1['error']));
@@ -3044,7 +3039,7 @@ class AdminController extends Controller
             $invoices = [];
         }
 
-        ddd([
+        return view('admin/facture', [
             'invoices' => $invoices,
             'date' => $date,
             'page_size' => $size,
@@ -3057,20 +3052,6 @@ class AdminController extends Controller
             'url' => '/admin/addInvoice',
             "username"=> "",
         ]);
-
-        // return view('admin/facture', [
-        //     'invoices' => $invoices,
-        //     'date' => $date,
-        //     'page_size' => $size,
-        //     'page_en_cours' => $page_en_cours,
-        //     'previous_page' => $previous_page,
-        //     'hasPrevPage' => $hasPrevPage,
-        //     'hasNextPage' => $hasNextPage,
-        //     'next_page' => $next_page,
-        //     'isSearch' => false,
-        //     'url' => '/admin/addInvoice',
-        //     "username"=> "",
-        // ]);
     }
 
     public function map()
@@ -3115,7 +3096,7 @@ class AdminController extends Controller
         }
     }
 
-    public function adminInvoiceInformation(Request $request, $page=1, $size=6)
+    public function adminInvoiceInformation(Request $request, $dateEntered="", $page=1, $size=6)
     {
         $alltoken = $_COOKIE['token'];
         $alltokentab = explode(';', $alltoken);
@@ -3124,158 +3105,204 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        if (isset($_POST['submit'])) {
-            $day = $_POST['day'];
-            $month = $_POST['month'];
-            $year = $_POST['year'];
+        if(empty($dateEntered)){
 
-            if ($year <= date('Y')) {
-                if ($month <= date('m')) {
-                    $time = strtotime($month . '/' . $day . '/' . $year);
-                    $date = date('Y-m-d', $time);
-                    session()->put('dateOfInvoices', $date);
-                    $url = "" . $date;
+            if (isset($_POST['submit'])) {
+                $day = $_POST['day'];
+                $month = $_POST['month'];
+                $year = $_POST['year'];
 
-                    $curl = curl_init();
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getStaticInformation',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'GET',
-                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                    ));
+                if ($year <= date('Y')) {
+                    if ($month <= date('m')) {
+                        $time = strtotime($month . '/' . $day . '/' . $year);
+                        $date = date('Y-m-d', $time);
+                        session()->put('dateOfInvoices', $date);
+                        $url = "" . $date;
 
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response, true);
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getStaticInformation',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+                        ));
 
-                    if(array_key_exists('result',$response)){
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response, true);
 
-                        if (!empty($response['result'])) {
-                            try {
-                                $url = curl_init();
-                                curl_setopt_array($url, array(
-                                    CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date . '/' . $page . '/' . $size,
-                                    CURLOPT_RETURNTRANSFER => true,
-                                    CURLOPT_ENCODING => '',
-                                    CURLOPT_MAXREDIRS => 10,
-                                    CURLOPT_TIMEOUT => 0,
-                                    CURLOPT_FOLLOWLOCATION => true,
-                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                    CURLOPT_CUSTOMREQUEST => 'GET',
-                                    CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                                ));
+                        if(array_key_exists('result',$response)){
 
-                                $response = curl_exec($url);
-                                $response = json_decode($response);
+                            if (!empty($response['result'])) {
+                                try {
+                                    $url = curl_init();
+                                    curl_setopt_array($url, array(
+                                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date . '/' . $page . '/' . $size,
+                                        CURLOPT_RETURNTRANSFER => true,
+                                        CURLOPT_ENCODING => '',
+                                        CURLOPT_MAXREDIRS => 10,
+                                        CURLOPT_TIMEOUT => 0,
+                                        CURLOPT_FOLLOWLOCATION => true,
+                                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                        CURLOPT_CUSTOMREQUEST => 'GET',
+                                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+                                    ));
 
-                                $invoices = $response-> result -> docs;
-                                $previous_page = $response-> result -> prevPage;
-                                $next_page = $response-> result -> nextPage;
-                                $hasPrevPage = $response-> result -> hasPrevPage;
-                                $hasNextPage = $response-> result -> hasNextPage;
-                                $page_en_cours = $response-> result -> page;
+                                    $response = curl_exec($url);
+                                    $response = json_decode($response);
 
-                                if ($invoices == null) {
-                                    $invoices = [];
+                                    $invoices = $response-> result -> docs;
+                                    $previous_page = $response-> result -> prevPage;
+                                    $next_page = $response-> result -> nextPage;
+                                    $hasPrevPage = $response-> result -> hasPrevPage;
+                                    $hasNextPage = $response-> result -> hasNextPage;
+                                    $page_en_cours = $response-> result -> page;
+
+                                    if ($invoices == null) {
+                                        $invoices = [];
+                                    }
+
+                                    return view('admin/facture', [
+                                        'invoices' => $invoices,
+                                        'date' => $date,
+                                        'page_size' => $size,
+                                        'page_en_cours' => $page_en_cours,
+                                        'previous_page' => $previous_page,
+                                        'hasPrevPage' => $hasPrevPage,
+                                        'hasNextPage' => $hasNextPage,
+                                        'next_page' => $next_page,
+                                        'isSearch' => false,
+                                        'url' => '/admin/addInvoice',
+                                        "username"=> "",
+                                    ]);
+                                } catch (Exception $e) {
+                                    Session::flash('messageErr', $e->getMessage());
+                                    Session::flash('alert-class', 'alert-danger');
+                                    return redirect()->back();
                                 }
-
-                                return view('admin/facture', [
-                                    'invoices' => $invoices,
-                                    'date' => $date,
-                                    'page_size' => $size,
-                                    'page_en_cours' => $page_en_cours,
-                                    'previous_page' => $previous_page,
-                                    'hasPrevPage' => $hasPrevPage,
-                                    'hasNextPage' => $hasNextPage,
-                                    'next_page' => $next_page,
-                                    'isSearch' => false,
-                                    'url' => '/admin/addInvoice',
-                                    "username"=> "",
-                                ]);
-                            } catch (Exception $e) {
-                                Session::flash('messageErr', $e->getMessage());
+                            } else {
+                                $messageErr = "Please entrer the static informations in the ";
+                                Session::flash('messageErr', $messageErr);
                                 Session::flash('alert-class', 'alert-danger');
                                 return redirect()->back();
                             }
                         } else {
-                            $messageErr = "Please entrer the static informations in the ";
-                            Session::flash('messageErr', $messageErr);
+                            $message = "Something wrong happened";
+                            Session::flash('message', $message);
                             Session::flash('alert-class', 'alert-danger');
                             return redirect()->back();
                         }
-                    } else {
-                        $message = "Something wrong happened";
-                        Session::flash('message', $message);
+                    }
+                }
+
+                $message = "You cannot create invoice with date greater than date of today";
+                Session::flash('message', $message);
+                Session::flash('alert-class', 'alert-danger');
+                return redirect()->back();
+            }
+
+            if (isset($_POST['paginate_invoice']) || isset($_POST['reload']) || isset($_POST['current_page']) || isset($_POST['search'])){
+
+                $date = $request->date;
+                $page_size = $request->page_size;
+                $page_en_cours = $request->page_en_cours;
+                $username = $request->username;
+
+                if ($page_en_cours || $page_en_cours == null || $page_en_cours == "") {
+                    $page_en_cours = $page;
+                }
+
+                if ($page_size == null || $page_size == "") {
+                    $page_size = $size;
+                }
+
+                // dd($page_size);
+
+                if(isset($_POST['reload'])) {
+                    $page =  1;
+                    $username = "";
+                }
+
+                if (($username != '' && $username != null) || isset($request->name)) {
+                    if (isset($request->name) && $request->name != '' && $request->name != null) {
+                        $username = $request->name;
+                    }
+
+                    $find = array(
+                        'username' => $username
+                    );
+                    $data_json = json_encode($find);
+                    try {
+                        $url = 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date . '/' . $page . '/' . $page_size;
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        $response  = curl_exec($ch);
+                        curl_close($ch);
+
+                        $response = json_decode($response);
+                        if ($response->status == 200) {
+                            $invoices = $response-> result -> docs;
+                            $previous_page = $response-> result -> prevPage;
+                            $next_page = $response-> result -> nextPage;
+                            $hasPrevPage = $response-> result -> hasPrevPage;
+                            $hasNextPage = $response-> result -> hasNextPage;
+                            $page_en_cours = $response-> result -> page;
+
+                            if ($invoices == null) {
+                                $invoices = [];
+                            }
+
+                            return view('admin/facture', [
+                                'invoices' => $invoices,
+                                'date' => $date,
+                                'page_size' => $page_size,
+                                'page_en_cours' => $page_en_cours,
+                                'previous_page' => $previous_page,
+                                'hasPrevPage' => $hasPrevPage,
+                                'hasNextPage' => $hasNextPage,
+                                'next_page' => $next_page,
+                                'isSearch' => true,
+                                'url' => '/admin/addInvoice',
+                                "username"=> $username,
+                            ]);
+
+                        } else {
+                            Session::flash('message', ucfirst($response->error));
+                            Session::flash('alert-class', 'alert-danger');
+                            return redirect()->back();
+                        }
+                    } catch (Exception $e) {
+                        Session::flash('messageErr', $e->getMessage());
                         Session::flash('alert-class', 'alert-danger');
                         return redirect()->back();
                     }
-                }
-            }
+                } else {
+                    try {
+                        $url = curl_init();
+                        curl_setopt_array($url, array(
+                            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date . '/' . $page . '/' . $page_size,
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+                        ));
 
-            $message = "You cannot create invoice with date greater than date of today";
-            Session::flash('message', $message);
-            Session::flash('alert-class', 'alert-danger');
-            return redirect()->back();
-        }
+                        $response = curl_exec($url);
+                        $response = json_decode($response);
 
-        if (isset($_POST['paginate_invoice']) || isset($_POST['reload']) || isset($_POST['previous_page'])
-        || isset($_POST['next_page']) || isset($_POST['current_page']) || isset($_POST['search'])){
-
-            $date = $request->date;
-            $page_size = $request->page_size;
-            $page_en_cours = $request->page_en_cours;
-            $username = $request->username;
-
-            if ($page_en_cours || $page_en_cours == null || $page_en_cours == "") {
-                $page_en_cours = $page;
-            }
-
-            if ($page_size == null || $page_size == "") {
-                $page_size = $size;
-            }
-
-            // dd($page_size);
-
-            if(isset($_POST['reload'])) {
-                $page =  1;
-                $username = "";
-            }
-
-            if(isset($_POST['previous_page'])) {
-                $page = $page - 1;
-            }
-
-            if(isset($_POST['next_page'])) {
-                $page = $page + 1;
-            }
-
-            if (($username != '' && $username != null) || isset($request->name)) {
-                if (isset($request->name) && $request->name != '' && $request->name != null) {
-                    $username = $request->name;
-                }
-
-                $find = array(
-                    'username' => $username
-                );
-                $data_json = json_encode($find);
-                try {
-                    $url = 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date . '/' . $page . '/' . $page_size;
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $response  = curl_exec($ch);
-                    curl_close($ch);
-
-                    $response = json_decode($response);
-                    if ($response->status == 200) {
                         $invoices = $response-> result -> docs;
                         $previous_page = $response-> result -> prevPage;
                         $next_page = $response-> result -> nextPage;
@@ -3296,69 +3323,59 @@ class AdminController extends Controller
                             'hasPrevPage' => $hasPrevPage,
                             'hasNextPage' => $hasNextPage,
                             'next_page' => $next_page,
-                            'isSearch' => true,
+                            'isSearch' => false,
                             'url' => '/admin/addInvoice',
-                            "username"=> $username,
+                            "username"=> "",
                         ]);
-
-                    } else {
-                        Session::flash('message', ucfirst($response->error));
+                    } catch (Exception $e) {
+                        Session::flash('messageErr', $e->getMessage());
                         Session::flash('alert-class', 'alert-danger');
                         return redirect()->back();
                     }
-                } catch (Exception $e) {
-                    Session::flash('messageErr', $e->getMessage());
-                    Session::flash('alert-class', 'alert-danger');
-                    return redirect()->back();
-                }
-            } else {
-                try {
-                    $url = curl_init();
-                    curl_setopt_array($url, array(
-                        CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date . '/' . $page . '/' . $page_size,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'GET',
-                        CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-                    ));
-
-                    $response = curl_exec($url);
-                    $response = json_decode($response);
-
-                    $invoices = $response-> result -> docs;
-                    $previous_page = $response-> result -> prevPage;
-                    $next_page = $response-> result -> nextPage;
-                    $hasPrevPage = $response-> result -> hasPrevPage;
-                    $hasNextPage = $response-> result -> hasNextPage;
-                    $page_en_cours = $response-> result -> page;
-
-                    if ($invoices == null) {
-                        $invoices = [];
-                    }
-
-                    return view('admin/facture', [
-                        'invoices' => $invoices,
-                        'date' => $date,
-                        'page_size' => $page_size,
-                        'page_en_cours' => $page_en_cours,
-                        'previous_page' => $previous_page,
-                        'hasPrevPage' => $hasPrevPage,
-                        'hasNextPage' => $hasNextPage,
-                        'next_page' => $next_page,
-                        'isSearch' => false,
-                        'url' => '/admin/addInvoice',
-                        "username"=> "",
-                    ]);
-                } catch (Exception $e) {
-                    Session::flash('messageErr', $e->getMessage());
-                    Session::flash('alert-class', 'alert-danger');
-                    return redirect()->back();
                 }
             }
+
+        }else{
+            $url = curl_init();
+            curl_setopt_array($url, array(
+                CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $dateEntered . '/' . $page . '/' . $size,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+            ));
+
+            $response = curl_exec($url);
+            $response = json_decode($response);
+
+            $invoices = $response-> result -> docs;
+            $previous_page = $response-> result -> prevPage;
+            $next_page = $response-> result -> nextPage;
+            $hasPrevPage = $response-> result -> hasPrevPage;
+            $hasNextPage = $response-> result -> hasNextPage;
+            $page_en_cours = $response-> result -> page;
+
+            if ($invoices == null) {
+                $invoices = [];
+            }
+
+            return view('admin/facture', [
+                'invoices' => $invoices,
+                'date' => $dateEntered,
+                'page_size' => $size,
+                'page_en_cours' => $page_en_cours,
+                'previous_page' => $previous_page,
+                'hasPrevPage' => $hasPrevPage,
+                'hasNextPage' => $hasNextPage,
+                'next_page' => $next_page,
+                'isSearch' => false,
+                'url' => '/admin/addInvoice',
+                "username"=> "",
+            ]);
         }
 
         return view('admin/addDateOfFacture');

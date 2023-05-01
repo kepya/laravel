@@ -128,6 +128,8 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::post('/admin/addInvoice/page/{page}/size/{size}',[AdminController::class, 'adminInvoiceInformation']);
 
+        Route::get('/admin/addInvoice/{dateEntered}/{page}/{size}',[AdminController::class, 'adminInvoiceInformation']);
+
 		Route::get('/admin/invoice/addInformation',[AdminController::class, 'adminInvoiceInformation']);
 
 		Route::match(['post','get'],'/admin/facture/search_custumer',[AdminController::class, 'adminSearchInvoiceByCustumer']);
@@ -152,10 +154,9 @@ Route::group(['middleware' => 'checksession'], function () {
 
 		Route::get('/admin/consumption-that-are-paid/page/{page_size}/size/{size}',[AdminController::class, 'searchAllPaid'])->name('searchAllPaid');
 
-
 		Route::match(['get','post'],'/admin/consumption-that-are-unpaid',[AdminController::class, 'allUnPaidClients'])->name('ConsumptionUnPaidClients');
 
-        Route::post('/admin/consumption-that-are-unpaid/{page}/{size}',[AdminController::class, 'allUnPaidClients'])->name('ConsumptionUnPaidClientsSearch');
+        Route::match(['get','post'],'/admin/consumption-that-are-unpaid/{page}/{size}',[AdminController::class, 'allUnPaidClients'])->name('ConsumptionUnPaidClientsSearch');
 
         Route::get('/admin/consumption-that-are-unpaid/{id}',[AdminController::class, 'allUnPaidInvoices'])->name('allUnPaidInvoices');
 

@@ -203,7 +203,7 @@
                                             <td><?= $customer['client']['subscriptionDate'] ? $customer['client']['subscriptionDate'] : '' ?></td>
                                             <td><?= $unpaidAmount ?></td>
                                             <td>
-                                                <a href="#" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="pay">
+                                                <a href="#modal-pay-{{ $customer['client']['_id'] }}" class="btn btn-warning" role="button" data-toggle="modal" data-target="#modal-pay-{{ $customer['client']['_id'] }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="pay">
                                                     <span class="icon"  style="color:white;">
                                                         Pay <i class="fas fa-file-invoice-dollar"></i>
                                                     </span>
@@ -216,7 +216,55 @@
                                             </td>
                                         </tr>
                             <?php
-                                    }
+                                    } ?>
+
+                                    <div class="modal fade" tabindex="-1" id="modal-pay-{{ $customer['client']['_id'] }}" role="dialog" aria-labelledby="payModalLabel" data-backdrop="static"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <section>
+                                                        Pay
+                                                    </section>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="post" action="/admin/consumption-that-are-unpaid/pay" class="user" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <input type="hidden" id="id" name="id"  value="<?= $customer['client']['_id'] ?>">
+                                                        <input type="hidden" id="page" name="page"  value="<?= $page ?>">
+                                                        <input type="hidden" id="size" name="size"  value="<?= $size ?>">
+
+                                                        <div class="amount">
+                                                            Amount
+                                                            <input type="number" class="form-control @error('amount') is-invalid @enderror"
+                                                                id="amount" name="amount" placeholder="amount" value="" required>
+                                                                @error('amount')
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                @enderror
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row float-right mt-3">
+                                                            <a href="#">
+                                                                <button href="#" class="btn btn-primary btn-user" name="submit" type="submit">
+                                                                    Proceed
+                                                                </button>
+                                                            </a>
+                                                            <a href="#">
+                                                                <button class="btn btn-secondary btn-user ml-2" type="button" data-dismiss="modal">Cancel</button>
+                                                            </a>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <?php
                                 }
                             ?>
                                     </tbody>
