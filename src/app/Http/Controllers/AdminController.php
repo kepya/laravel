@@ -2137,7 +2137,7 @@ class AdminController extends Controller
             'response' => $response,
             'size' => $size,
             'page' => $page,
-            'messageOk' => $messageOK,
+            'messageOK' => $messageOK,
             'messageErr' => $messageErr
         ]);
 
@@ -2969,7 +2969,11 @@ class AdminController extends Controller
 
 
         $newIndex = $_POST['newIndex'];
+
         $date = $_POST['date'];
+        $page = $_POST['page'];
+        $size = $_POST['page_size'];
+
         $idClient = $_POST['userId'];
         if (isset($_POST['oldIndex'])) {
             $oldIndex = $_POST['oldIndex'];
@@ -3001,17 +3005,16 @@ class AdminController extends Controller
         $response1 = json_decode($response1, true);
 
         if ($response1['status'] == 200) {
-            Session::flash('message', 'Invoice created!');
+            Session::flash('message', 'Invoice created!'.$url);
             Session::flash('alert-class', 'alert-success');
         } else {
             Session::flash('message', ucfirst($response1['error']));
             Session::flash('alert-class', 'alert-danger');
         }
 
-
         $url = curl_init();
         curl_setopt_array($url, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date,
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date.'/'.$size.'/'.$page,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -3027,12 +3030,30 @@ class AdminController extends Controller
 
         //print_r($response);
 
-        $invoices = $response -> result;
+        $invoices = $response-> result -> docs;
+        $previous_page = $response-> result -> prevPage;
+        $next_page = $response-> result -> nextPage;
+        $hasPrevPage = $response-> result -> hasPrevPage;
+        $hasNextPage = $response-> result -> hasNextPage;
+        $page_en_cours = $response-> result -> page;
+
         if ($invoices == null) {
             $invoices = [];
         }
 
-        return view('admin/facture', ['invoices' => $invoices, 'date' => $date]);
+        return view('admin/facture', [
+            'invoices' => $invoices,
+            'date' => $date,
+            'page_size' => $size,
+            'page_en_cours' => $page_en_cours,
+            'previous_page' => $previous_page,
+            'hasPrevPage' => $hasPrevPage,
+            'hasNextPage' => $hasNextPage,
+            'next_page' => $next_page,
+            'isSearch' => false,
+            'url' => '/admin/addInvoice',
+            "username"=> "",
+        ]);
     }
 
     public function map()
