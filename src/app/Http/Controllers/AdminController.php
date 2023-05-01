@@ -1739,7 +1739,7 @@ class AdminController extends Controller
             $response = json_decode($response);
 
             if ($response == null || $response->status == 500) {
-                return view('admin/consumptionThatAreNotPaid', [
+                return view('admin/consumptionThatAreNotPaidClient', [
                     'invoices' => [],
                     'size' => 0,
                     'url' => "/admin/consumption-that-are-unpaid",
@@ -1764,8 +1764,28 @@ class AdminController extends Controller
             $hasNextPage = $response-> result -> hasNextPage;
             $page_en_cours = $response-> result -> page;
             $size = count($bill);
-            return view('admin/consumptionThatAreNotPaid', [
-                'invoices' => $bill,
+
+            $id = $_POST['userID'];
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/'.$id,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+            ));
+
+            $response2 = curl_exec($curl);
+            curl_close($curl);
+            $response2 = json_decode($response2);
+
+            return view('admin/consumptionThatAreNotPaidClient', [
+                'unPaidInvoices' => $bill,
                 'size' => $size,
                 'url' => "/admin/consumption-that-are-unpaid",
                 'page_en_cours' => $page_en_cours,
@@ -1779,15 +1799,16 @@ class AdminController extends Controller
                 "consumption"=>  intval($consumption),
                 "year"=> intval($year),
                 "month"=> intval($month),
+                "userInfo" => $response2->result
             ]);
         }
 
-        if (isset($_POST['send_pagination_consumption_unpaid'])) {
-            $size = $_POST['select_size'];
-            $page = 1;
+        // if (isset($_POST['send_pagination_consumption_unpaid'])) {
+        //     $size = $_POST['select_size'];
+        //     $page = 1;
 
-            return redirect()->route('ConsumptionUnPaidInvoices', ['page' => $page,'size' => $size]);
-        }
+        //     return redirect()->route('ConsumptionUnPaidInvoices', ['page' => $page,'size' => $size]);
+        // }
     }
 
     public function allInvoices(Request $request)
