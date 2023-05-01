@@ -208,7 +208,7 @@
                                                         Pay <i class="fas fa-file-invoice-dollar"></i>
                                                     </span>
                                                 </a>
-                                                <a href="#" class="btn <?= $card ?>" customerID="<?= $customer['client']['_id'] ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
+                                                <a href="/admin/consumption-that-are-unpaid/<?= $customer['client']['_id'] ?>" class="btn <?= $card ?>" customerID="<?= $customer['client']['_id'] ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" title="info">
                                                     <span class="icon"  style="color:white;">
                                                         See <i class="fas fa-eye"></i>
                                                     </span>
