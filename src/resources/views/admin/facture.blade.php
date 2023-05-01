@@ -136,7 +136,7 @@
 
 <div class="py-3 d-flex flex-row align-items-center justify-content-between ">
     <h4 class="m-0 font-weight-bold text-primary">
-        Add Invoices
+        <a href="/admin/invoice/addInformation" class="mr-3"><i class="fas fa-chevron-circle-left"></i></a>Add Invoices
     </h4>
 
     <form action="{{url('/admin/addInvoice')}}"  method="post" enctype="multipart/form-data" class="form-horizontal row-border">
@@ -213,6 +213,8 @@
                                     <div class="input-group">Date</div>
                                     <input type="date" class="form-control" value="<?= $date?>" placeholder="Date" id="date" name="date">
                                 </div>
+                                <input type="number" value="<?= $page_size ?>" name="page_size" id="page_size" hidden class="form-control ml-2"/>
+                                <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
 
                                 <div class="form-group mb-3" id="b_idCompteur">
                                     <div class="input-group">Meters</div>
@@ -259,11 +261,11 @@
             <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
             <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
 
-            <select class="form-control ml-2" style="width: 70px;" id="page_size" name="page_size" value="<?= $page_size ?>">
-                <option value="6">6</option>
-                <option value="12">12</option>
-                <option value="18">18</option>
-                <option value="30">30</option>
+            <select class="form-control ml-2" style="width: 70px;" id="page_size" name="page_size">
+                <option <?=$page_size == 6 ? 'selected' : ''?> value="6">6</option>
+                <option <?=$page_size == 12 ? 'selected' : ''?> value="12">12</option>
+                <option <?=$page_size == 18 ? 'selected' : ''?> value="18">18</option>
+                <option <?=$page_size == 30 ? 'selected' : ''?> value="30">30</option>
             </select>
             <input type="submit" name="paginate_invoice" id="paginate_invoice" placeholder="Show" class="ml-1 btn btn-primary">
         </div>
