@@ -2957,7 +2957,7 @@ class AdminController extends Controller
         return view('admin/facture', ['users' => $users]);
     }
 
-    public function addOneInvoice()
+    public function addOneInvoice(Request $request)
     {
         $message = null;
         $alltoken = $_COOKIE['token'];
@@ -2968,48 +2968,51 @@ class AdminController extends Controller
         $Authorization = 'Bearer ' . $tokenVal;
 
 
-        $newIndex = $_POST['newIndex'];
+        $newIndex = isset($request->newIndex) ? $request->newIndex : 0 ;
 
-        $date = $_POST['date'];
-        $page = $_POST['page'];
-        $size = $_POST['page_size'];
+        $date = $request->date;
+        $page = $request->page;
+        $size = $request->page_size;
 
-        $idClient = $_POST['userId'];
-        if (isset($_POST['oldIndex'])) {
-            $oldIndex = $_POST['oldIndex'];
+        $idClient = isset($request->userId) ? $request->userId : "";
+
+        if (isset($request->oldIndex)) {
+            $oldIndex = $request->oldIndex;
         } else {
             $oldIndex = 0;
         }
 
-        $meter = $_POST['meter'];
+        $meter = $request->meter;
 
-        // je definie l'url de connexion.
-        $url = "http://172.17.0.3:4000/admin/facture/" . $idClient;
+        if(!empty($idClient)){
+            // je definie l'url de connexion.
+            $url = "http://172.17.0.3:4000/admin/facture/" . $idClient;
 
-        $data1 = array(
-            'idCompteur'=> $meter,
-            'newIndex' => $newIndex,
-            'oldIndex' => $oldIndex,
-            'dateReleveNewIndex' => $date
-        );
-        $data_json1 = json_encode($data1);
+            $data1 = array(
+                'idCompteur'=> $meter,
+                'newIndex' => $newIndex,
+                'oldIndex' => $oldIndex,
+                'dateReleveNewIndex' => $date
+            );
+            $data_json1 = json_encode($data1);
 
-        $ch1 = curl_init();
-        curl_setopt($ch1, CURLOPT_URL, $url);
-        curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
-        curl_setopt($ch1, CURLOPT_POST, 1);
-        curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_json1);
-        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-        $response1  = curl_exec($ch1);
-        curl_close($ch1);
-        $response1 = json_decode($response1, true);
+            $ch1 = curl_init();
+            curl_setopt($ch1, CURLOPT_URL, $url);
+            curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
+            curl_setopt($ch1, CURLOPT_POST, 1);
+            curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_json1);
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            $response1  = curl_exec($ch1);
+            curl_close($ch1);
+            $response1 = json_decode($response1, true);
 
-        if ($response1['status'] == 200) {
-            Session::flash('message', 'Invoice created!'.$url);
-            Session::flash('alert-class', 'alert-success');
-        } else {
-            Session::flash('message', ucfirst($response1['error']));
-            Session::flash('alert-class', 'alert-danger');
+            if ($response1['status'] == 200) {
+                Session::flash('message', 'Invoice created!'.$url);
+                Session::flash('alert-class', 'alert-success');
+            } else {
+                Session::flash('message', ucfirst($response1['error']));
+                Session::flash('alert-class', 'alert-danger');
+            }
         }
 
         $url = curl_init();
@@ -3041,7 +3044,7 @@ class AdminController extends Controller
             $invoices = [];
         }
 
-        return view('admin/facture', [
+        ddd([
             'invoices' => $invoices,
             'date' => $date,
             'page_size' => $size,
@@ -3054,6 +3057,20 @@ class AdminController extends Controller
             'url' => '/admin/addInvoice',
             "username"=> "",
         ]);
+
+        // return view('admin/facture', [
+        //     'invoices' => $invoices,
+        //     'date' => $date,
+        //     'page_size' => $size,
+        //     'page_en_cours' => $page_en_cours,
+        //     'previous_page' => $previous_page,
+        //     'hasPrevPage' => $hasPrevPage,
+        //     'hasNextPage' => $hasNextPage,
+        //     'next_page' => $next_page,
+        //     'isSearch' => false,
+        //     'url' => '/admin/addInvoice',
+        //     "username"=> "",
+        // ]);
     }
 
     public function map()
