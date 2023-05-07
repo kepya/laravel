@@ -271,26 +271,52 @@
         </div>
     </form>
 
-    <form style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;" action="{{ url('/admin/addInvoice')}}" method="post" role="form">
-        <input type="number" value="<?= $page_en_cours ?>" name="page" id="page" placeholder="page" title="page" hidden class="form-control ml-2"/>
-        <input type="number" value="<?= $page_size ?>" name="page_size" id="page_size" placeholder="page_size" title="page_size" hidden class="form-control ml-2"/>
-        <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
-        <input type="date" value="<?= $date ?>" id="date" name="date" hidden>
-        @csrf
-        @if($hasPrevPage == true)
-            <button class="btn bg-white" name="previous_page" id="previous_page" type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
-            <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
-        @else
-            <button disabled class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
-        @endif
-            <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
-        @if($hasNextPage == true)
-            <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
-            <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
-        @else
-            <button disabled class="btn bg-white" style="width: 40px;border-radius: 0px;"  type="button"> <i class="fas fa-angle-double-right"></i> </button>
-        @endif
-    </form>
+    <?php
+        //previous page
+        if($hasPrevPage == 0){
+            $prevDisabled = 'disabled';
+            $prevAriadisabled = 'true';
+            $prevHref = '#';
+        }else{
+            $prevDisabled = '';
+            $prevAriadisabled = '';
+            $prevHref = '/admin/addInvoice/'.$date.'/'.$prevPage.'/'.$page_size;
+        }
+
+        //next page
+        if($hasNextPage == 0){
+            $nextDisabled = 'disabled';
+            $nextAriadisabled = 'true';
+            $nextHref = '#';
+        }else{
+            $nextDisabled = '';
+            $nextAriadisabled = '';
+            $nextHref = '/admin/addInvoice/'.$date.'/'.$nextPage.'/'.$page_size;
+        }
+
+    ?>
+
+
+    <!-- Pagination -->
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item <?= $prevDisabled?>">
+                <a class="page-link" href="<?=$prevHref ?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                </li>
+                <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/addInvoice/<?= $date ?>/<?= $page_en_cours ?>/<?=$page_size ?>"><?= $page_en_cours ?></a></li>
+
+                <li class="page-item <?=$nextDisabled?>">
+                <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
 </div>
 
 

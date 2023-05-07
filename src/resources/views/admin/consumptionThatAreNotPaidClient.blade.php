@@ -132,6 +132,7 @@
             <input type="number" name="year" id="year" placeholder="Year" title="Year" class="form-control ml-2"/>
             <input type="number" name="consumption" id="consumption" placeholder="Consumption" title="Consumption" class="form-control ml-2"/>
             <input type="text" name="username" id="username" placeholder="Username" title="Username" value="<?= $userInfo->name ?>" class="form-control ml-2" disabled/>
+            <input type="hidden" name="userID" id="userID" value="<?= $userInfo->_id ?>"/>
             <input type="submit" name="send_search_consumption_unpaid" id="send_search_consumption_unpaid" class="ml-1 btn btn-primary">
         </div>
     </form>

@@ -454,7 +454,24 @@
       if(isset($facturesYear)){
 
           $i = 1;
-          foreach($facturesYear as $fact) { ?>
+          foreach($facturesYear as $fact) {
+
+                $desc=""; //description as a string
+                $description=$userdata['description'];
+
+                if(!empty($description)){
+                    $j=0;
+                    foreach($description as $description){
+                        $j++;
+                        if($j == count($userdata['description'])){
+                            $desc = $desc.$description;
+                        }else{
+                            $desc = $desc.$description." / ";
+                        }
+                    }
+                }
+
+            ?>
 
             <div class="col-md-6 col-lg-4">
               <div class="card card-margin">
@@ -470,7 +487,7 @@
                               </div>
                               <div class="widget-49-meeting-info">
                                   <span class="widget-49-pro-title"><?= $userdata['name']?></span>
-                                  <span class="widget-49-meeting-time"><?= $userdata['localisation']['description']?></span>
+                                  <span class="widget-49-meeting-time"><?= $desc ?></span>
                               </div>
                           </div>
                           <ul class="widget-49-meeting-points">
@@ -502,6 +519,21 @@
       }else {
         $i = 1;
         foreach($factures as $fact){
+
+            $desc=""; //description as a string
+            $description=$userdata['description'];
+
+            if(!empty($description)){
+                $j=0;
+                foreach($description as $description){
+                    $j++;
+                    if($j == count($userdata['description'])){
+                        $desc = $desc.$description;
+                    }else{
+                        $desc = $desc.$description." / ";
+                    }
+                }
+            }
   ?>
   <div class="col-md-6 col-lg-4">
         <div class="card card-margin">
@@ -517,7 +549,7 @@
                         </div>
                         <div class="widget-49-meeting-info">
                             <span class="widget-49-pro-title"><?= $userdata['name']?></span>
-                            <span class="widget-49-meeting-time"><?= $userdata['localisation']['description']?></span>
+                            <span class="widget-49-meeting-time"><?= $desc ?></span>
                         </div>
                     </div>
                     <ul class="widget-49-meeting-points">
