@@ -2264,7 +2264,7 @@ class AdminController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/one/' . $invoice_id,
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getInfoForPrint/' . $invoice_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -2277,44 +2277,21 @@ class AdminController extends Controller
 
         $response = curl_exec($curl);
         curl_close($curl);
-        $invoice = json_decode($response, true);
+        $response = json_decode($response, true);
 
-        $curl2 = curl_init();
-        curl_setopt_array($curl2, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $invoice['result']['idClient'],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-        ));
-        $response2 = curl_exec($curl2);
-        curl_close($curl2);
-        $client = json_decode($response2, true);
+        dd($response);
 
-        $curl3 = curl_init();
-        curl_setopt_array($curl3, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/auth/' . $invoice['result']['idAdmin'],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-        ));
-        $response3 = curl_exec($curl3);
-        curl_close($curl3);
-        $admin = json_decode($response3, true);
-
-        // dd($invoice);
-
-        $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin]);
-        return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
+        if ($response->status == 200) {
+            $montantImpaye = $response-> result -> montantImpaye;
+            $client = $response-> result -> client;
+            $admin = $response-> result -> admin;
+            $invoice = $response-> result -> invoice;
+            $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin, 'montantImpaye' => $montantImpaye]);
+            return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');
+        } else {
+            $pdf = PDF::loadView('facturePdf/generator', ['invoice' => [], 'client' => null, 'admin' => null, 'montantImpaye' => 0]);
+            return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
+        }
     }
 
     public function detailInvoive($invoice_id)
