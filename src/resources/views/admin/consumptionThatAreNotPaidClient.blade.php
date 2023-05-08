@@ -160,8 +160,16 @@
                         <tbody>
                             @foreach($unPaidInvoices as $invoice)
                             <tr>
-                                <td style="text-align: center">{{$invoice -> consommation}} m<sup>3</sup></td>
-                                <td style="text-align: center">{{$invoice -> montantConsommation}}</td>
+                               @if($invoice -> invoice ->  consommation > 0)
+                                    <td style="text-align: center">{{$invoice ->  consommation}} m<sup>3</sup></td>
+                                @else
+                                    <td style="text-align: center">{{-1 * ($invoice ->  consommation)}} m<sup>3</sup></td>
+                                @endif
+                                @if($invoice ->  montantConsommation > 0)
+                                    <td style="text-align: center">{{$invoice ->  montantConsommation}}</td>
+                                @else
+                                    <td style="text-align: center">{{-1 * ($invoice ->  montantConsommation)}}</td>
+                                @endif
                                 <td style="text-align: center">{{$invoice -> montantImpaye}} FCFA</td>
                                 <td style="text-align: center">{{date('d-m-Y H:i:s', strtotime($invoice -> dataLimitePaid))}}</td>
                                 <td style="text-align: right">

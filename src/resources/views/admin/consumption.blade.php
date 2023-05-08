@@ -156,8 +156,16 @@
                         @foreach($invoices as $invoice)
                         <tr>
                         <td>{{$invoice->user->name}}</td>
-                            <td style="text-align: center">{{$invoice -> invoice -> consommation}} m<sup>3</sup></td>
-                            <td style="text-align: center">{{$invoice -> invoice -> montantConsommation}}</td>
+                            @if($invoice -> invoice ->  consommation > 0)
+                                <td style="text-align: center">{{$invoice -> invoice ->  consommation}} m<sup>3</sup></td>
+                            @else
+                                <td style="text-align: center">{{-1 * ($invoice -> invoice ->  consommation)}} m<sup>3</sup></td>
+                            @endif
+                            @if($invoice -> invoice ->  montantConsommation > 0)
+                                <td style="text-align: center">{{$invoice -> invoice ->  montantConsommation}}</td>
+                            @else
+                                <td style="text-align: center">{{-1 * ($invoice -> invoice ->  montantConsommation)}}</td>
+                            @endif
                             <td style="text-align: center">{{$invoice -> invoice -> montantVerse}} FCFA</td>
                             <td style="text-align: center">{{$invoice -> invoice -> montantImpaye}} FCFA</td>
                             <td style="text-align: center">{{date('d-m-Y H:i:s', strtotime($invoice -> invoice -> dataLimitePaid))}}</td>
@@ -276,29 +284,29 @@
                     <option value="15">15</option>
                     <option value="20">20</option>
                 </select>
-                <input type="submit" name="send_pagination_consumption_unpaid" id="send_pagination_consumption_unpaid" placeholder="Show" class="ml-1 btn btn-primary">
+                <input type="submit" name="send_pagination" id="send_pagination" placeholder="Show" class="ml-1 btn btn-primary">
             </div>
         </form>
         @if($isSearch == false)
             <div style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;">
                 @if($hasPrevPage == true)
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$previous_page.'/size/'.$size) }}">
+                    <a href="{{ url('/admin/consumption/page/'.$previous_page.'/size/'.$size) }}">
                         <button class="btn bg-white"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
                     </a>
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$previous_page.'/size/'.$size) }}">
+                    <a href="{{ url('/admin/consumption/page/'.$previous_page.'/size/'.$size) }}">
                         <button class="btn bg-white" style="color: blue;border-radius: 0px;">{{$previous_page}}</button>
                     </a>
                 @else
                     <button disabled class="btn bg-white" style="border-radius: 0px;"> <i class="fas fa-angle-double-left"></i> </button>
                 @endif
-                <a href="{{ url('/admin/consumption-that-are-paid/page/'.$page_en_cours.'/size/'.$size) }}">
+                <a href="{{ url('/admin/consumption/page/'.$page_en_cours.'/size/'.$size) }}">
                     <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
                 </a>
                 @if($hasNextPage == true)
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$next_page.'/size/'.$size) }}">
+                    <a href="{{ url('/admin/consumption/page/'.$next_page.'/size/'.$size) }}">
                         <button class="btn" style="width: 40px;border-radius: 0px; color: black;" name="page_search" id="page_search">{{$next_page}}</button>
                     </a>
-                    <a href="{{ url('/admin/consumption-that-are-paid/page/'.$next_page.'/size/'.$size) }}">
+                    <a href="{{ url('/admin/consumption/page/'.$next_page.'/size/'.$size) }}">
                         <button class="btn bg-white" style="width: 40px;border: none;border-radius: 0px;"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
                     </a>
                 @else
