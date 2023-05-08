@@ -226,10 +226,20 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group mb-3">
-                                    <div class="input-group">New index</div>
-                                    <input type="number" min="0" class="form-control" placeholder="new index" id="newIndex" name="newIndex" required>
-                                </div>
+       
+                                <?php if($invoice->hasDirectNextInvoice == true) { ?>
+                                    <div class="form-group mb-3">
+                                        <div class="input-group">New index</div>
+                                        <input type="number" min="0"  value="<?= $invoice  -> newIndex?>" class="form-control" disabled placeholder="new index" id="newIndex" name="newIndex" required>
+                                    </div>
+                                <?php } ?>
+                                       
+                                <?php if($invoice->hasDirectNextInvoice == false) { ?>
+                                    <div class="form-group mb-3">
+                                        <div class="input-group">New index</div>
+                                        <input type="number" min="0" class="form-control" placeholder="new index" id="newIndex" name="newIndex" required>
+                                    </div>
+                                <?php } ?>
                                 <?php if($invoice->hasAtLeastOneInvoice == false) { ?>
                                     <div class="form-group mb-3" id="b_oldIndex">
                                         <div class="input-group">Old index</div>

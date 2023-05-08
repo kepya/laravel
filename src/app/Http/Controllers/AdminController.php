@@ -1541,6 +1541,8 @@ class AdminController extends Controller
                 "type"=> "paid",
             );
 
+            // dd($data);
+
             $data_json = json_encode($data);
 
             $ch = curl_init();
@@ -1553,6 +1555,8 @@ class AdminController extends Controller
             curl_close($ch);
 
             $response = json_decode($response);
+
+            // dd($response);
 
             if ($response == null || $response->status == 500) {
                 return view('admin/consumptionThatArePaid', [

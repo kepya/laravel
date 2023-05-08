@@ -193,13 +193,21 @@
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Consumption</div>
-                            <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> consommation?>" required>
+                                @if($invoice  -> consommation > 0)
+                                    <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> consommation?>" required>
+                                @else
+                                    <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= -1 * ($invoice  -> consommation)?>" required>
+                                @endif
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <div class="input-group">Amount</div>
-                            <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> montantConsommation?>" required>
+                            @if($invoice  -> montantConsommation > 0)
+                                <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= $invoice  -> montantConsommation?>" required>
+                            @else
+                                <input type="number" disabled class="form-control" placeholder="consumption" id="consumption" name="consumption" value="<?= -1 * ($invoice  -> montantConsommation)?>" required>
+                            @endif
                         </div>
                     </div>
                 </div>
