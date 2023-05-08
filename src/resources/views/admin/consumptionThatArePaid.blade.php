@@ -268,7 +268,7 @@
             @csrf
             <div class="flex d-flex align-items-center">
                 entries :
-                <input type="text" name="url" id="url" placeholder="url" title="url" class="form-control" value="<?= $url ?>" hidden/>
+                <input type="text" name="url" id="url" placeholder="url" title="url" class="form-control" value="<?= $url ?? '' ?>" hidden/>
 
                 <select class="form-control ml-2" style="width: 70px;" id="select_size" name="select_size" value="<?= $size ?>">
                     <option value="5">5</option>
@@ -279,9 +279,9 @@
                 <input type="submit" name="send_pagination_consumption_unpaid" id="send_pagination_consumption_unpaid" placeholder="Show" class="ml-1 btn btn-primary">
             </div>
         </form>
-        @if($isSearch == false)
+        @if($isSearch ?? '' == false)
             <div style="height: 100%; border: 1px; border-style: solid; border-radius: 5px;">
-                @if($hasPrevPage == true)
+                @if($hasPrevPage ?? '' == true)
                     <a href="{{ url('/admin/consumption-that-are-paid/page/'.$previous_page.'/size/'.$size) }}">
                         <button class="btn bg-white"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
                     </a>
@@ -294,7 +294,7 @@
                 <a href="{{ url('/admin/consumption-that-are-paid/page/'.$page_en_cours.'/size/'.$size) }}">
                     <button class="btn btn-primary" style="width: 40px;border-radius: 0px;" name="page_search" id="page_search">{{$page_en_cours}}</button>
                 </a>
-                @if($hasNextPage == true)
+                @if($hasNextPage ?? '' == true)
                     <a href="{{ url('/admin/consumption-that-are-paid/page/'.$next_page.'/size/'.$size) }}">
                         <button class="btn" style="width: 40px;border-radius: 0px; color: black;" name="page_search" id="page_search">{{$next_page}}</button>
                     </a>
@@ -315,14 +315,14 @@
                 <input type="text" value="<?= $username ?>" name="username" id="username" placeholder="Username" title="Username" class="form-control ml-2" hidden/>
                 <input type="text" value="paid" name="type" id="type" placeholder="type" title="type" class="form-control ml-2" hidden/>
 
-                @if($hasPrevPage == true)
+                @if($hasPrevPage ?? '' == true)
                     <button class="btn bg-white" name="previous_page" id="previous_page"  type="submit"> <i class="fas fa-angle-double-left" style="color: blue;"></i> </button>
                     <button class="btn bg-white" name="previous_page" id="previous_page" style="color: blue;border-radius: 0px;" type="submit">{{$previous_page}}</button>
                 @else
                     <button disabled class="btn bg-white" style="border-radius: 0px;" type="button"> <i class="fas fa-angle-double-left"></i> </button>
                 @endif
                     <button class="btn btn-primary" style="width: 40px;border-radius: 0px;"  name="current_page" id="current_page">{{$page_en_cours}}</button>
-                @if($hasNextPage == true)
+                @if($hasNextPage ?? '' == true)
                     <button class="btn" name="next_page" id="next_page" style="width: 40px;border-radius: 0px; color: black;" type="submit">{{$next_page}}</button>
                     <button class="btn bg-white" name="next_page" id="next_page" style="width: 40px;border: none;border-radius: 0px;" type="submit"> <i class="fas fa-angle-double-right" style="color: blue;"></i> </button>
                 @else

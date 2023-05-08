@@ -2295,18 +2295,17 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response, true);
 
-        dd($response);
-
-        if ($response->status == 200) {
-            $montantImpaye = $response-> result -> montantImpaye;
-            $client = $response-> result -> client;
-            $admin = $response-> result -> admin;
-            $invoice = $response-> result -> invoice;
+        // dd($response);
+        if ($response['status'] == 200) {
+            $montantImpaye = $response['result']['montantImpaye'];
+            $client = $response['result']['client'];
+            $admin = $response['result']['admin'];
+            $invoice = $response['result']['invoice'];
             $pdf = PDF::loadView('facturePdf/generator', ['invoice' => $invoice, 'client' => $client, 'admin' => $admin, 'montantImpaye' => $montantImpaye]);
-            return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');
+            return $pdf->download('facture-' . $client['name'] . '-' . date('F') . '.pdf');
         } else {
             $pdf = PDF::loadView('facturePdf/generator', ['invoice' => [], 'client' => null, 'admin' => null, 'montantImpaye' => 0]);
-            return $pdf->download('facture-' . $client['result']['name'] . '-' . date('F') . '.pdf');;
+            return $pdf->download('facture-' . $client['name'] . '-' . date('F') . '.pdf');;
         }
     }
 
@@ -3165,6 +3164,8 @@ class AdminController extends Controller
                                         $invoices = [];
                                     }
 
+                                    // dd($invoices);
+
                                     return view('admin/facture', [
                                         'invoices' => $invoices,
                                         'date' => $date,
@@ -3375,6 +3376,7 @@ class AdminController extends Controller
                 "username"=> "",
             ]);
         }
+
 
         return view('admin/addDateOfFacture');
     }

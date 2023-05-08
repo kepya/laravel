@@ -18,12 +18,12 @@
             <td colspan="9" align="center">Facture d'eau</td>
         </tr>
         <tr>
-            <td colspan="9" align="left">Tel: <?=$admin['result']['phone']?></td>
+            <td colspan="9" align="left">Tel: <?=$admin['phone']?></td>
         </tr>
         <tr>
             <td colspan="7"></td>
             <td class="border">Dernier Index <br> relevé le :</td>
-            <td class="border" align="center"><?=date("d.m.y",strtotime($invoice['result']['dateReleveNewIndex']))?></td>
+            <td class="border" align="center"><?=date("d.m.y",strtotime($invoice['dateReleveNewIndex']))?></td>
         </tr>
         <tr>
             <td colspan="9" align="center">Déposé le :</td>
@@ -31,12 +31,12 @@
         <tr>
             <td colspan="7"></td>
             <td class="border">Date limite <br> de paiement :</td>
-            <td class="border" align="center"><?=date("d.m.y",strtotime($invoice['result']['dataLimitePaid']))?></td>
+            <td class="border" align="center"><?=date("d.m.y",strtotime($invoice['dataLimitePaid']))?></td>
         </tr>
         <tr>
-            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['result']['name']?> <br> Localisation:
-                @for ($i = 0; $i < count($client['result']['description']); $i++)
-                    <?=$client['result']['description'][$i]?>
+            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['name']?> <br> Localisation:
+                @for ($i = 0; $i < count($client['description']); $i++)
+                    <?=$client['description'][$i]?>
                 @endfor
             </td>
         </tr>
@@ -55,15 +55,15 @@
             <td align="center" class="border">Ancien</td>
         </tr>
         <tr>
-            <td align="center" class="border"><?=$invoice['result']['idCompteur']?></td>
-            <td align="center" class="border"><?=$invoice['result']['newIndex']?></td>
-            <td align="center" class="border"><?=$invoice['result']['oldIndex']?></td>
-            <td align="center" class="border"><?=$invoice['result']['consommation']?></td>
-            <td align="center" class="border"><?=$invoice['result']['prixUnitaire']?></td>
-            <td align="center" class="border"><?php echo ($invoice['result']['montantConsommation']-$invoice['result']['fraisEntretien'])?></td>
-            <td align="center" class="border"><?=$invoice['result']['fraisEntretien']?></td>
+            <td align="center" class="border"><?=$invoice['idCompteur']?></td>
+            <td align="center" class="border"><?=$invoice['newIndex']?></td>
+            <td align="center" class="border"><?=$invoice['oldIndex']?></td>
+            <td align="center" class="border"><?=$invoice['consommation']?></td>
+            <td align="center" class="border"><?=$invoice['prixUnitaire']?></td>
+            <td align="center" class="border"><?php echo ($invoice['montantConsommation']-$invoice['fraisEntretien'])?></td>
+            <td align="center" class="border"><?=$invoice['fraisEntretien']?></td>
             <td align="center" class="border"><?=$montantImpaye?></td>
-            <td align="center" class="border"><?=$invoice['result']['montantConsommation']?></td>
+            <td align="center" class="border"><?=$invoice['montantConsommation']?></td>
         </tr>
         <tr>
             <td height="8"></td>
@@ -75,8 +75,8 @@
             <td align="center" colspan="6">Mode paiement: Cash ou Orange Money (avec frais de retrait)</td>
         </tr>
         <tr>
-            <td class="border" height="30"><?=$invoice['result']['montantVerse']?></td>
-            <td class="border"><?=$admin['result']['name']?></td>
+            <td class="border" height="30"><?=$invoice['montantVerse']?></td>
+            <td class="border"><?=$admin['name']?></td>
             <td class="border"></td>
             <td align="center" colspan="6"></td>
         </tr>
