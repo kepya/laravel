@@ -1556,7 +1556,7 @@ class AdminController extends Controller
 
             $response = json_decode($response);
 
-            // dd($response);
+            dd($response);
 
             if ($response == null || $response->status == 500) {
                 return view('admin/consumptionThatArePaid', [
@@ -2926,6 +2926,13 @@ class AdminController extends Controller
                 'oldIndex' => $oldIndex,
                 'dateReleveNewIndex' => $date
             );
+
+            if ($oldIndex > $newIndex) {
+                Session::flash('message', `Nous ne pouvons pas creer la facture car l'ancien index ne peut pas être superieur au nouveau index`);
+                Session::flash('alert-class', 'alert-danger');
+                return redirect()->back();
+            }
+
             $data_json1 = json_encode($data1);
 
             $ch1 = curl_init();
