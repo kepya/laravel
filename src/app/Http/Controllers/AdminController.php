@@ -1556,7 +1556,7 @@ class AdminController extends Controller
 
             $response = json_decode($response);
 
-            dd($response);
+            // dd($response);
 
             if ($response == null || $response->status == 500) {
                 return view('admin/consumptionThatArePaid', [
