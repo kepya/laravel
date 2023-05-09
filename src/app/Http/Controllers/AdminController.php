@@ -2891,7 +2891,7 @@ class AdminController extends Controller
 
         $url = curl_init();
         curl_setopt_array($url, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date.'/'.$size.'/'.$page,
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/userThatHaveNotPaidInvoiceWithDate/' . $date.'/'.$page.'/'.$size,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
