@@ -2302,14 +2302,12 @@ class AdminController extends Controller
         if ($response->status == 200) {
             Session::flash('message', 'Action Successfully done!');
             Session::flash('alert-class', 'alert-success');
-            return redirect()->back();
         } else {
             Session::flash('message', ucfirst($response->error));
             Session::flash('alert-class', 'alert-danger');
-            return redirect()->back();
         }
 
-        // return redirect()->route('/admin/consumption-that-are-unpaid');
+        return redirect()->route('ConsumptionPaidInvoices');
     }
 
     public function getClientByInvoices($invoice_id, $client_id)

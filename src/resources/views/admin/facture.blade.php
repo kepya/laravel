@@ -37,7 +37,7 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Consumption</h6>
                     <a class="collapse-item" href="/admin/consumption" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">All</a>
-                    <a class="collapse-item" href=$url."" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">Consumption Paid</a>
+                    <a class="collapse-item" href="/admin/consumption-that-are-paid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices paid">Consumption Paid</a>
                     <a class="collapse-item" href="/admin/consumption-that-are-unpaid" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Invoices unpaid">Consumption UnPaid</a>
                 </div>
             </div>
@@ -124,17 +124,14 @@
         </li>
 @stop
 @section('content')
-            <?php if (isset($messageOK)){?>
-                    <div class="alert alert-success alert-dismissible fade show"><i class="fas fa-check-circle"></i> <?= $messageOK ?>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    </div>
-            <?php } ?>
-            <?php if (isset($messageErr)){?>
-                    <div class="alert alert-danger alert-dismissible fade show"><i class="fas fa-exclamation-triangle"></i><?= $messageErr ?>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    </div>
-            <?php } ?>
-
+@if(Session::has('message'))
+    <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
+        {{ Session::get('message') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
 <div class="py-3 d-flex flex-row align-items-center justify-content-between ">
     <h4 class="m-0 font-weight-bold text-primary">

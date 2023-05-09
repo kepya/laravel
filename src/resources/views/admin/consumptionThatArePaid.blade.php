@@ -111,7 +111,14 @@
         </li>
 @stop
 @section('content')
-
+@if(Session::has('message'))
+    <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
+        {{ Session::get('message') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Paid Consumption</h1>
