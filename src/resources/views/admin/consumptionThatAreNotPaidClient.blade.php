@@ -160,7 +160,7 @@
                         <tbody>
                             @foreach($unPaidInvoices as $invoice)
                             <tr>
-                               @if($invoice -> invoice ->  consommation > 0)
+                               @if($invoice -> consommation > 0)
                                     <td style="text-align: center">{{$invoice ->  consommation}} m<sup>3</sup></td>
                                 @else
                                     <td style="text-align: center">{{-1 * ($invoice ->  consommation)}} m<sup>3</sup></td>

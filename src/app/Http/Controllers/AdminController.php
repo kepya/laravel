@@ -1084,135 +1084,78 @@ class AdminController extends Controller
         $Authorization = 'Bearer ' . $tokenVal;
 
         $year = date("Y");
-
-
         $month = date("m");
 
+        if(empty($year)){
+            $year = 0;
+        }
 
-        $page = 1;
-        $invoices_paid = array();
-        $invoices_unpaid = array();
+        $url = "http://172.17.0.3:4000/admin/facture/search/".$page_size."/".$size;
+        $alltoken = $_COOKIE['token'];
+        $alltokentab = explode(';', $alltoken);
+        $token = $alltokentab[0];
+        $tokentab = explode('=',$token);
+        $tokenVal = $tokentab[1];
+        $Authorization = 'Bearer '.$tokenVal;
 
-        $curl = curl_init();
+        $data = array(
+            "year"=> intval($year),
+            "type"=> "paid",
+        );
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/factureByYear/' . $year,
+        $data_json = json_encode($data);
 
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-        ));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response  = curl_exec($ch);
+        curl_close($ch);
 
-        $response = curl_exec($curl);
-        curl_close($curl);
         $response = json_decode($response);
 
-        $i = 0;
-        $invoices = array();
-        $invoicesWithPaginator = array();
+        if ($response == null || $response->status == 500) {
+            return view('admin/consumptionThatAreNotPaidClient', [
+                'invoices' => [],
+                'size' => 0,
+                'url' => "/admin/consumption-that-are-paid",
+                'page_en_cours' => 1,
+                'previous_page' => 1,
+                'hasPrevPage' => false,
+                'hasNextPage' => false,
+                'next_page' => 1,
+                'isSearch' => false,
 
-        foreach ($response as $key => $value) {
-            if ($i >= 1) {
-                $invoices = $value;
-            }
-            $i = $i + 1;
+                "username"=> "",
+                "year"=> 0,
+                "month"=> 0,
+            ]);
         }
 
-        foreach ($invoices as $invoice) {
-            if ($invoice->facturePay) {
-                array_push($invoices_paid, $invoice);
-            } else {
-                array_push($invoices_unpaid, $invoice);
-            }
-        }
+        $bill = $response-> result -> docs;
+        $previous_page = $response-> result -> prevPage;
+        $next_page = $response-> result -> nextPage;
+        $hasPrevPage = $response-> result -> hasPrevPage;
+        $hasNextPage = $response-> result -> hasNextPage;
+        $page_en_cours = $response-> result -> page;
+        $size = count($bill);
 
-        $page_en_cours = $page_size;
-        $previous_page = 1;
-        $next_page = 1;
-
-        $arrLength = count($invoices_paid);
-
-        $size_final = $size * $page_size;
-
-        if ($arrLength < $size) {
-            $size = $arrLength;
-        } else {
-            $page = $arrLength / $size;
-            //$next_page = $page + 1;
-        }
-
-        if ($page_en_cours > 1) {
-            $previous_page = $page_en_cours - 1;
-        }
-
-        if ($arrLength < $size_final) {
-            $size_final = $arrLength;
-            $next_page = $page - 1;
-        } else {
-            if ($page_size == $size) {
-                $next_page = $page;
-            }
-        }
-
-        if ($size == $size_final) {
-            for ($i = 0; $i < $size; $i++) {
-                array_push($invoicesWithPaginator, $invoices_paid[$i]);
-            }
-        } else {
-            for ($i = $size; $i < $size_final; $i++) {
-                array_push($invoicesWithPaginator, $invoices_paid[$i]);
-            }
-        }
-
-        if (gettype($invoices_paid) != "array") {
-            $invoices_paid = array();
-        }
-
-
-
-        $client = array();
-
-        foreach ($invoicesWithPaginator as $invoice) {
-
-            $idClient = $invoice->idClient;
-            $url = curl_init();
-            curl_setopt_array($url, array(
-                CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/' . $idClient,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
-            ));
-
-            $response = curl_exec($url);
-            $response = json_decode($response);
-
-            $i = 0;
-
-            foreach ($response as $key => $value) {
-                if ($i >= 1) {
-                    array_push($client, $value);
-                }
-                $i = $i + 1;
-            }
-        }
-        return view('admin/consumptionThatArePaid', [
-            'invoices' => $invoicesWithPaginator,
-            'client' => $client,
-            'page' => $page,
+        return view('admin/consumptionThatAreNotPaidClient', [
+            'unPaidInvoices' => $bill,
             'size' => $size,
+            'url' => "/admin/consumption-that-are-unpaid",
             'page_en_cours' => $page_en_cours,
             'previous_page' => $previous_page,
-            'next_page' => $next_page
+            'hasPrevPage' => $hasPrevPage,
+            'hasNextPage' => $hasNextPage,
+            'next_page' => $next_page,
+
+            'isSearch' => false,
+            "username"=> "",
+            "year"=> 0,
+            "month"=> 0,
         ]);
     }
 
@@ -2899,7 +2842,6 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-
         $newIndex = isset($request->newIndex) ? $request->newIndex : 0 ;
 
         $date = $request->date;
@@ -2914,43 +2856,47 @@ class AdminController extends Controller
             $oldIndex = 0;
         }
 
+        // dd($meter);
+
         $meter = $request->meter;
+        $messageErr = null;
 
-        if(!empty($idClient)){
-            // je definie l'url de connexion.
-            $url = "http://172.17.0.3:4000/admin/facture/" . $idClient;
-
-            $data1 = array(
-                'idCompteur'=> $meter,
-                'newIndex' => $newIndex,
-                'oldIndex' => $oldIndex,
-                'dateReleveNewIndex' => $date
-            );
-
-            if ($oldIndex > $newIndex) {
-                Session::flash('message', `Nous ne pouvons pas creer la facture car l'ancien index ne peut pas être superieur au nouveau index`);
-                Session::flash('alert-class', 'alert-danger');
-                return redirect()->back();
-            }
-
-            $data_json1 = json_encode($data1);
-
-            $ch1 = curl_init();
-            curl_setopt($ch1, CURLOPT_URL, $url);
-            curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
-            curl_setopt($ch1, CURLOPT_POST, 1);
-            curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_json1);
-            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-            $response1  = curl_exec($ch1);
-            curl_close($ch1);
-            $response1 = json_decode($response1, true);
-
-            if ($response1['status'] == 200) {
-                Session::flash('message', 'Invoice created!');
-                Session::flash('alert-class', 'alert-success');
-            } else {
-                Session::flash('message', ucfirst($response1['error']));
-                Session::flash('alert-class', 'alert-danger');
+        if ($oldIndex > $newIndex) {
+            $messageErr = "Nous ne pouvons pas creer la facture car l'ancien index ne peut pas être superieur au nouveau index";
+            Session::flash('message', $messageErr);
+            Session::flash('alert-class', 'alert-danger');
+            // dd($messageErr);
+        } else {
+            if(!empty($idClient)){
+                // je definie l'url de connexion.
+                $url = "http://172.17.0.3:4000/admin/facture/" . $idClient;
+    
+                $data1 = array(
+                    'idCompteur'=> $meter,
+                    'newIndex' => $newIndex,
+                    'oldIndex' => $oldIndex,
+                    'dateReleveNewIndex' => $date
+                );
+    
+                $data_json1 = json_encode($data1);
+    
+                $ch1 = curl_init();
+                curl_setopt($ch1, CURLOPT_URL, $url);
+                curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: ' . $Authorization));
+                curl_setopt($ch1, CURLOPT_POST, 1);
+                curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_json1);
+                curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+                $response1  = curl_exec($ch1);
+                curl_close($ch1);
+                $response1 = json_decode($response1, true);
+    
+                if ($response1['status'] == 200) {
+                    Session::flash('message', 'Invoice created!');
+                    Session::flash('alert-class', 'alert-success');
+                } else {
+                    Session::flash('message', ucfirst($response1['error']));
+                    Session::flash('alert-class', 'alert-danger');
+                }
             }
         }
 
@@ -2971,6 +2917,7 @@ class AdminController extends Controller
         $response = json_decode($response);
 
         //print_r($response);
+        // dd($messageErr);
 
         $invoices = $response-> result -> docs;
         $previous_page = $response-> result -> prevPage;
@@ -2995,6 +2942,7 @@ class AdminController extends Controller
             'isSearch' => false,
             'url' => '/admin/addInvoice',
             "username"=> "",
+            'messageErr' => $messageErr
         ]);
     }
 

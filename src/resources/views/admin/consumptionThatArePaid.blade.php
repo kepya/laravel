@@ -285,7 +285,7 @@
                     <option value="15">15</option>
                     <option value="20">20</option>
                 </select>
-                <input type="submit" name="send_pagination_consumption_unpaid" id="send_pagination_consumption_unpaid" placeholder="Show" class="ml-1 btn btn-primary">
+                <input type="submit" name="send_pagination_consumption_paid" id="send_pagination_consumption_paid" placeholder="Show" class="ml-1 btn btn-primary">
             </div>
         </form>
         @if($isSearch ?? '' == false)

@@ -124,14 +124,16 @@
         </li>
 @stop
 @section('content')
-@if(Session::has('message'))
-    <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible fade show">
-        {{ Session::get('message') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
+            <?php if (isset($messageOK)){?>
+                    <div class="alert alert-success alert-dismissible fade show"><i class="fas fa-check-circle"></i> <?= $messageOK ?>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+            <?php } ?>
+            <?php if (isset($messageErr)){?>
+                    <div class="alert alert-danger alert-dismissible fade show"><i class="fas fa-exclamation-triangle"></i><?= $messageErr ?>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+            <?php } ?>
 
 
 <div class="py-3 d-flex flex-row align-items-center justify-content-between ">
