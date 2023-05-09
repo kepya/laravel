@@ -1844,6 +1844,8 @@ class AdminController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
+        // dd($response);
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'http://172.17.0.3:4000/client/auth/'.$id,
@@ -1860,6 +1862,8 @@ class AdminController extends Controller
         $response2 = curl_exec($curl);
         curl_close($curl);
         $response2 = json_decode($response2);
+        // dd($response2);
+        // dd($response->result->unPaidInvoices);
 
         return view('admin/consumptionThatAreNotPaidClient', [
             'unPaidInvoices' => $response->result->unPaidInvoices,
