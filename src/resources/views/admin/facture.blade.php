@@ -230,6 +230,7 @@
                                     <div class="form-group mb-3">
                                         <div class="input-group">New index</div>
                                         <input type="number" min="0"  value="<?= $invoice  -> newIndex?>" class="form-control" disabled placeholder="new index" id="newIndex" name="newIndex" required>
+                                        <input type="number" min="0"  value="<?= $invoice  -> newIndex?>" class="form-control" hidden placeholder="new index" id="newIndex" name="newIndex" required>
                                     </div>
                                 <?php } ?>
                                        
@@ -249,6 +250,7 @@
                                     <div class="form-group mb-3" id="b_oldIndex">
                                         <div class="input-group">Old index</div>
                                         <input type="number" min="0" class="form-control"  value="<?= $invoice  -> oldIndex?>" disabled placeholder="old index" id="oldIndex" name="oldIndex" value="0">
+                                        <input type="number" min="0" class="form-control"  value="<?= $invoice  -> oldIndex?>" hidden placeholder="old index" id="oldIndex" name="oldIndex" value="0">
                                     </div>
                                 <?php } ?>
                                 <div class="row form-group float-right">

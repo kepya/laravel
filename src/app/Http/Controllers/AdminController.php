@@ -2839,14 +2839,13 @@ class AdminController extends Controller
         $size = $request->page_size;
 
         $idClient = isset($request->userId) ? $request->userId : "";
-
+        // dd($newIndex);
         if (isset($request->oldIndex)) {
             $oldIndex = $request->oldIndex;
         } else {
             $oldIndex = 0;
         }
 
-        // dd($meter);
 
         $meter = $request->meter;
         $messageErr = null;
