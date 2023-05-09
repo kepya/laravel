@@ -245,6 +245,12 @@
                                         <input type="number" min="0" class="form-control" placeholder="old index" id="oldIndex" name="oldIndex" value="0">
                                     </div>
                                 <?php } ?>
+                                <?php if($invoice->hasAtLeastOneInvoice == true) { ?>
+                                    <div class="form-group mb-3" id="b_oldIndex">
+                                        <div class="input-group">Old index</div>
+                                        <input type="number" min="0" class="form-control"  value="<?= $invoice  -> oldIndex?>" disabled placeholder="old index" id="oldIndex" name="oldIndex" value="0">
+                                    </div>
+                                <?php } ?>
                                 <div class="row form-group float-right">
                                     <button type="submit" class="btn btn-primary" id="addInvoice" name="addInvoice"> Add</button>
                                 </div>
