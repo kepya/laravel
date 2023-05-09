@@ -272,7 +272,7 @@
         </div>
     </div>
 
-    <div class="flex d-flex justify-content-between mb-1">
+    <!-- <div class="flex d-flex justify-content-between mb-1">
         <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
             @csrf
             <div class="flex d-flex align-items-center">
@@ -339,5 +339,70 @@
                 @endif
             </form>
         @endif
+    </div> -->
+
+    <div class="flex d-flex align-items-center justify-content-between mb-3 mt-3">
+    <form action="{{url('/admin/search_invoices')}}" method="post" role="form">
+            @csrf
+            <div class="flex d-flex align-items-center">
+                entries :
+                <input type="text" name="url" id="url" placeholder="url" title="url" class="form-control" value="<?= $url ?? '' ?>" hidden/>
+
+                <select class="form-control ml-2" style="width: 70px;" id="select_size" name="select_size" value="<?= $size ?>">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+                <input type="submit" name="send_pagination_consumption_paid" id="send_pagination_consumption_paid" placeholder="Show" class="ml-1 btn btn-primary">
+            </div>
+        </form>
+
+    <?php
+        //previous page
+        if($hasPrevPage == 0){
+            $prevDisabled = 'disabled';
+            $prevAriadisabled = 'true';
+            $prevHref = '#';
+        }else{
+            $prevDisabled = '';
+            $prevAriadisabled = '';
+            $prevHref = '/admin/consumption-that-are-paid/page/'.$previous_page.'/size/'.$size;
+        }
+
+        //next page
+        if($hasNextPage == 0){
+            $nextDisabled = 'disabled';
+            $nextAriadisabled = 'true';
+            $nextHref = '#';
+        }else{
+            $nextDisabled = '';
+            $nextAriadisabled = '';
+            $nextHref = '/admin/consumption-that-are-paid/page/'.$next_page.'/size/'.$size;
+        }
+
+    ?>
+
+
+    <!-- Pagination -->
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item <?= $prevDisabled?>">
+                <a class="page-link" href="<?=$prevHref ?>" aria-label="Previous" aria-disabled="<?=$prevAriadisabled?>">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                </li>
+                <li class="page-item active" aria-current="page"><a class="page-link" href="/admin/consumption-that-are-paid/page/<?= $page_en_cours ?>/size/<?=$size ?>"><?= $page_en_cours ?></a></li>
+
+                <li class="page-item <?=$nextDisabled?>">
+                <a class="page-link" href="<?= $nextHref ?>" aria-label="Next" aria-disabled="<?=$nextAriadisabled?>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+</div>
 @stop

@@ -1083,41 +1083,28 @@ class AdminController extends Controller
         $tokenVal = $tokentab[1];
         $Authorization = 'Bearer ' . $tokenVal;
 
-        $year = date("Y");
-        $month = date("m");
+        $page = $page_size;
 
-        if(empty($year)){
-            $year = 0;
-        }
+        $curl = curl_init();
 
-        $url = "http://172.17.0.3:4000/admin/facture/search/".$page_size."/".$size;
-        $alltoken = $_COOKIE['token'];
-        $alltokentab = explode(';', $alltoken);
-        $token = $alltokentab[0];
-        $tokentab = explode('=',$token);
-        $tokenVal = $tokentab[1];
-        $Authorization = 'Bearer '.$tokenVal;
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://172.17.0.3:4000/admin/facture/getByStatusWithPagination/true/'.$page.'/'.$size,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array('Authorization: ' . $Authorization),
+        ));
 
-        $data = array(
-            "year"=> intval($year),
-            "type"=> "paid",
-        );
-
-        $data_json = json_encode($data);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'authorization: '.$Authorization));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response  = curl_exec($ch);
-        curl_close($ch);
-
+        $response = curl_exec($curl);
+        curl_close($curl);
         $response = json_decode($response);
 
-        if ($response == null || $response->status == 500) {
-            return view('admin/consumptionThatAreNotPaidClient', [
+        if ($response->status == 500) {
+            return view('admin/consumptionThatArePaid', [
                 'invoices' => [],
                 'size' => 0,
                 'url' => "/admin/consumption-that-are-paid",
@@ -1129,11 +1116,11 @@ class AdminController extends Controller
                 'isSearch' => false,
 
                 "username"=> "",
+                "consumption"=>  0,
                 "year"=> 0,
                 "month"=> 0,
             ]);
         }
-
         $bill = $response-> result -> docs;
         $previous_page = $response-> result -> prevPage;
         $next_page = $response-> result -> nextPage;
@@ -1142,18 +1129,19 @@ class AdminController extends Controller
         $page_en_cours = $response-> result -> page;
         $size = count($bill);
 
-        return view('admin/consumptionThatAreNotPaidClient', [
-            'unPaidInvoices' => $bill,
+        return view('admin/consumptionThatArePaid', [
+            'invoices' => $bill,
             'size' => $size,
-            'url' => "/admin/consumption-that-are-unpaid",
+            'url' => "/admin/consumption-that-are-paid",
             'page_en_cours' => $page_en_cours,
             'previous_page' => $previous_page,
             'hasPrevPage' => $hasPrevPage,
             'hasNextPage' => $hasNextPage,
             'next_page' => $next_page,
-
             'isSearch' => false,
+
             "username"=> "",
+            "consumption"=>  0,
             "year"=> 0,
             "month"=> 0,
         ]);
