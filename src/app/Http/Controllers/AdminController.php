@@ -2839,7 +2839,7 @@ class AdminController extends Controller
         $size = $request->page_size;
 
         $idClient = isset($request->userId) ? $request->userId : "";
-        // dd($newIndex);
+        
         if (isset($request->oldIndex)) {
             $oldIndex = $request->oldIndex;
         } else {
@@ -2866,6 +2866,8 @@ class AdminController extends Controller
                     'oldIndex' => $oldIndex,
                     'dateReleveNewIndex' => $date
                 );
+
+                dd($data1);
     
                 $data_json1 = json_encode($data1);
     
