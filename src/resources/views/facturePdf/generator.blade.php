@@ -64,7 +64,7 @@
             <td align="center" class="border"><?php echo ($invoice['montantConsommation']-$invoice['fraisEntretien'])?></td>
             <td align="center" class="border"><?=$invoice['fraisEntretien']?></td>
             <td align="center" class="border"><?=$montantImpaye?></td>
-            <td align="center" class="border"><?php echo ($invoice['montantConsommation'] + $montantImpaye)?></td>
+            <td align="center" class="border"><?php echo ($invoice['montantImpaye'] + $montantImpaye)?></td>
         </tr>
         <tr>
             <td height="8"></td>
