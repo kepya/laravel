@@ -34,7 +34,8 @@
             <td class="border" align="center"><?=date("d.m.y",strtotime($invoice['dataLimitePaid']))?></td>
         </tr>
         <tr>
-            <td colspan="9" align="center">Mois: <?=date("F Y")?> <br> Destinataire: <?=$client['name']?> <br> Localisation:
+        <!-- strftime('%B', strtotime($invoice['dateReleveNewIndex'])) -->
+            <td colspan="9" align="center">Mois: <?=date("F",strtotime($invoice['dateReleveNewIndex']))?> <br> Destinataire: <?=$client['name']?> <br> Localisation:
                 @for ($i = 0; $i < count($client['description']); $i++)
                     <?=$client['description'][$i]?>
                 @endfor
